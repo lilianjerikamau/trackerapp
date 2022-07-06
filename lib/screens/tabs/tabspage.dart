@@ -49,8 +49,8 @@ class _TabsPageState extends State<TabsPage> {
             label: ('Insrall Tracker'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.verified_user),
-            label: ('Login'),
+            icon: Icon(Icons.card_travel),
+            label: ('Create Job Card'),
           ),
         ],
         currentIndex: _selectedIndex,

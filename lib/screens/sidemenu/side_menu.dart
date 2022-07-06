@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trackerapp/database/sessionpreferences.dart';
+import 'package:trackerapp/screens/login_screen.dart';
 import 'package:trackerapp/screens/tabs/tabspage.dart';
 
 class SideMenu extends StatefulWidget {
@@ -7,25 +9,33 @@ class SideMenu extends StatefulWidget {
 }
 
 class _SideMenuState extends State<SideMenu> {
+  late bool _loggedIn = false;
+  late String? _loggedInUser = null;
+  BuildContext? _context;
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Colors.redAccent,
+      backgroundColor: Colors.red.withOpacity(0.8),
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
-            child: Text(
-              '',
-              style: TextStyle(color: Colors.white, fontSize: 25),
+          DrawerHeader(
+            child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(10),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.asset(
+                  'images/logo.png',
+                  height: 150.0,
+                  width: 100.0,
+                ),
+              ),
+              color: Colors.red[700]!.withOpacity(0.8),
             ),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10.0),
-                    bottomRight: Radius.circular(10.0)),
-                color: Colors.red,
-                image: DecorationImage(
-                    fit: BoxFit.cover, image: AssetImage('images/logo.png'))),
+            decoration: new BoxDecoration(
+              color: Colors.red[700]!.withOpacity(0.8),
+            ),
           ),
           ListTile(
             leading: const Icon(
@@ -87,7 +97,38 @@ class _SideMenuState extends State<SideMenu> {
               color: Colors.black,
             ),
             title: Text('Logout'),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pop();
+              showDialog(
+                  context: context,
+                  builder: (ctx) {
+                    return AlertDialog(
+                      title: Text('Log out?'),
+                      content: Text('Are you sure you want to log out?'),
+                      actions: <Widget>[
+                        FlatButton(
+                            child: Text('No'),
+                            onPressed: () {
+                              Navigator.pop(ctx);
+                            }),
+                        FlatButton(
+                            onPressed: () {
+                              Navigator.pop(ctx);
+
+                              SessionPreferences().setLoggedInStatus(false);
+                              _loggedIn = false;
+                              _loggedInUser = null;
+                              Navigator.push(
+                                ctx,
+                                MaterialPageRoute(
+                                    builder: (ctx) => LoginPage()),
+                              );
+                            },
+                            child: Text('Yes'))
+                      ],
+                    );
+                  });
+            },
           ),
         ],
       ),

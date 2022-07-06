@@ -21,8 +21,8 @@ class TabNavigationItem {
         ),
         TabNavigationItem(
           page: Search(),
-          icon: Icon(Icons.search),
-          title: Text("Search"),
+          icon: Icon(Icons.track_changes_rounded),
+          title: Text("Install Tracker"),
         ),
         TabNavigationItem(
           page: LoginPage(),

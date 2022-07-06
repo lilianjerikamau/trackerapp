@@ -5,6 +5,8 @@ void main() {
   runApp(MyApp());
 }
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
