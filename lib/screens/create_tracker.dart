@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:trackerapp/widgets/validators.dart';
 // import 'package:seedfund/constants/constants.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateTracker extends StatefulWidget {
   _CreateTracker createState() => _CreateTracker();
@@ -35,10 +35,9 @@ class _CreateTracker extends State<CreateTracker> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   final _formKey3 = GlobalKey<FormState>();
-
   final _formKey16 = GlobalKey<FormState>();
-  bool isLoading = false;
 
+  bool isLoading = false;
   bool isOther5 = false;
   bool isOther6 = false;
 
@@ -81,28 +80,28 @@ class _CreateTracker extends State<CreateTracker> {
   bool selectedCategory33 = true;
   bool selectedCategory34 = true;
 
-  // Future<Map<String, dynamic>> sheiqdata(Map<String, dynamic> body) async {
-  //   final prefs = await SharedPreferences.getInstance();
+//   Future<Map<String, dynamic>> sheiqdata(Map<String, dynamic> body) async {
+//     final prefs = await SharedPreferences.getInstance();
+//     String? token = prefs.getString("token");
+//     String user = prefs.getInt("user").toString();
+//     print("post call started with ${body.toString()}");
+//     Map<String, dynamic> fullBody = body;
+//     fullBody["userid"] = user;
+//     final http.Response response = await http.post(
+//       // AppUrl.sheIq
+//       ,
+//       headers: <String, String>{
+//         'Content-Type': 'application/json',
+//       },
+//       body: jsonEncode(fullBody),
+//     );
 
-  //   String token = prefs.getString("token");
-  //   String user = prefs.getInt("user").toString();
-  //   print("post call started with ${body.toString()}");
-  //   Map<String, dynamic> fullBody = body;
-  //   fullBody["userid"] = user;
-  //   final http.Response response = await http.post(
-  //     AppUrl.sheIq,
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: jsonEncode(fullBody),
-  //   );
+//     print(response.body);
 
-  //   print(response.body);
-
-  //   return {
-  //     "status": response.statusCode,
-  //     "body": response.statusCode == 200 ? response.body : "An error occured"
-  //   };
+//     return {
+//       "status": response.statusCode,
+//       "body": response.statusCode == 200 ? response.body : "An error occured"
+//     };
 
 //     if (response.statusCode == 201) {
 //       final jsonData = json.decode(response.body);
@@ -111,7 +110,7 @@ class _CreateTracker extends State<CreateTracker> {
 //     } else {
 //       throw Exception('Failed to create album.');
 //     }
-  // }
+//   }
 
   late String otherValue1;
   late String otherValue2;
@@ -126,7 +125,7 @@ class _CreateTracker extends State<CreateTracker> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Align(
               alignment: Alignment.bottomLeft,
@@ -143,14 +142,6 @@ class _CreateTracker extends State<CreateTracker> {
                         if (currentForm == 0) {
                           currentForm = 0;
                           percentageComplete = 25;
-                        } else {
-                          // ScaffoldMessenger.of(context)
-                          //     .showSnackBar(const SnackBar(
-                          //   behavior: SnackBarBehavior.floating,
-                          //   content: Text(
-                          //       "Make sure all required fields are filled"),
-                          //   duration: Duration(seconds: 3),
-                          // ));
                         }
                         break;
                       case 1:
@@ -158,14 +149,6 @@ class _CreateTracker extends State<CreateTracker> {
                         if (currentForm == 1) {
                           currentForm = 0;
                           percentageComplete = 50;
-                        } else {
-                          // ScaffoldMessenger.of(context)
-                          //     .showSnackBar(const SnackBar(
-                          //   behavior: SnackBarBehavior.floating,
-                          //   content: Text(
-                          //       "Make sure all required fields are filled"),
-                          //   duration: Duration(seconds: 3),
-                          // ));
                         }
                         break;
                       case 2:
@@ -174,14 +157,6 @@ class _CreateTracker extends State<CreateTracker> {
                         if (currentForm == 2) {
                           currentForm = 1;
                           percentageComplete = 75;
-                        } else {
-                          // ScaffoldMessenger.of(context)
-                          //     .showSnackBar(const SnackBar(
-                          //   behavior: SnackBarBehavior.floating,
-                          //   content: Text(
-                          //       "Make sure all required fields are filled"),
-                          //   duration: Duration(seconds: 3),
-                          // ));
                         }
                         break;
                       case 3:
@@ -190,14 +165,6 @@ class _CreateTracker extends State<CreateTracker> {
                         if (currentForm == 3) {
                           currentForm = 2;
                           percentageComplete = 100;
-                        } else {
-                          // ScaffoldMessenger.of(context)
-                          //     .showSnackBar(const SnackBar(
-                          //   behavior: SnackBarBehavior.floating,
-                          //   content: Text(
-                          //       "Make sure all required fields are filled"),
-                          //   duration: Duration(seconds: 3),
-                          // ));
                         }
                         break;
                     }
@@ -316,7 +283,8 @@ class _CreateTracker extends State<CreateTracker> {
                       //           {Navigator.pop(context)}
                       //         else
                       //           {
-                      //             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //             ScaffoldMessenger.of(context)
+                      //                 .showSnackBar(SnackBar(
                       //               behavior: SnackBarBehavior.floating,
                       //               content: Text(
                       //                   "An error occurred while doing the operation,make sure you have internet access"),
@@ -324,7 +292,6 @@ class _CreateTracker extends State<CreateTracker> {
                       //             ))
                       //           }
                       //       });
-
                     }
                   });
                 },
@@ -792,7 +759,7 @@ class _CreateTracker extends State<CreateTracker> {
                             ))
                       ])),
                   Form(
-                      autovalidateMode: AutovalidateMode.always,
+                      // autovalidateMode: AutovalidateMode.always,
                       key: _formKey3,
                       child: Column(children: <Widget>[
                         Card(

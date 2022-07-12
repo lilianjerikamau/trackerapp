@@ -15,7 +15,7 @@ class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Colors.red.withOpacity(0.8),
+      backgroundColor: Colors.white,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -31,18 +31,18 @@ class _SideMenuState extends State<SideMenu> {
                   width: 100.0,
                 ),
               ),
-              color: Colors.red[700]!.withOpacity(0.8),
+              color: Colors.red,
             ),
             decoration: new BoxDecoration(
-              color: Colors.red[700]!.withOpacity(0.8),
+              color: Colors.red,
             ),
           ),
           ListTile(
             leading: const Icon(
               Icons.home,
-              color: Colors.white,
+              color: Colors.black,
             ),
-            title: Text('Home', style: TextStyle(color: Colors.white)),
+            title: Text('Home', style: TextStyle(color: Colors.black)),
             onTap: () => {
               Navigator.pushReplacement(
                 context,
@@ -53,12 +53,12 @@ class _SideMenuState extends State<SideMenu> {
           ),
           ListTile(
             leading: const Icon(
-              Icons.search,
-              color: Colors.white,
+              Icons.track_changes,
+              color: Colors.black,
             ),
-            title: const Text('Search',
+            title: const Text('Tracker',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                 )),
             onTap: () => {
               Navigator.pushReplacement(
@@ -70,12 +70,12 @@ class _SideMenuState extends State<SideMenu> {
           ),
           ListTile(
             leading: const Icon(
-              Icons.settings,
-              color: Colors.white,
+              Icons.work,
+              color: Colors.black,
             ),
-            title: const Text('Profile',
+            title: const Text('Job-card',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                 )),
             onTap: () => {
               Navigator.pushReplacement(
@@ -89,7 +89,7 @@ class _SideMenuState extends State<SideMenu> {
             height: 150,
           ),
           ListTile(
-            hoverColor: Colors.white,
+            hoverColor: Colors.black,
             dense: true,
             visualDensity: VisualDensity(vertical: -4),
             leading: Icon(

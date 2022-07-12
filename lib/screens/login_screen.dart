@@ -11,6 +11,7 @@ import 'package:trackerapp/models/usermodels.dart';
 import 'package:trackerapp/screens/forgotpassword.dart';
 import 'package:trackerapp/screens/home.dart';
 import 'package:trackerapp/screens/selectcompany.dart';
+import 'package:trackerapp/screens/tabs/tabspage.dart';
 import 'package:trackerapp/utils/config.dart' as Config;
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -207,7 +208,8 @@ class _State extends State<LoginPage> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => Home()),
+                                                builder: (context) =>
+                                                    TabsPage(selectedIndex: 0)),
                                           );
                                         });
                                         Fluttertoast.showToast(

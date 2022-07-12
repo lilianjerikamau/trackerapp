@@ -248,7 +248,7 @@ class _HomeState extends State<Home> {
                               children: [
                                 const Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(20, 30, 80, 20),
+                                      const EdgeInsets.fromLTRB(20, 10, 80, 20),
                                   child: const Text(
                                     'Tracker    ',
                                     style: const TextStyle(

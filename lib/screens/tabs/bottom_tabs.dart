@@ -18,18 +18,18 @@ class TabNavigationItem {
   static List<TabNavigationItem> get items => [
         TabNavigationItem(
           page: Home(),
-          icon: Icon(Icons.home),
-          title: Text("Home"),
+          icon: const Icon(Icons.home),
+          title: const Text("Home"),
         ),
         TabNavigationItem(
           page: CreateTracker(),
-          icon: Icon(Icons.track_changes_rounded),
-          title: Text("Install Tracker"),
+          icon: const Icon(Icons.track_changes_rounded),
+          title: const Text("Install Tracker"),
         ),
         TabNavigationItem(
           page: CreateJobCard(),
-          icon: Icon(Icons.work),
-          title: Text("Login"),
+          icon: const Icon(Icons.work),
+          title: const Text("Create Job-Card"),
         ),
       ];
 }

@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:trackerapp/widgets/validators.dart';
-// import 'package:seedfund/constants/constants.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateJobCard extends StatefulWidget {
   _CreateJobCard createState() => _CreateJobCard();
@@ -36,19 +34,8 @@ class _CreateJobCard extends State<CreateJobCard> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   final _formKey3 = GlobalKey<FormState>();
-  final _formKey4 = GlobalKey<FormState>();
-  final _formKey5 = GlobalKey<FormState>();
-  final _formKey6 = GlobalKey<FormState>();
-  final _formKey7 = GlobalKey<FormState>();
-  final _formKey8 = GlobalKey<FormState>();
-  final _formKey9 = GlobalKey<FormState>();
-  final _formKey10 = GlobalKey<FormState>();
-  final _formKey11 = GlobalKey<FormState>();
-  final _formKey12 = GlobalKey<FormState>();
-  final _formKey13 = GlobalKey<FormState>();
-  final _formKey14 = GlobalKey<FormState>();
-  final _formKey15 = GlobalKey<FormState>();
   final _formKey16 = GlobalKey<FormState>();
+
   bool isLoading = false;
   bool isOtherEnabled = false;
   bool isOtherEnabled2 = false;
@@ -124,183 +111,184 @@ class _CreateJobCard extends State<CreateJobCard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
-                Widget>[
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: FloatingActionButton.extended(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              onPressed: () {
-                print("the current form is $currentForm");
-                setState(() {
-                  var form;
-                  switch (currentForm) {
-                    case 0:
-                      form = _formKey.currentState;
-                      if (currentForm == 0) {
-                        currentForm = 0;
-                        percentageComplete = 25;
-                      } else {
-                        // ScaffoldMessenger.of(context)
-                        //     .showSnackBar(const SnackBar(
-                        //   behavior: SnackBarBehavior.floating,
-                        //   content: Text(
-                        //       "Make sure all required fields are filled"),
-                        //   duration: Duration(seconds: 3),
-                        // ));
-                      }
-                      break;
-                    case 1:
-                      form = _formKey2.currentState;
-                      if (currentForm == 1) {
-                        currentForm = 0;
-                        percentageComplete = 50;
-                      } else {
-                        // ScaffoldMessenger.of(context)
-                        //     .showSnackBar(const SnackBar(
-                        //   behavior: SnackBarBehavior.floating,
-                        //   content: Text(
-                        //       "Make sure all required fields are filled"),
-                        //   duration: Duration(seconds: 3),
-                        // ));
-                      }
-                      break;
-                    case 2:
-                      form = _formKey3.currentState;
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: FloatingActionButton.extended(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                onPressed: () {
+                  print("the current form is $currentForm");
+                  setState(() {
+                    var form;
+                    switch (currentForm) {
+                      case 0:
+                        form = _formKey.currentState;
+                        if (currentForm == 0) {
+                          currentForm = 0;
+                          percentageComplete = 25;
+                        } else {
+                          // ScaffoldMessenger.of(context)
+                          //     .showSnackBar(const SnackBar(
+                          //   behavior: SnackBarBehavior.floating,
+                          //   content: Text(
+                          //       "Make sure all required fields are filled"),
+                          //   duration: Duration(seconds: 3),
+                          // ));
+                        }
+                        break;
+                      case 1:
+                        form = _formKey2.currentState;
+                        if (currentForm == 1) {
+                          currentForm = 0;
+                          percentageComplete = 50;
+                        } else {
+                          // ScaffoldMessenger.of(context)
+                          //     .showSnackBar(const SnackBar(
+                          //   behavior: SnackBarBehavior.floating,
+                          //   content: Text(
+                          //       "Make sure all required fields are filled"),
+                          //   duration: Duration(seconds: 3),
+                          // ));
+                        }
+                        break;
+                      case 2:
+                        form = _formKey3.currentState;
 
-                      if (currentForm == 2) {
-                        currentForm = 1;
-                        percentageComplete = 75;
-                      } else {
-                        // ScaffoldMessenger.of(context)
-                        //     .showSnackBar(const SnackBar(
-                        //   behavior: SnackBarBehavior.floating,
-                        //   content: Text(
-                        //       "Make sure all required fields are filled"),
-                        //   duration: Duration(seconds: 3),
-                        // ));
-                      }
-                      break;
-                  }
-                });
-              },
-              icon: Icon(
-                currentForm == 0 || currentForm == 3
-                    ? Icons.error
-                    : Icons.arrow_back,
-                color: Colors.redAccent,
+                        if (currentForm == 2) {
+                          currentForm = 1;
+                          percentageComplete = 75;
+                        } else {
+                          // ScaffoldMessenger.of(context)
+                          //     .showSnackBar(const SnackBar(
+                          //   behavior: SnackBarBehavior.floating,
+                          //   content: Text(
+                          //       "Make sure all required fields are filled"),
+                          //   duration: Duration(seconds: 3),
+                          // ));
+                        }
+                        break;
+                    }
+                  });
+                },
+                icon: Icon(
+                  currentForm == 0 || currentForm == 3
+                      ? Icons.error
+                      : Icons.arrow_back,
+                  color: Colors.redAccent,
+                ),
+                label: Text(
+                    currentForm == 0 || currentForm == 3 ? "Invalid" : "Prev"),
+                heroTag: null,
               ),
-              label: Text(
-                  currentForm == 0 || currentForm == 3 ? "Invalid" : "Prev"),
-              heroTag: null,
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: FloatingActionButton.extended(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              onPressed: () {
-                print("the current form is $currentForm");
-                setState(() {
-                  var form;
-                  switch (currentForm) {
-                    case 0:
-                      form = _formKey.currentState;
-                      if (form.validate()) {
-                        form.save();
+            Align(
+              alignment: Alignment.bottomRight,
+              child: FloatingActionButton.extended(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                onPressed: () {
+                  print("the current form is $currentForm");
+                  setState(() {
+                    var form;
+                    switch (currentForm) {
+                      case 0:
+                        form = _formKey.currentState;
+                        if (form.validate()) {
+                          form.save();
 
-                        currentForm = 1;
-                        percentageComplete = 25;
-                      } else {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          content:
-                              Text("Make sure all required fields are filled"),
-                          duration: Duration(seconds: 3),
-                        ));
-                      }
-                      break;
-                    case 1:
-                      form = _formKey2.currentState;
-                      if (form.validate()) {
-                        form.save();
-                        currentForm = 2;
-                        percentageComplete = 50;
-                      } else {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          content:
-                              Text("Make sure all required fields are filled"),
-                          duration: Duration(seconds: 3),
-                        ));
-                      }
-                      break;
-                    case 2:
-                      form = _formKey16.currentState;
+                          currentForm = 1;
+                          percentageComplete = 25;
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                                "Make sure all required fields are filled"),
+                            duration: Duration(seconds: 3),
+                          ));
+                        }
+                        break;
+                      case 1:
+                        form = _formKey2.currentState;
+                        if (form.validate()) {
+                          form.save();
+                          currentForm = 2;
+                          percentageComplete = 50;
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                                "Make sure all required fields are filled"),
+                            duration: Duration(seconds: 3),
+                          ));
+                        }
+                        break;
+                      case 2:
+                        form = _formKey16.currentState;
 
-                      if (form.validate()) {
-                        form.save();
-                        currentForm = 3;
-                        percentageComplete = 100;
-                      } else {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          content:
-                              Text("Make sure all required fields are filled"),
-                          duration: Duration(seconds: 3),
-                        ));
-                      }
-                      break;
-                    // case 16:
-                    //   var uploadData = {
-                    //     "loanNumber": loansNumber,
-                    //     "loanPurpose": selectedCategory,
-                    //     "whereTaken": selectedCategory2,
-                    //     "longAgoTaken": paymentPeriodInMonths,
-                    //     "whoTookLoan": loanTaker,
-                    //     "bankAccount": hasBankAccount,
-                    //     "card": hasCard,
-                    //     "insurance": hasInsurance,
-                    //     "totalLoan": totalLoan,
-                    //     "noLoanQuery": selectedCategory3,
-                    //     "business": hasCard,
-                    //     "type": selectedCategory4,
-                    //     "operationTime": operationTime,
-                    //     "industry": selectedCategory5,
-                    //     "businessTypeOfLoan": selectedCategory6,
-                    //     "collateralType": selectedCategory7,
-                    //   };
+                        if (form.validate()) {
+                          form.save();
+                          currentForm = 3;
+                          percentageComplete = 100;
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                                "Make sure all required fields are filled"),
+                            duration: Duration(seconds: 3),
+                          ));
+                        }
+                        break;
+                      // case 16:
+                      //   var uploadData = {
+                      //     "loanNumber": loansNumber,
+                      //     "loanPurpose": selectedCategory,
+                      //     "whereTaken": selectedCategory2,
+                      //     "longAgoTaken": paymentPeriodInMonths,
+                      //     "whoTookLoan": loanTaker,
+                      //     "bankAccount": hasBankAccount,
+                      //     "card": hasCard,
+                      //     "insurance": hasInsurance,
+                      //     "totalLoan": totalLoan,
+                      //     "noLoanQuery": selectedCategory3,
+                      //     "business": hasCard,
+                      //     "type": selectedCategory4,
+                      //     "operationTime": operationTime,
+                      //     "industry": selectedCategory5,
+                      //     "businessTypeOfLoan": selectedCategory6,
+                      //     "collateralType": selectedCategory7,
+                      //   };
 
-                    //   sheiqdata(uploadData).then((value) => {
-                    //         if (value["status"] == 200)
-                    //           {Navigator.pop(context)}
-                    //         else
-                    //           {
-                    //             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    //               behavior: SnackBarBehavior.floating,
-                    //               content: Text(
-                    //                   "An error occurred while doing the operation,make sure you have internet access"),
-                    //               duration: Duration(seconds: 3),
-                    //             ))
-                    //           }
-                    //       });
+                      //   sheiqdata(uploadData).then((value) => {
+                      //         if (value["status"] == 200)
+                      //           {Navigator.pop(context)}
+                      //         else
+                      //           {
+                      //             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //               behavior: SnackBarBehavior.floating,
+                      //               content: Text(
+                      //                   "An error occurred while doing the operation,make sure you have internet access"),
+                      //               duration: Duration(seconds: 3),
+                      //             ))
+                      //           }
+                      //       });
 
-                  }
-                });
-              },
-              icon: Icon(currentForm == 3
-                  ? Icons.upload_rounded
-                  : Icons.arrow_forward),
-              label: Text(currentForm == 3 ? "finish" : "next"),
+                    }
+                  });
+                },
+                icon: Icon(currentForm == 3
+                    ? Icons.upload_rounded
+                    : Icons.arrow_forward),
+                label: Text(currentForm == 3 ? "finish" : "next"),
+              ),
             ),
-          ),
-        ]),
+          ],
+        ),
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -487,7 +475,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                                   ),
                                   TextFormField(
                                     validator: (value) => value!.isEmpty
-                                        ? "This field is required"
+                                        ? "* This field is required"
                                         : null,
                                     onSaved: (value) => {},
                                     keyboardType: TextInputType.name,
