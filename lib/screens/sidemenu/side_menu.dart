@@ -93,7 +93,7 @@ class _SideMenuState extends State<SideMenu> {
             dense: true,
             visualDensity: VisualDensity(vertical: -4),
             leading: Icon(
-              Icons.logout,
+              Icons.power_settings_new,
               color: Colors.black,
             ),
             title: Text('Logout'),
