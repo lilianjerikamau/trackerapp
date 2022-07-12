@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:trackerapp/screens/create_job_card.dart';
+import 'package:trackerapp/screens/create_tracker.dart';
 import 'package:trackerapp/screens/home.dart';
 import 'package:trackerapp/screens/login_screen.dart';
 import 'package:trackerapp/screens/profile.dart';
@@ -20,13 +22,13 @@ class TabNavigationItem {
           title: Text("Home"),
         ),
         TabNavigationItem(
-          page: Search(),
+          page: CreateTracker(),
           icon: Icon(Icons.track_changes_rounded),
           title: Text("Install Tracker"),
         ),
         TabNavigationItem(
-          page: LoginPage(),
-          icon: Icon(Icons.login_rounded),
+          page: CreateJobCard(),
+          icon: Icon(Icons.work),
           title: Text("Login"),
         ),
       ];

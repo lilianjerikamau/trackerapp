@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:trackerapp/widgets/validators.dart';
 // import 'package:seedfund/constants/constants.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,7 +24,10 @@ class _CreateJobCard extends State<CreateJobCard> {
   TextEditingController dateinput = TextEditingController();
   @override
   void initState() {
-    dateinput.text = ""; //set the initial value of text field
+    DateTime dateTime = DateTime.now();
+    String YYYY_MM_DD = dateTime.toIso8601String().split('T').first;
+    dateinput.text = YYYY_MM_DD; //set the initial value of text field
+
     super.initState();
   }
 
@@ -120,99 +124,183 @@ class _CreateJobCard extends State<CreateJobCard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          onPressed: () {
-            print("the current form is $currentForm");
-            setState(() {
-              var form;
-              switch (currentForm) {
-                case 0:
-                  form = _formKey.currentState;
-                  if (form.validate()) {
-                    form.save();
+        floatingActionButton:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
+                Widget>[
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: FloatingActionButton.extended(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              onPressed: () {
+                print("the current form is $currentForm");
+                setState(() {
+                  var form;
+                  switch (currentForm) {
+                    case 0:
+                      form = _formKey.currentState;
+                      if (currentForm == 0) {
+                        currentForm = 0;
+                        percentageComplete = 25;
+                      } else {
+                        // ScaffoldMessenger.of(context)
+                        //     .showSnackBar(const SnackBar(
+                        //   behavior: SnackBarBehavior.floating,
+                        //   content: Text(
+                        //       "Make sure all required fields are filled"),
+                        //   duration: Duration(seconds: 3),
+                        // ));
+                      }
+                      break;
+                    case 1:
+                      form = _formKey2.currentState;
+                      if (currentForm == 1) {
+                        currentForm = 0;
+                        percentageComplete = 50;
+                      } else {
+                        // ScaffoldMessenger.of(context)
+                        //     .showSnackBar(const SnackBar(
+                        //   behavior: SnackBarBehavior.floating,
+                        //   content: Text(
+                        //       "Make sure all required fields are filled"),
+                        //   duration: Duration(seconds: 3),
+                        // ));
+                      }
+                      break;
+                    case 2:
+                      form = _formKey3.currentState;
 
-                    currentForm = 1;
-                    percentageComplete = 25;
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      content: Text("Make sure all required fields are filled"),
-                      duration: Duration(seconds: 3),
-                    ));
+                      if (currentForm == 2) {
+                        currentForm = 1;
+                        percentageComplete = 75;
+                      } else {
+                        // ScaffoldMessenger.of(context)
+                        //     .showSnackBar(const SnackBar(
+                        //   behavior: SnackBarBehavior.floating,
+                        //   content: Text(
+                        //       "Make sure all required fields are filled"),
+                        //   duration: Duration(seconds: 3),
+                        // ));
+                      }
+                      break;
                   }
-                  break;
-                case 1:
-                  form = _formKey2.currentState;
-                  if (form.validate()) {
-                    form.save();
-                    currentForm = 2;
-                    percentageComplete = 50;
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      content: Text("Make sure all required fields are filled"),
-                      duration: Duration(seconds: 3),
-                    ));
+                });
+              },
+              icon: Icon(
+                currentForm == 0 || currentForm == 3
+                    ? Icons.error
+                    : Icons.arrow_back,
+                color: Colors.redAccent,
+              ),
+              label: Text(
+                  currentForm == 0 || currentForm == 3 ? "Invalid" : "Prev"),
+              heroTag: null,
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton.extended(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              onPressed: () {
+                print("the current form is $currentForm");
+                setState(() {
+                  var form;
+                  switch (currentForm) {
+                    case 0:
+                      form = _formKey.currentState;
+                      if (form.validate()) {
+                        form.save();
+
+                        currentForm = 1;
+                        percentageComplete = 25;
+                      } else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          content:
+                              Text("Make sure all required fields are filled"),
+                          duration: Duration(seconds: 3),
+                        ));
+                      }
+                      break;
+                    case 1:
+                      form = _formKey2.currentState;
+                      if (form.validate()) {
+                        form.save();
+                        currentForm = 2;
+                        percentageComplete = 50;
+                      } else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          content:
+                              Text("Make sure all required fields are filled"),
+                          duration: Duration(seconds: 3),
+                        ));
+                      }
+                      break;
+                    case 2:
+                      form = _formKey16.currentState;
+
+                      if (form.validate()) {
+                        form.save();
+                        currentForm = 3;
+                        percentageComplete = 100;
+                      } else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          content:
+                              Text("Make sure all required fields are filled"),
+                          duration: Duration(seconds: 3),
+                        ));
+                      }
+                      break;
+                    // case 16:
+                    //   var uploadData = {
+                    //     "loanNumber": loansNumber,
+                    //     "loanPurpose": selectedCategory,
+                    //     "whereTaken": selectedCategory2,
+                    //     "longAgoTaken": paymentPeriodInMonths,
+                    //     "whoTookLoan": loanTaker,
+                    //     "bankAccount": hasBankAccount,
+                    //     "card": hasCard,
+                    //     "insurance": hasInsurance,
+                    //     "totalLoan": totalLoan,
+                    //     "noLoanQuery": selectedCategory3,
+                    //     "business": hasCard,
+                    //     "type": selectedCategory4,
+                    //     "operationTime": operationTime,
+                    //     "industry": selectedCategory5,
+                    //     "businessTypeOfLoan": selectedCategory6,
+                    //     "collateralType": selectedCategory7,
+                    //   };
+
+                    //   sheiqdata(uploadData).then((value) => {
+                    //         if (value["status"] == 200)
+                    //           {Navigator.pop(context)}
+                    //         else
+                    //           {
+                    //             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    //               behavior: SnackBarBehavior.floating,
+                    //               content: Text(
+                    //                   "An error occurred while doing the operation,make sure you have internet access"),
+                    //               duration: Duration(seconds: 3),
+                    //             ))
+                    //           }
+                    //       });
+
                   }
-                  break;
-                case 2:
-                  form = _formKey16.currentState;
-
-                  if (form.validate()) {
-                    form.save();
-                    currentForm = 3;
-                    percentageComplete = 100;
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      content: Text("Make sure all required fields are filled"),
-                      duration: Duration(seconds: 3),
-                    ));
-                  }
-                  break;
-                // case 16:
-                //   var uploadData = {
-                //     "loanNumber": loansNumber,
-                //     "loanPurpose": selectedCategory,
-                //     "whereTaken": selectedCategory2,
-                //     "longAgoTaken": paymentPeriodInMonths,
-                //     "whoTookLoan": loanTaker,
-                //     "bankAccount": hasBankAccount,
-                //     "card": hasCard,
-                //     "insurance": hasInsurance,
-                //     "totalLoan": totalLoan,
-                //     "noLoanQuery": selectedCategory3,
-                //     "business": hasCard,
-                //     "type": selectedCategory4,
-                //     "operationTime": operationTime,
-                //     "industry": selectedCategory5,
-                //     "businessTypeOfLoan": selectedCategory6,
-                //     "collateralType": selectedCategory7,
-                //   };
-
-                //   sheiqdata(uploadData).then((value) => {
-                //         if (value["status"] == 200)
-                //           {Navigator.pop(context)}
-                //         else
-                //           {
-                //             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                //               behavior: SnackBarBehavior.floating,
-                //               content: Text(
-                //                   "An error occurred while doing the operation,make sure you have internet access"),
-                //               duration: Duration(seconds: 3),
-                //             ))
-                //           }
-                //       });
-
-              }
-            });
-          },
-          icon: Icon(
-              currentForm == 3 ? Icons.upload_rounded : Icons.arrow_forward),
-          label: Text(currentForm == 3 ? "finish" : "next"),
-        ),
+                });
+              },
+              icon: Icon(currentForm == 3
+                  ? Icons.upload_rounded
+                  : Icons.arrow_forward),
+              label: Text(currentForm == 3 ? "finish" : "next"),
+            ),
+          ),
+        ]),
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -248,7 +336,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                             children: <Widget>[
                               const Text(
                                 'Create Job Card',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 20.0,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
@@ -370,8 +458,8 @@ class _CreateJobCard extends State<CreateJobCard> {
                             margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                             elevation: 0,
                             shape: const RoundedRectangleBorder(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10.0))),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, top: 30, bottom: 30),
@@ -406,7 +494,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                                     decoration: const InputDecoration(
                                         hintText: "Enter client's name"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -429,16 +517,14 @@ class _CreateJobCard extends State<CreateJobCard> {
                                     ],
                                   ),
                                   TextFormField(
-                                    validator: (value) => value!.isEmpty
-                                        ? "This field is required"
-                                        : null,
+                                    validator: phoneValidator,
                                     onSaved: (value) => {},
                                     keyboardType: TextInputType.phone,
                                     decoration: const InputDecoration(
                                         hintText:
                                             "Enter client's phone number"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -461,15 +547,13 @@ class _CreateJobCard extends State<CreateJobCard> {
                                     ],
                                   ),
                                   TextFormField(
-                                    validator: (value) => value!.isEmpty
-                                        ? "This field is required"
-                                        : null,
+                                    validator: emailValidator,
                                     onSaved: (value) => {},
                                     keyboardType: TextInputType.emailAddress,
                                     decoration: const InputDecoration(
                                         hintText: "Enter client's email"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -493,7 +577,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                                   ),
                                   DropdownButtonFormField(
                                     // value: _selectedValue,
-                                    hint: Text(
+                                    hint: const Text(
                                       "Enter Client's Account Type",
                                     ),
                                     isExpanded: true,
@@ -569,8 +653,8 @@ class _CreateJobCard extends State<CreateJobCard> {
                             margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                             elevation: 0,
                             shape: const RoundedRectangleBorder(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10.0))),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, top: 30, bottom: 30),
@@ -605,7 +689,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                                     decoration: const InputDecoration(
                                         hintText: "Enter supplier's name"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -628,16 +712,14 @@ class _CreateJobCard extends State<CreateJobCard> {
                                     ],
                                   ),
                                   TextFormField(
-                                    validator: (value) => value!.isEmpty
-                                        ? "This field is required"
-                                        : null,
+                                    validator: phoneValidator,
                                     onSaved: (value) => {},
                                     keyboardType: TextInputType.phone,
                                     decoration: const InputDecoration(
                                         hintText:
                                             "Enter supplier's phone number"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -714,8 +796,8 @@ class _CreateJobCard extends State<CreateJobCard> {
                             margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                             elevation: 0,
                             shape: const RoundedRectangleBorder(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10.0))),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, top: 30, bottom: 30),
@@ -751,7 +833,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                                         hintText:
                                             "Enter Vehicle Registration No"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -778,42 +860,11 @@ class _CreateJobCard extends State<CreateJobCard> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.name,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Vehicle Model"),
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Model",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2!
-                                            .copyWith(),
-                                      ),
-                                      Text(
-                                        "*",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2!
-                                            .copyWith(color: Colors.red),
-                                      )
-                                    ],
-                                  ),
-                                  TextFormField(
-                                    validator: (value) => value!.isEmpty
-                                        ? "This field is required"
-                                        : null,
-                                    onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
-                                    decoration: const InputDecoration(
-                                        hintText: "Enter Vehicle Model"),
-                                  ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -840,11 +891,11 @@ class _CreateJobCard extends State<CreateJobCard> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.name,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Vehicle Type"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -871,11 +922,11 @@ class _CreateJobCard extends State<CreateJobCard> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Vehicle Chassis No"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -902,11 +953,11 @@ class _CreateJobCard extends State<CreateJobCard> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Vehicle Engine No"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -933,11 +984,11 @@ class _CreateJobCard extends State<CreateJobCard> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Vehicle Color"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -964,11 +1015,11 @@ class _CreateJobCard extends State<CreateJobCard> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Vehicle Location"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -995,12 +1046,12 @@ class _CreateJobCard extends State<CreateJobCard> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.number,
                                     decoration: const InputDecoration(
                                         hintText:
                                             "Enter Vehicle No of Trackers"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1024,7 +1075,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                                   ),
                                   DropdownButtonFormField(
                                     // value: _selectedValue,
-                                    hint: Text(
+                                    hint: const Text(
                                       "Enter Preferred Installer",
                                     ),
                                     isExpanded: true,
@@ -1054,7 +1105,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                                       );
                                     }).toList(),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1078,7 +1129,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                                   ),
                                   DropdownButtonFormField(
                                     // value: _selectedValue,
-                                    hint: Text(
+                                    hint: const Text(
                                       "Enter Sales Person",
                                     ),
                                     isExpanded: true,
@@ -1108,7 +1159,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                                       );
                                     }).toList(),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1132,7 +1183,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                                   ),
                                   DropdownButtonFormField(
                                     // value: _selectedValue,
-                                    hint: Text(
+                                    hint: const Text(
                                       "Enter Installation Branch",
                                     ),
                                     isExpanded: true,
@@ -1162,28 +1213,9 @@ class _CreateJobCard extends State<CreateJobCard> {
                                       );
                                     }).toList(),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
-                                  // Row(
-                                  //   children: [
-                                  //     Text(
-                                  //       "Install Fuel Sensor",
-                                  //       overflow: TextOverflow.ellipsis,
-                                  //       style: Theme.of(context)
-                                  //           .textTheme
-                                  //           .subtitle2!
-                                  //           .copyWith(),
-                                  //     ),
-                                  //     Text(
-                                  //       "*",
-                                  //       style: Theme.of(context)
-                                  //           .textTheme
-                                  //           .subtitle2!
-                                  //           .copyWith(color: Colors.red),
-                                  //     ),
-                                  //   ],
-                                  // ),
                                   CheckboxListTile(
                                     controlAffinity:
                                         ListTileControlAffinity.trailing,
@@ -1207,13 +1239,11 @@ class _CreateJobCard extends State<CreateJobCard> {
                                     controller:
                                         dateinput, //editing controller of this TextField
                                     decoration: const InputDecoration(
-                                        icon: Icon(
-                                          Icons.calendar_today,
-                                          color: Colors.red,
-                                        ), //icon of text field
-                                        labelText:
-                                            "Enter Date" //label text of field
-                                        ),
+                                      icon: Icon(
+                                        Icons.calendar_today,
+                                        color: Colors.red,
+                                      ), //icon of text field
+                                    ),
                                     readOnly:
                                         true, //set it true, so that user will not able to edit text
                                     onTap: () async {
@@ -1280,7 +1310,5 @@ class _CreateJobCard extends State<CreateJobCard> {
             ),
           ),
         ));
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }

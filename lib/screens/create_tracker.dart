@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:trackerapp/widgets/validators.dart';
 // import 'package:seedfund/constants/constants.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,7 +24,9 @@ class _CreateTracker extends State<CreateTracker> {
   TextEditingController dateinput = TextEditingController();
   @override
   void initState() {
-    dateinput.text = ""; //set the initial value of text field
+    DateTime dateTime = DateTime.now();
+    String YYYY_MM_DD = dateTime.toIso8601String().split('T').first;
+    dateinput.text = YYYY_MM_DD; //set the initial value of text field
     super.initState();
   }
 
@@ -32,50 +35,52 @@ class _CreateTracker extends State<CreateTracker> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   final _formKey3 = GlobalKey<FormState>();
-  final _formKey4 = GlobalKey<FormState>();
-  final _formKey5 = GlobalKey<FormState>();
-  final _formKey6 = GlobalKey<FormState>();
-  final _formKey7 = GlobalKey<FormState>();
-  final _formKey8 = GlobalKey<FormState>();
-  final _formKey9 = GlobalKey<FormState>();
-  final _formKey10 = GlobalKey<FormState>();
-  final _formKey11 = GlobalKey<FormState>();
-  final _formKey12 = GlobalKey<FormState>();
-  final _formKey13 = GlobalKey<FormState>();
-  final _formKey14 = GlobalKey<FormState>();
-  final _formKey15 = GlobalKey<FormState>();
+
   final _formKey16 = GlobalKey<FormState>();
   bool isLoading = false;
-  bool isOtherEnabled = false;
-  bool isOtherEnabled2 = false;
-  bool isOtherEnabled3 = false;
-  int hasBankAccount = 1;
+
   bool isOther5 = false;
   bool isOther6 = false;
-  bool isOther7 = false;
-  late String otherValue6;
-  late String otherValue7;
 
   int currentForm = 0;
-  int frequencyOfTransaction = 0;
-  int hasInsurance = 1;
-  int hasCard = 1;
-  int doYouOwnaBusiness = 1;
+
   int percentageComplete = 0;
 
-  late int totalLoan;
-  late String frequencyOfTransactionText;
-  late String operationTime;
+  bool selectedCategory = true;
+  bool selectedCategory2 = true;
+  bool selectedCategory3 = true;
+  bool selectedCategory4 = true;
+  bool selectedCategory5 = true;
+  bool selectedCategory6 = true;
+  bool selectedCategory7 = true;
+  bool selectedCategory8 = true;
+  bool selectedCategory9 = true;
+  bool selectedCategory10 = true;
+  bool selectedCategory11 = true;
+  bool selectedCategory12 = true;
+  bool selectedCategory13 = true;
+  bool selectedCategory14 = true;
+  bool selectedCategory15 = true;
+  bool selectedCategory16 = true;
+  bool selectedCategory17 = true;
+  bool selectedCategory18 = true;
+  bool selectedCategory19 = true;
+  bool selectedCategory20 = true;
+  bool selectedCategory21 = true;
+  bool selectedCategory22 = true;
+  bool selectedCategory23 = true;
+  bool selectedCategory24 = true;
+  bool selectedCategory25 = true;
+  bool selectedCategory26 = true;
+  bool selectedCategory27 = true;
+  bool selectedCategory28 = true;
+  bool selectedCategory29 = true;
+  bool selectedCategory30 = true;
+  bool selectedCategory31 = true;
+  bool selectedCategory32 = true;
+  bool selectedCategory33 = true;
+  bool selectedCategory34 = true;
 
-  late String paymentPeriodInMonths, loanTaker;
-  List<String> selectedCategory = [];
-  List<String> selectedCategory2 = [];
-  List<String> selectedCategory3 = [];
-  List<String> selectedCategory4 = [];
-  List<String> selectedCategory5 = [];
-  List<String> selectedCategory6 = [];
-  List<String> selectedCategory7 = [];
-  List<Widget> widgets = [];
   // Future<Map<String, dynamic>> sheiqdata(Map<String, dynamic> body) async {
   //   final prefs = await SharedPreferences.getInstance();
 
@@ -120,113 +125,217 @@ class _CreateTracker extends State<CreateTracker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          onPressed: () {
-            print("the current form is $currentForm");
-            setState(() {
-              var form;
-              switch (currentForm) {
-                case 0:
-                  form = _formKey.currentState;
-                  if (form.validate()) {
-                    form.save();
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: FloatingActionButton.extended(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                onPressed: () {
+                  print("the current form is $currentForm");
+                  setState(() {
+                    var form;
+                    switch (currentForm) {
+                      case 0:
+                        form = _formKey.currentState;
+                        if (currentForm == 0) {
+                          currentForm = 0;
+                          percentageComplete = 25;
+                        } else {
+                          // ScaffoldMessenger.of(context)
+                          //     .showSnackBar(const SnackBar(
+                          //   behavior: SnackBarBehavior.floating,
+                          //   content: Text(
+                          //       "Make sure all required fields are filled"),
+                          //   duration: Duration(seconds: 3),
+                          // ));
+                        }
+                        break;
+                      case 1:
+                        form = _formKey2.currentState;
+                        if (currentForm == 1) {
+                          currentForm = 0;
+                          percentageComplete = 50;
+                        } else {
+                          // ScaffoldMessenger.of(context)
+                          //     .showSnackBar(const SnackBar(
+                          //   behavior: SnackBarBehavior.floating,
+                          //   content: Text(
+                          //       "Make sure all required fields are filled"),
+                          //   duration: Duration(seconds: 3),
+                          // ));
+                        }
+                        break;
+                      case 2:
+                        form = _formKey3.currentState;
 
-                    currentForm = 1;
-                    percentageComplete = 25;
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      content: Text("Make sure all required fields are filled"),
-                      duration: Duration(seconds: 3),
-                    ));
-                  }
-                  break;
-                case 1:
-                  form = _formKey2.currentState;
-                  if (form.validate()) {
-                    form.save();
-                    currentForm = 2;
-                    percentageComplete = 50;
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      content: Text("Make sure all required fields are filled"),
-                      duration: Duration(seconds: 3),
-                    ));
-                  }
-                  break;
-                case 2:
-                  form = _formKey3.currentState;
+                        if (currentForm == 2) {
+                          currentForm = 1;
+                          percentageComplete = 75;
+                        } else {
+                          // ScaffoldMessenger.of(context)
+                          //     .showSnackBar(const SnackBar(
+                          //   behavior: SnackBarBehavior.floating,
+                          //   content: Text(
+                          //       "Make sure all required fields are filled"),
+                          //   duration: Duration(seconds: 3),
+                          // ));
+                        }
+                        break;
+                      case 3:
+                        form = _formKey16.currentState;
 
-                  if (form.validate()) {
-                    form.save();
-                    currentForm = 3;
-                    percentageComplete = 75;
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      content: Text("Make sure all required fields are filled"),
-                      duration: Duration(seconds: 3),
-                    ));
-                  }
-                  break;
-                case 3:
-                  form = _formKey16.currentState;
+                        if (currentForm == 3) {
+                          currentForm = 2;
+                          percentageComplete = 100;
+                        } else {
+                          // ScaffoldMessenger.of(context)
+                          //     .showSnackBar(const SnackBar(
+                          //   behavior: SnackBarBehavior.floating,
+                          //   content: Text(
+                          //       "Make sure all required fields are filled"),
+                          //   duration: Duration(seconds: 3),
+                          // ));
+                        }
+                        break;
+                    }
+                  });
+                },
+                icon: Icon(
+                  currentForm == 0 || currentForm == 4
+                      ? Icons.error
+                      : Icons.arrow_back,
+                  color: Colors.redAccent,
+                ),
+                label: Text(
+                    currentForm == 0 || currentForm == 4 ? "Invalid" : "Prev"),
+                heroTag: null,
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: FloatingActionButton.extended(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                onPressed: () {
+                  print("the current form is $currentForm");
+                  setState(() {
+                    var form;
+                    switch (currentForm) {
+                      case 0:
+                        form = _formKey.currentState;
+                        if (form.validate()) {
+                          form.save();
 
-                  if (form.validate()) {
-                    form.save();
-                    currentForm = 4;
-                    percentageComplete = 100;
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      content: Text("Make sure all required fields are filled"),
-                      duration: Duration(seconds: 3),
-                    ));
-                  }
-                  break;
-                // case 16:
-                //   var uploadData = {
-                //     "loanNumber": loansNumber,
-                //     "loanPurpose": selectedCategory,
-                //     "whereTaken": selectedCategory2,
-                //     "longAgoTaken": paymentPeriodInMonths,
-                //     "whoTookLoan": loanTaker,
-                //     "bankAccount": hasBankAccount,
-                //     "card": hasCard,
-                //     "insurance": hasInsurance,
-                //     "totalLoan": totalLoan,
-                //     "noLoanQuery": selectedCategory3,
-                //     "business": hasCard,
-                //     "type": selectedCategory4,
-                //     "operationTime": operationTime,
-                //     "industry": selectedCategory5,
-                //     "businessTypeOfLoan": selectedCategory6,
-                //     "collateralType": selectedCategory7,
-                //   };
+                          currentForm = 1;
+                          percentageComplete = 25;
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                                "Make sure all required fields are filled"),
+                            duration: Duration(seconds: 3),
+                          ));
+                        }
+                        break;
+                      case 1:
+                        form = _formKey2.currentState;
+                        if (form.validate()) {
+                          form.save();
+                          currentForm = 2;
+                          percentageComplete = 75;
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                                "Make sure all required fields are filled"),
+                            duration: Duration(seconds: 3),
+                          ));
+                        }
+                        break;
+                      case 2:
+                        form = _formKey3.currentState;
 
-                //   sheiqdata(uploadData).then((value) => {
-                //         if (value["status"] == 200)
-                //           {Navigator.pop(context)}
-                //         else
-                //           {
-                //             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                //               behavior: SnackBarBehavior.floating,
-                //               content: Text(
-                //                   "An error occurred while doing the operation,make sure you have internet access"),
-                //               duration: Duration(seconds: 3),
-                //             ))
-                //           }
-                //       });
+                        if (form.validate()) {
+                          form.save();
+                          currentForm = 3;
+                          percentageComplete = 50;
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                                "Make sure all required fields are filled"),
+                            duration: Duration(seconds: 3),
+                          ));
+                        }
+                        break;
+                      case 3:
+                        form = _formKey16.currentState;
 
-              }
-            });
-          },
-          icon: Icon(
-              currentForm == 4 ? Icons.upload_rounded : Icons.arrow_forward),
-          label: Text(currentForm == 4 ? "finish" : "next"),
+                        if (form.validate()) {
+                          form.save();
+                          currentForm = 4;
+                          percentageComplete = 100;
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                                "Make sure all required fields are filled"),
+                            duration: Duration(seconds: 3),
+                          ));
+                        }
+                        break;
+                      // case 16:
+                      //   var uploadData = {
+                      //     "loanNumber": loansNumber,
+                      //     "loanPurpose": selectedCategory,
+                      //     "whereTaken": selectedCategory2,
+                      //     "longAgoTaken": paymentPeriodInMonths,
+                      //     "whoTookLoan": loanTaker,
+                      //     "bankAccount": hasBankAccount,
+                      //     "card": hasCard,
+                      //     "insurance": hasInsurance,
+                      //     "totalLoan": totalLoan,
+                      //     "noLoanQuery": selectedCategory3,
+                      //     "business": hasCard,
+                      //     "type": selectedCategory4,
+                      //     "operationTime": operationTime,
+                      //     "industry": selectedCategory5,
+                      //     "businessTypeOfLoan": selectedCategory6,
+                      //     "collateralType": selectedCategory7,
+                      //   };
+
+                      //   sheiqdata(uploadData).then((value) => {
+                      //         if (value["status"] == 200)
+                      //           {Navigator.pop(context)}
+                      //         else
+                      //           {
+                      //             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //               behavior: SnackBarBehavior.floating,
+                      //               content: Text(
+                      //                   "An error occurred while doing the operation,make sure you have internet access"),
+                      //               duration: Duration(seconds: 3),
+                      //             ))
+                      //           }
+                      //       });
+
+                    }
+                  });
+                },
+                icon: Icon(currentForm == 4
+                    ? Icons.upload_rounded
+                    : Icons.arrow_forward),
+                label: Text(currentForm == 4 ? "finish" : "Next"),
+                heroTag: null,
+              ),
+            ),
+          ],
         ),
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -263,7 +372,7 @@ class _CreateTracker extends State<CreateTracker> {
                             children: <Widget>[
                               const Text(
                                 'Create Tracker',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 20.0,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
@@ -289,7 +398,7 @@ class _CreateTracker extends State<CreateTracker> {
                       height: 140.0,
                       child: AspectRatio(
                         aspectRatio: 300 / 145,
-                        child: Container(
+                        child: SizedBox(
                           width: size,
                           height: size,
                           child: Stack(
@@ -385,8 +494,8 @@ class _CreateTracker extends State<CreateTracker> {
                             margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                             elevation: 0,
                             shape: const RoundedRectangleBorder(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10.0))),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, top: 30, bottom: 30),
@@ -421,7 +530,7 @@ class _CreateTracker extends State<CreateTracker> {
                                     decoration: const InputDecoration(
                                         hintText: "Enter client's name"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -444,16 +553,14 @@ class _CreateTracker extends State<CreateTracker> {
                                     ],
                                   ),
                                   TextFormField(
-                                    validator: (value) => value!.isEmpty
-                                        ? "This field is required"
-                                        : null,
+                                    validator: phoneValidator,
                                     onSaved: (value) => {},
                                     keyboardType: TextInputType.phone,
                                     decoration: const InputDecoration(
                                         hintText:
                                             "Enter client's phone number"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -476,15 +583,13 @@ class _CreateTracker extends State<CreateTracker> {
                                     ],
                                   ),
                                   TextFormField(
-                                    validator: (value) => value!.isEmpty
-                                        ? "This field is required"
-                                        : null,
+                                    validator: emailValidator,
                                     onSaved: (value) => {},
                                     keyboardType: TextInputType.emailAddress,
                                     decoration: const InputDecoration(
                                         hintText: "Enter client's email"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -508,7 +613,7 @@ class _CreateTracker extends State<CreateTracker> {
                                   ),
                                   DropdownButtonFormField(
                                     // value: _selectedValue,
-                                    hint: Text(
+                                    hint: const Text(
                                       "Enter Client's Account Type",
                                     ),
                                     isExpanded: true,
@@ -543,6 +648,7 @@ class _CreateTracker extends State<CreateTracker> {
                             ))
                       ])),
                   Form(
+                      autovalidateMode: AutovalidateMode.always,
                       key: _formKey2,
                       child: Column(children: <Widget>[
                         Card(
@@ -584,8 +690,8 @@ class _CreateTracker extends State<CreateTracker> {
                             margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                             elevation: 0,
                             shape: const RoundedRectangleBorder(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10.0))),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, top: 30, bottom: 30),
@@ -620,7 +726,7 @@ class _CreateTracker extends State<CreateTracker> {
                                     decoration: const InputDecoration(
                                         hintText: "Enter supplier's name"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -643,16 +749,14 @@ class _CreateTracker extends State<CreateTracker> {
                                     ],
                                   ),
                                   TextFormField(
-                                    validator: (value) => value!.isEmpty
-                                        ? "This field is required"
-                                        : null,
+                                    validator: phoneValidator,
                                     onSaved: (value) => {},
                                     keyboardType: TextInputType.phone,
                                     decoration: const InputDecoration(
                                         hintText:
                                             "Enter supplier's phone number"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -679,7 +783,7 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter commission amount"),
                                   ),
@@ -688,6 +792,7 @@ class _CreateTracker extends State<CreateTracker> {
                             ))
                       ])),
                   Form(
+                      autovalidateMode: AutovalidateMode.always,
                       key: _formKey3,
                       child: Column(children: <Widget>[
                         Card(
@@ -729,8 +834,8 @@ class _CreateTracker extends State<CreateTracker> {
                             margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                             elevation: 0,
                             shape: const RoundedRectangleBorder(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10.0))),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, top: 30, bottom: 30),
@@ -740,7 +845,7 @@ class _CreateTracker extends State<CreateTracker> {
                                   Row(
                                     children: [
                                       Text(
-                                        "Registration",
+                                        "Registration No",
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme
@@ -761,12 +866,12 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.name,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText:
                                             "Enter Vehicle Registration No"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -793,11 +898,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Vehicle Model"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -824,11 +929,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Vehicle Type"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -855,11 +960,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Vehicle Chassis No"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -886,11 +991,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Vehicle Engine No"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -917,11 +1022,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Vehicle Color"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -948,11 +1053,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Vehicle Location"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -979,11 +1084,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Region"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1007,7 +1112,7 @@ class _CreateTracker extends State<CreateTracker> {
                                   ),
                                   DropdownButtonFormField(
                                     // value: _selectedValue,
-                                    hint: Text(
+                                    hint: const Text(
                                       "Installer",
                                     ),
                                     isExpanded: true,
@@ -1037,7 +1142,7 @@ class _CreateTracker extends State<CreateTracker> {
                                       );
                                     }).toList(),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1061,7 +1166,7 @@ class _CreateTracker extends State<CreateTracker> {
                                   ),
                                   DropdownButtonFormField(
                                     // value: _selectedValue,
-                                    hint: Text(
+                                    hint: const Text(
                                       "Enter Sales Person",
                                     ),
                                     isExpanded: true,
@@ -1091,7 +1196,7 @@ class _CreateTracker extends State<CreateTracker> {
                                       );
                                     }).toList(),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1115,7 +1220,7 @@ class _CreateTracker extends State<CreateTracker> {
                                   ),
                                   DropdownButtonFormField(
                                     // value: _selectedValue,
-                                    hint: Text(
+                                    hint: const Text(
                                       "Enter Installation Branch",
                                     ),
                                     isExpanded: true,
@@ -1145,12 +1250,12 @@ class _CreateTracker extends State<CreateTracker> {
                                       );
                                     }).toList(),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   DropdownButtonFormField(
                                     // value: _selectedValue,
-                                    hint: Text(
+                                    hint: const Text(
                                       "Tracker Type",
                                     ),
                                     isExpanded: true,
@@ -1180,7 +1285,7 @@ class _CreateTracker extends State<CreateTracker> {
                                       );
                                     }).toList(),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1207,7 +1312,7 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Tracker Location"),
                                   ),
@@ -1249,7 +1354,7 @@ class _CreateTracker extends State<CreateTracker> {
                                       });
                                     },
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1276,11 +1381,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter IMEI Service"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1307,11 +1412,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Backup1 IMEI Number"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1338,11 +1443,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Backup2 IMEI Number"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1369,11 +1474,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Device No"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1400,11 +1505,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Backup1 Device No"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1431,11 +1536,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Backup2 Device No"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1462,11 +1567,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Expiry(Months)"),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -1488,26 +1593,31 @@ class _CreateTracker extends State<CreateTracker> {
                                       )
                                     ],
                                   ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
                                   TextFormField(
                                     validator: (value) => value!.isEmpty
                                         ? "This field is required"
                                         : null,
                                     onSaved: (value) => {},
-                                    keyboardType: TextInputType.phone,
+                                    keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Remarks"),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
                                   ),
                                   TextField(
                                     controller:
                                         dateinput, //editing controller of this TextField
+
                                     decoration: const InputDecoration(
-                                        icon: Icon(
-                                          Icons.calendar_today,
-                                          color: Colors.red,
-                                        ), //icon of text field
-                                        labelText:
-                                            "Enter Date" //label text of field
-                                        ),
+                                      icon: Icon(
+                                        Icons.calendar_today,
+                                        color: Colors.red,
+                                      ), //icon of text field
+                                    ),
                                     readOnly:
                                         true, //set it true, so that user will not able to edit text
                                     onTap: () async {
@@ -1516,7 +1626,7 @@ class _CreateTracker extends State<CreateTracker> {
                                               context: context,
                                               initialDate: DateTime.now(),
                                               firstDate: DateTime(
-                                                  2000), //DateTime.now() - not to allow to choose before today.
+                                                  2020), //DateTime.now() - not to allow to choose before today.
                                               lastDate: DateTime(2101));
 
                                       if (pickedDate != null) {
@@ -1543,18 +1653,19 @@ class _CreateTracker extends State<CreateTracker> {
                             ))
                       ])),
                   Form(
+                    autovalidateMode: AutovalidateMode.always,
                     key: _formKey16,
                     child: Column(children: <Widget>[
                       Card(
-                          margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                           elevation: 0.9,
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                               side:
                                   BorderSide(color: Colors.redAccent, width: 1),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0))),
                           child: Padding(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                                 left: 0, right: 0, top: 30, bottom: 30),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1566,7 +1677,7 @@ class _CreateTracker extends State<CreateTracker> {
                                       .headline6!
                                       .copyWith(fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 Row(
@@ -1581,7 +1692,7 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 40,
                                     ),
                                     Flexible(
@@ -1593,7 +1704,7 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
@@ -1605,13 +1716,13 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                   ],
                                 ),
-                                Divider(color: Colors.red),
-                                SizedBox(
+                                const Divider(color: Colors.red),
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Row(
@@ -1626,37 +1737,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory,
+                                        value: selectedCategory,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory2,
+                                        value: selectedCategory2,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory2 = value!;
                                           });
                                         },
                                       ),
@@ -1675,37 +1780,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory3,
+                                        value: selectedCategory3,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory3 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory4,
+                                        value: selectedCategory4,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory4 = value!;
                                           });
                                         },
                                       ),
@@ -1724,37 +1823,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory5,
+                                        value: selectedCategory5,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory5 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory6,
+                                        value: selectedCategory6,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory6 = value!;
                                           });
                                         },
                                       ),
@@ -1765,15 +1858,15 @@ class _CreateTracker extends State<CreateTracker> {
                             ),
                           )),
                       Card(
-                          margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                           elevation: 0.9,
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                               side:
                                   BorderSide(color: Colors.redAccent, width: 1),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
+                              borderRadius: const BorderRadius.all(
+                                  const Radius.circular(10.0))),
                           child: Padding(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                                 left: 0, right: 0, top: 30, bottom: 30),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1785,7 +1878,7 @@ class _CreateTracker extends State<CreateTracker> {
                                       .headline6!
                                       .copyWith(fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 Row(
@@ -1800,7 +1893,7 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 40,
                                     ),
                                     Flexible(
@@ -1812,7 +1905,7 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
@@ -1824,13 +1917,13 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                   ],
                                 ),
-                                Divider(color: Colors.red),
-                                SizedBox(
+                                const Divider(color: Colors.red),
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Row(
@@ -1845,37 +1938,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory7,
+                                        value: selectedCategory7,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory7 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory8,
+                                        value: selectedCategory8,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory8 = value!;
                                           });
                                         },
                                       ),
@@ -1894,37 +1981,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory9,
+                                        value: selectedCategory9,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory9 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory10,
+                                        value: selectedCategory10,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory10 = value!;
                                           });
                                         },
                                       ),
@@ -1943,37 +2024,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory12,
+                                        value: selectedCategory12,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory12 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory13,
+                                        value: selectedCategory13,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory13 = value!;
                                           });
                                         },
                                       ),
@@ -1992,37 +2067,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory15,
+                                        value: selectedCategory15,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory15 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory16,
+                                        value: selectedCategory16,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory16 = value!;
                                           });
                                         },
                                       ),
@@ -2041,37 +2110,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory17,
+                                        value: selectedCategory17,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory17 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory18,
+                                        value: selectedCategory18,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory18 = value!;
                                           });
                                         },
                                       ),
@@ -2090,37 +2153,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory19,
+                                        value: selectedCategory19,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory19 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory20,
+                                        value: selectedCategory20,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory20 = value!;
                                           });
                                         },
                                       ),
@@ -2131,15 +2188,15 @@ class _CreateTracker extends State<CreateTracker> {
                             ),
                           )),
                       Card(
-                          margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                           elevation: 0.9,
-                          shape: RoundedRectangleBorder(
-                              side:
-                                  BorderSide(color: Colors.redAccent, width: 1),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
+                          shape: const RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  color: Colors.redAccent, width: 1),
+                              borderRadius: const BorderRadius.all(
+                                  Radius.circular(10.0))),
                           child: Padding(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                                 left: 0, right: 0, top: 30, bottom: 30),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -2151,7 +2208,7 @@ class _CreateTracker extends State<CreateTracker> {
                                       .headline6!
                                       .copyWith(fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 Row(
@@ -2166,7 +2223,7 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 40,
                                     ),
                                     Flexible(
@@ -2178,7 +2235,7 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
@@ -2190,13 +2247,13 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                   ],
                                 ),
-                                Divider(color: Colors.red),
-                                SizedBox(
+                                const Divider(color: Colors.red),
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Row(
@@ -2211,37 +2268,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory21,
+                                        value: selectedCategory21,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory21 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory22,
+                                        value: selectedCategory22,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory22 = value!;
                                           });
                                         },
                                       ),
@@ -2260,37 +2311,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory23,
+                                        value: selectedCategory23,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory23 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory24,
+                                        value: selectedCategory24,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory24 = value!;
                                           });
                                         },
                                       ),
@@ -2309,37 +2354,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        selected: selectedCategory25,
+                                        title: const Text('OK'),
+                                        value: selectedCategory25,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory25 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory26,
+                                        value: selectedCategory26,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory26 = value!;
                                           });
                                         },
                                       ),
@@ -2358,37 +2397,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory27,
+                                        value: selectedCategory27,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory27 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory28,
+                                        value: selectedCategory28,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory28 = value!;
                                           });
                                         },
                                       ),
@@ -2407,37 +2440,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory29,
+                                        value: selectedCategory29,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory29 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory30,
+                                        value: selectedCategory30,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory30 = value!;
                                           });
                                         },
                                       ),
@@ -2456,37 +2483,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory31,
+                                        value: selectedCategory31,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory31 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory32,
+                                        value: selectedCategory32,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory32 = value!;
                                           });
                                         },
                                       ),
@@ -2505,37 +2526,31 @@ class _CreateTracker extends State<CreateTracker> {
                                             .copyWith(),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 30,
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory33,
+                                        value: selectedCategory33,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory33 = value!;
                                           });
                                         },
                                       ),
                                     ),
                                     Flexible(
                                       child: CheckboxListTile(
-                                        title: Text('OK'),
-                                        value: selectedCategory2.contains("OK"),
+                                        title: const Text('OK'),
+                                        selected: selectedCategory34,
+                                        value: selectedCategory34,
                                         activeColor: Colors.red,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            if (value!) {
-                                              selectedCategory2.add("OK");
-                                            } else {
-                                              selectedCategory2.remove("OK");
-                                            }
+                                            selectedCategory34 = value!;
                                           });
                                         },
                                       ),
@@ -2579,7 +2594,5 @@ class _CreateTracker extends State<CreateTracker> {
             ),
           ),
         ));
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }

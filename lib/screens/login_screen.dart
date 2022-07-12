@@ -255,8 +255,7 @@ class _State extends State<LoginPage> {
                               }
                             },
                           )),
-                      Container(
-                          child: Row(
+                      Row(
                         children: <Widget>[
                           const Text('Change company URL?'),
                           FlatButton(
@@ -279,7 +278,7 @@ class _State extends State<LoginPage> {
                           )
                         ],
                         mainAxisAlignment: MainAxisAlignment.center,
-                      ))
+                      )
                     ],
                   )),
             ));
