@@ -55,6 +55,10 @@ dev_dependencies:
   progress_dialog: ^1.2.4
   fluttertoast: ^8.0.9
   form_field_validator: ^1.1.0
+  search_page: ^2.0.0+1
+  api_cache_manager: ^1.0.2
+  searchable_dropdown: ^1.1.3
+  flutter_expanded_tile: ^0.3.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

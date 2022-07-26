@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -66,64 +67,39 @@ Future readResponse(HttpClientResponse response) {
   return completer.future;
 }
 
-Future<http.Response?> getSimpleRequestObject(String url, String requestMethod,
-    {String? body, required ProgressDialog dialog}) async {
-  late http.Response response;
-  // final url =getBaseUrl();
-  Uri uri = Uri.parse(url);
-  print(uri);
-  if (requestMethod == get) {
-    final response = await http.get(Uri.parse(url));
-    jsonDecode(response.body);
-  } else if (requestMethod == post) {
-    if (body != null) {
-      response = await http.post(Uri.parse(url), body: body);
-    } else {
-      response = await http.post(Uri.parse(url));
-    }
-  }
-  if (response != null) {
-    int statusCode = response.statusCode;
-    if (statusCode == 200) {
-      return response;
-    } else {
-      // Fluttertoast.showToast(msg: "Error $statusCode occurred");
-    }
-  } else {
-    Fluttertoast.showToast(msg: 'There was no response from the server');
-  }
-  return null;
-}
-
-Future<HttpClientResponse?> getRequestObject(String url, String requestMethod,
+Future<HttpClientResponse> getRequestObject(String url, String requestMethod,
     {String? body, ProgressDialog? dialog}) async {
   HttpClient httpClient = new HttpClient();
   httpClient.badCertificateCallback =
       (X509Certificate cert, String host, int port) => true;
   Uri uri = Uri.parse(url);
   print(uri);
-  ;
   late HttpClientRequest request;
+  late HttpClientResponse response;
   if (requestMethod == get) {
     request = await httpClient.getUrl(uri);
   } else if (requestMethod == post) {
     request = await httpClient.postUrl(uri);
-    request.headers.set('content-type', 'application/json');
-    request.add(utf8.encode(body!));
-    print(request);
+    if (body != null) {
+      request.headers.set('content-type', 'application/json');
+      request.add(utf8.encode(body));
+      print(request);
+    }
   } else if (requestMethod == put) {
     request = await httpClient.putUrl(uri);
-    request.headers.set('content-type', 'application/json');
-    request.add(utf8.encode(body!));
+    if (body != null) {
+      request.headers.set('content-type', 'application/json');
+      request.add(utf8.encode(body));
+    }
   }
-  late HttpClientResponse response;
+
   try {
     response = await request.close();
-    if (dialog!.isShowing()) {
+    if (dialog != null && dialog.isShowing()) {
       dialog.hide();
     }
   } catch (e) {
-    if (dialog!.isShowing()) {
+    if (dialog != null && dialog.isShowing()) {
       dialog.hide();
     }
     Fluttertoast.showToast(msg: 'Exception caught on mobile');
@@ -134,16 +110,16 @@ Future<HttpClientResponse?> getRequestObject(String url, String requestMethod,
     if (statusCode == 200) {
       return response;
     } else {
-      if (dialog.isShowing()) {
+      if (dialog != null && dialog.isShowing()) {
         dialog.hide();
       }
       // Fluttertoast.showToast(msg: 'Error $statusCode occurred');
     }
   } else {
-    if (dialog.isShowing()) {
+    if (dialog != null && dialog.isShowing()) {
       dialog.hide();
     }
     Fluttertoast.showToast(msg: 'There was no response from the server');
   }
-  return null;
+  return response;
 }

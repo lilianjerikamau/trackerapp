@@ -22,13 +22,14 @@ import 'package:trackerapp/widgets/validators.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class CreateTracker extends StatefulWidget {
-  _CreateTracker createState() => _CreateTracker();
+class MaintainTracker extends StatefulWidget {
+  const MaintainTracker({Key? key}) : super(key: key);
+
+  @override
+  State<MaintainTracker> createState() => _MaintainTrackerState();
 }
 
-const TWO_PI = 3.14 * .6;
-
-class _CreateTracker extends State<CreateTracker> {
+class _MaintainTrackerState extends State<MaintainTracker> {
   TextEditingController dateinput = TextEditingController();
   late BuildContext _context;
   TextEditingController _searchController = new TextEditingController();
@@ -44,11 +45,11 @@ class _CreateTracker extends State<CreateTracker> {
   final _remarks = TextEditingController();
 
   TextEditingController _dateinput = TextEditingController();
-  TextEditingController _chasisno = TextEditingController();
+
   TextEditingController _vehtype = TextEditingController();
-  TextEditingController _vehcolor = TextEditingController();
+
   TextEditingController _engineno = TextEditingController();
-  TextEditingController _region = TextEditingController();
+
   TextEditingController _trackerLocation = TextEditingController();
   List techniciansJson = [];
   List technicians = [];
@@ -218,12 +219,12 @@ class _CreateTracker extends State<CreateTracker> {
                       });
                     },
                     icon: Icon(
-                      currentForm == 0 || currentForm == 3
+                      currentForm == 0 || currentForm == 4
                           ? Icons.error
                           : Icons.arrow_back,
                       color: Colors.redAccent,
                     ),
-                    label: Text(currentForm == 0 || currentForm == 3
+                    label: Text(currentForm == 0 || currentForm == 4
                         ? "Invalid"
                         : "Prev"),
                     heroTag: null,
@@ -257,63 +258,12 @@ class _CreateTracker extends State<CreateTracker> {
                             }
                             break;
                           case 1:
-
-                            // _selectedImei1 != null &&
-                            // _selectedImei2 != null &&
-                            // _selectedDevice != null &&
-                            // _selectedDevice1 != null &&
-                            // _selectedDevice2 != null
                             form = _formKey3.currentState;
+
                             if (form.validate()) {
-                              if (_selectedImei != null) {
-                                if ((_selectedImei == _selectedDevice ||
-                                        _selectedImei == _selectedDevice1 ||
-                                        _selectedImei == _selectedDevice2 ||
-                                        _selectedImei == _selectedImei1 ||
-                                        _selectedImei == _selectedImei2) ||
-                                    (_selectedImei1 == _selectedDevice ||
-                                        _selectedImei1 == _selectedDevice1 ||
-                                        _selectedImei1 == _selectedDevice2 ||
-                                        _selectedImei1 == _selectedImei ||
-                                        _selectedImei1 == _selectedImei2) ||
-                                    (_selectedImei2 == _selectedDevice ||
-                                        _selectedImei2 == _selectedDevice1 ||
-                                        _selectedImei2 == _selectedDevice ||
-                                        _selectedImei2 == _selectedImei1 ||
-                                        _selectedImei2 == _selectedImei2) ||
-                                    (_selectedDevice == _selectedImei ||
-                                        _selectedDevice == _selectedDevice1 ||
-                                        _selectedDevice == _selectedDevice2 ||
-                                        _selectedDevice == _selectedImei1 ||
-                                        _selectedDevice == _selectedImei2) ||
-                                    (_selectedDevice1 == _selectedImei ||
-                                        _selectedDevice1 == _selectedDevice ||
-                                        _selectedDevice1 == _selectedDevice2 ||
-                                        _selectedDevice1 == _selectedImei1 ||
-                                        _selectedDevice1 == _selectedImei2) ||
-                                    (_selectedDevice2 == _selectedImei ||
-                                        _selectedDevice2 == _selectedDevice ||
-                                        _selectedDevice2 == _selectedDevice1 ||
-                                        _selectedDevice2 == _selectedImei1 ||
-                                        _selectedDevice2 == _selectedImei2)) {
-                                  Fluttertoast.showToast(
-                                      msg:
-                                          'Duplicate IMEI Number or Device Number ');
-                                } else {
-                                  setState(() {
-                                    _selectedImei == 0 &&
-                                        _selectedImei1 == 0 &&
-                                        _selectedImei2 == 0 &&
-                                        _selectedDevice == 0 &&
-                                        _selectedDevice1 == 0 &&
-                                        _selectedDevice2 == 0;
-                                  });
-                                }
-                              } else {
-                                setState() {
-                                  _selectedImei == 0;
-                                }
-                              }
+                              form.save();
+                              currentForm = 2;
+                              percentageComplete = 50;
                             } else {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
@@ -347,10 +297,10 @@ class _CreateTracker extends State<CreateTracker> {
                         }
                       });
                     },
-                    icon: Icon(currentForm == 3
+                    icon: Icon(currentForm == 4
                         ? Icons.upload_rounded
                         : Icons.arrow_forward),
-                    label: Text(currentForm == 3 ? "finish" : "Next"),
+                    label: Text(currentForm == 4 ? "finish" : "Next"),
                     heroTag: null,
                   ),
                 ),
@@ -391,20 +341,13 @@ class _CreateTracker extends State<CreateTracker> {
                         isLoading
                             ? const LinearProgressIndicator()
                             : const SizedBox(),
-                        Diagonal(
-                          position: position,
-                          clipHeight: clipHeight,
-                          child: Container(
-                            color: Colors.white,
-                          ),
-                        ),
                         Positioned(
                             child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               const Text(
-                                'Create Installation Tracker',
+                                'Create Maintenance Tracker',
                                 style: TextStyle(
                                   fontSize: 20.0,
                                   color: Colors.black,
@@ -438,14 +381,6 @@ class _CreateTracker extends State<CreateTracker> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        "Client Information",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6!
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
-                                      ),
                                       const SizedBox(
                                         height: 1,
                                       ),
@@ -525,7 +460,6 @@ class _CreateTracker extends State<CreateTracker> {
                                         ],
                                       ),
                                       TextFormField(
-                                        readOnly: true,
                                         validator: (value) => value!.isEmpty
                                             ? "Attach Job Card"
                                             : null,
@@ -549,7 +483,7 @@ class _CreateTracker extends State<CreateTracker> {
                                                 .copyWith(),
                                           ),
                                           Text(
-                                            "",
+                                            "*",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2!
@@ -558,7 +492,6 @@ class _CreateTracker extends State<CreateTracker> {
                                         ],
                                       ),
                                       TextFormField(
-                                        readOnly: true,
                                         initialValue: _custPhone,
                                         onSaved: (value) => {},
                                         keyboardType: TextInputType.phone,
@@ -580,7 +513,7 @@ class _CreateTracker extends State<CreateTracker> {
                                                 .copyWith(),
                                           ),
                                           Text(
-                                            "*",
+                                            "",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2!
@@ -589,10 +522,10 @@ class _CreateTracker extends State<CreateTracker> {
                                         ],
                                       ),
                                       TextFormField(
+                                        // validator: (value) => value!.isEmpty
+                                        //     ? "This field is required"
+                                        //     : null,
                                         readOnly: true,
-                                        validator: (value) => value!.isEmpty
-                                            ? "This field is required"
-                                            : null,
                                         initialValue: _vehreg,
                                         onSaved: (value) => {},
                                         keyboardType: TextInputType.text,
@@ -614,7 +547,7 @@ class _CreateTracker extends State<CreateTracker> {
                                                 .copyWith(),
                                           ),
                                           Text(
-                                            "*",
+                                            "",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2!
@@ -623,11 +556,8 @@ class _CreateTracker extends State<CreateTracker> {
                                         ],
                                       ),
                                       TextFormField(
-                                        readOnly: true,
                                         initialValue: _vehmodel,
-                                        validator: (value) => value!.isEmpty
-                                            ? "This field is required"
-                                            : null,
+                                        readOnly: true,
                                         onSaved: (value) => {},
                                         keyboardType: TextInputType.text,
                                         decoration: const InputDecoration(
@@ -658,19 +588,20 @@ class _CreateTracker extends State<CreateTracker> {
                                       TextFormField(
                                         initialValue: _location,
                                         readOnly: true,
+                                        // validator: (value) => value!.isEmpty
+                                        //     ? "This field is required"
+                                        //     : null,
                                         onSaved: (value) => {},
                                         keyboardType: TextInputType.text,
                                         decoration: const InputDecoration(
                                             hintText: "Enter Vehicle Location"),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
                                       ),
                                     ],
                                   ),
                                 ))
                           ])),
                       Form(
+                          // autovalidateMode: AutovalidateMode.always,
                           key: _formKey3,
                           child: Column(children: <Widget>[
                             Card(
@@ -687,14 +618,6 @@ class _CreateTracker extends State<CreateTracker> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        "Tracker Installation Details",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6!
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
-                                      ),
                                       const SizedBox(
                                         height: 1,
                                       ),
@@ -725,9 +648,6 @@ class _CreateTracker extends State<CreateTracker> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
                                       Row(
                                         children: [
                                           Text(
@@ -758,36 +678,6 @@ class _CreateTracker extends State<CreateTracker> {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Chassis No",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(),
-                                          ),
-                                          Text(
-                                            "*",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(color: Colors.red),
-                                          )
-                                        ],
-                                      ),
-                                      TextFormField(
-                                        controller: _chasisno,
-                                        validator: (value) => value!.isEmpty
-                                            ? "This field is required"
-                                            : null,
-                                        onSaved: (value) => {},
-                                        keyboardType: TextInputType.text,
-                                        decoration: const InputDecoration(
-                                            hintText:
-                                                "Enter Vehicle Chassis No"),
-                                      ),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -811,7 +701,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         ],
                                       ),
                                       TextFormField(
+                                        readOnly: true,
                                         controller: _engineno,
+                                        // validator: (value) => value!.isEmpty
+                                        //     ? "This field is required"
+                                        //     : null,
                                         onSaved: (value) => {},
                                         keyboardType: TextInputType.text,
                                         decoration: const InputDecoration(
@@ -821,69 +715,6 @@ class _CreateTracker extends State<CreateTracker> {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Color",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(),
-                                          ),
-                                          Text(
-                                            "*",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(color: Colors.red),
-                                          )
-                                        ],
-                                      ),
-                                      TextFormField(
-                                        controller: _vehcolor,
-                                        validator: (value) => value!.isEmpty
-                                            ? "This field is required"
-                                            : null,
-                                        onSaved: (value) => {},
-                                        keyboardType: TextInputType.text,
-                                        decoration: const InputDecoration(
-                                            hintText: "Enter Vehicle Color"),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Region",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(),
-                                          ),
-                                          Text(
-                                            "*",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(color: Colors.red),
-                                          )
-                                        ],
-                                      ),
-                                      TextFormField(
-                                        controller: _region,
-                                        validator: (value) => value!.isEmpty
-                                            ? "This field is required"
-                                            : null,
-                                        onSaved: (value) => {},
-                                        keyboardType: TextInputType.text,
-                                        decoration: const InputDecoration(
-                                            hintText: "Enter Region"),
-                                      ),
-
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -913,39 +744,6 @@ class _CreateTracker extends State<CreateTracker> {
                                         keyboardType: TextInputType.text,
                                         decoration: const InputDecoration(
                                             hintText: "Sales Person"),
-                                      ),
-                                      // const SizedBox(
-                                      //   height: 10,
-                                      // ),
-                                      // Row(
-                                      //   children: [
-                                      //     Text(
-                                      //       "Installation Branch",
-                                      //       overflow: TextOverflow.ellipsis,
-                                      //       style: Theme.of(context)
-                                      //           .textTheme
-                                      //           .subtitle2!
-                                      //           .copyWith(),
-                                      //     ),
-                                      //     Text(
-                                      //       "*",
-                                      //       style: Theme.of(context)
-                                      //           .textTheme
-                                      //           .subtitle2!
-                                      //           .copyWith(color: Colors.red),
-                                      //     )
-                                      //   ],
-                                      // ),
-                                      // TextFormField(
-                                      //   initialValue: _branchName,
-                                      //   readOnly: true,
-                                      //   onSaved: (value) => {},
-                                      //   keyboardType: TextInputType.text,
-                                      //   decoration: const InputDecoration(
-                                      //       hintText: "Installation Branch"),
-                                      // ),
-                                      const SizedBox(
-                                        height: 10,
                                       ),
                                       const SizedBox(
                                         height: 10,
@@ -998,6 +796,25 @@ class _CreateTracker extends State<CreateTracker> {
                                           });
                                         },
                                       ),
+                                      CheckboxListTile(
+                                        controlAffinity:
+                                            ListTileControlAffinity.trailing,
+                                        title: Text(
+                                          'Remove Tracker',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2!
+                                              .copyWith(),
+                                        ),
+                                        value: isOther6,
+                                        activeColor: Colors.red,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            isOther6 = value!;
+                                          });
+                                        },
+                                      ),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -1026,9 +843,10 @@ class _CreateTracker extends State<CreateTracker> {
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
-                                          _selectedImei = value != null
-                                              ? value
-                                              : 'Select IMEI Device';
+                                          (value) => value == null
+                                              ? 'field required'
+                                              : null;
+                                          _selectedImei = value;
                                           _imeinoId = value != null
                                               ? value['id']
                                               : null;
@@ -1107,7 +925,7 @@ class _CreateTracker extends State<CreateTracker> {
 
                                         // isCaseSensitiveSearch: true,
                                         searchHint: const Text(
-                                          'Select Backup1 IMEI Number',
+                                          'Backup1 IMEI Number',
                                           style: TextStyle(fontSize: 20),
                                         ),
                                         items: devicesJson.map((val) {
@@ -1141,7 +959,7 @@ class _CreateTracker extends State<CreateTracker> {
                                       ),
                                       SearchableDropdown(
                                         hint: const Text(
-                                          "Select Backup2 IMEI Number",
+                                          "Backup2 IMEI Number",
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
@@ -1218,16 +1036,11 @@ class _CreateTracker extends State<CreateTracker> {
                                           _deviceDescription = value != null
                                               ? value['description']
                                               : null;
-
-                                          // print(_selectedImei);
-                                          // print(_imeinoId);
-                                          // print(_deviceSerialNo);
-                                          // print(_deviceDescription);
                                         },
 
                                         // isCaseSensitiveSearch: true,
                                         searchHint: const Text(
-                                          'Device No',
+                                          'Select Device No ',
                                           style: TextStyle(fontSize: 20),
                                         ),
                                         items: devicesJson.map((val) {
@@ -1282,7 +1095,7 @@ class _CreateTracker extends State<CreateTracker> {
 
                                         // isCaseSensitiveSearch: true,
                                         searchHint: const Text(
-                                          'Select Backup1 Device No',
+                                          'Select Backup1 Device No ',
                                           style: TextStyle(fontSize: 20),
                                         ),
                                         items: devicesJson.map((val) {
@@ -1377,13 +1190,18 @@ class _CreateTracker extends State<CreateTracker> {
                                           )
                                         ],
                                       ),
-
                                       TextFormField(
                                         controller: _remarks,
+                                        validator: (value) => value!.isEmpty
+                                            ? "This field is required"
+                                            : null,
                                         onSaved: (value) => {},
                                         keyboardType: TextInputType.text,
                                         decoration: const InputDecoration(
                                             hintText: "Enter Remarks"),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
                                       ),
                                     ],
                                   ),
@@ -2338,7 +2156,7 @@ class _CreateTracker extends State<CreateTracker> {
             backgroundColor: Colors.grey[200],
             appBar: AppBar(
               title: const Text(
-                'Pending Job Cards',
+                'Pending JobCards',
                 style: const TextStyle(color: Colors.black),
               ),
               leading: IconButton(
@@ -2360,11 +2178,18 @@ class _CreateTracker extends State<CreateTracker> {
           );
   }
 
+  Widget getListTile(val) {
+    return ListTile(
+      leading: Text(val['serialno'] ?? ''),
+      title: Text(val['description'] ?? ''),
+    );
+  }
+
   _fetchPendingInstallationJobCard() async {
     String url = await Config.getBaseUrl();
 
     HttpClientResponse response = await Config.getRequestObject(
-        url + 'trackerjobcard/pending/$_hrid?type=0', Config.get);
+        url + 'trackerjobcard/pending/$_hrid?type=1', Config.get);
     if (response != null) {
       print(response);
 
@@ -2488,12 +2313,9 @@ class _CreateTracker extends State<CreateTracker> {
                   onPressed: () async {
                     Navigator.pop(ctx);
 
-                    String chassisno = _chasisno.text.trim();
                     String trackerlocation = _trackerLocation.text.trim();
-                    String vehiclecolor = _vehcolor.text.trim();
-                    String engineno = _engineno.text.trim();
 
-                    String region = _region.text.trim();
+                    String engineno = _engineno.text.trim();
 
                     String remarks = _remarks.text.trim();
                     String dateinput = _dateinput.text;
@@ -2508,11 +2330,8 @@ class _CreateTracker extends State<CreateTracker> {
                           'Content-Type': 'application/json',
                         },
                         body: jsonEncode(<String, dynamic>{
-                          "trackertypeid": 0,
+                          "trackertypeid": 1,
                           "trackerlocation": trackerlocation,
-                          "chassisno": chassisno,
-                          "vehiclecolor": vehiclecolor,
-                          "region": region,
                           "jobcardid": _jobCardId,
                           "imeinoid": _imeinoId != null ? _imeinoId : 0,
                           "backupimeinoid": _imeinoId1 != null ? _imeinoId1 : 0,
@@ -2555,17 +2374,15 @@ class _CreateTracker extends State<CreateTracker> {
                           "value1inspaf14": value1inspaf14,
                           "value1inspaf15": value1inspaf15,
                           "value1inspaf16": value1inspaf16,
-                          "trackerlocation": _location,
+                          // "trackerlocation": _location,
                           "remarks": remarks == null ? "" : remarks,
+                          "removed": isOther6,
                           "userid": _userid,
                         }));
 
                     print(jsonEncode(<String, dynamic>{
-                      "trackertypeid": 0,
+                      "trackertypeid": 1,
                       "trackerlocation": trackerlocation,
-                      "chassisno": chassisno,
-                      "vehiclecolor": vehiclecolor,
-                      "region": region,
                       "jobcardid": _jobCardId,
                       "imeinoid": _imeinoId != null ? _imeinoId : 0,
                       "backupimeinoid": _imeinoId1 != null ? _imeinoId1 : 0,
@@ -2609,6 +2426,7 @@ class _CreateTracker extends State<CreateTracker> {
                       "value1inspaf16": value1inspaf16,
                       // "trackerlocation": _location,
                       "remarks": remarks,
+                      "removed": isOther6,
                       "userid": _userid,
                     }));
                     if (response != null) {
@@ -2629,13 +2447,6 @@ class _CreateTracker extends State<CreateTracker> {
             ],
           );
         });
-  }
-
-  Widget getListTile(val) {
-    return ListTile(
-      leading: Text(val['serialno'] ?? ''),
-      title: Text(val['description'] ?? ''),
-    );
   }
 
   void _showDialog(BuildContext context) {
@@ -2720,7 +2531,7 @@ class _CreateTracker extends State<CreateTracker> {
                     isSelectedJobCard = false;
                   });
 
-                  SessionPreferences().setSelectedJobCard(jobCard);
+                  // SessionPreferences().setSelectedJobCard(jobCard);
                   _jobCardId = jobCard.id;
                   _custName = jobCard.customername;
                   _custPhone = jobCard.custphone;

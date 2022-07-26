@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:trackerapp/database/sessionpreferences.dart';
 import 'package:trackerapp/models/usermodels.dart';
+import 'package:trackerapp/screens/login_screen.dart';
 import 'package:trackerapp/utils/config.dart';
 
 // ignore: must_be_immutable
@@ -54,7 +55,9 @@ class _ChooseCompanyState extends State<ChooseCompany> {
                 } else {
                   SessionPreferences()
                       .setCompanySettings(CompanySettings(
-                          baseUrl: erpUrl + _companysettingurl.text + domainUrl,
+                          baseUrl: erpUrl +
+                              _companysettingurl.text.trim() +
+                              domainUrl,
                           imageName: 'logo.png'))
                       .then((value) {
                     widget.companySelected('logo.png');
@@ -63,7 +66,12 @@ class _ChooseCompanyState extends State<ChooseCompany> {
                       msg: "Company setting updated successfully....",
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.BOTTOM,
-                      textColor: Colors.amberAccent);
+                      textColor: Colors.red);
+                  Navigator.pushReplacement<void, void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => LoginPage(),
+                      ));
                 }
               },
               child: Text('Update Company'),

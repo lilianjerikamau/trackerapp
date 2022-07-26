@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trackerapp/database/sessionpreferences.dart';
+import 'package:trackerapp/screens/create_tracker.dart';
+import 'package:trackerapp/screens/home.dart';
 import 'package:trackerapp/screens/login_screen.dart';
-import 'package:trackerapp/screens/tabs/tabspage.dart';
 
 class SideMenu extends StatefulWidget {
   @override
@@ -9,8 +10,30 @@ class SideMenu extends StatefulWidget {
 }
 
 class _SideMenuState extends State<SideMenu> {
-  late bool _loggedIn = false;
-  late String? _loggedInUser = null;
+  @override
+  initState() {
+    SessionPreferences().getLoggedInStatus().then((loggedIn) {
+      if (loggedIn == null) {
+        setState(() {
+          _loggedIn = false;
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+          print("logged in is null");
+        });
+      } else {
+        setState(() {
+          _loggedIn = loggedIn;
+          print("logged in not null");
+        });
+      }
+    });
+    super.initState();
+  }
+
+  bool _loggedIn = false;
+  String? _loggedInUser = null;
   BuildContext? _context;
   @override
   Widget build(BuildContext context) {
@@ -46,8 +69,7 @@ class _SideMenuState extends State<SideMenu> {
             onTap: () => {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => TabsPage(selectedIndex: 0)),
+                MaterialPageRoute(builder: (context) => Home()),
               )
             },
           ),
@@ -63,8 +85,7 @@ class _SideMenuState extends State<SideMenu> {
             onTap: () => {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => TabsPage(selectedIndex: 1)),
+                MaterialPageRoute(builder: (context) => CreateTracker()),
               ),
             },
           ),
@@ -80,8 +101,7 @@ class _SideMenuState extends State<SideMenu> {
             onTap: () => {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => TabsPage(selectedIndex: 2)),
+                MaterialPageRoute(builder: (context) => CreateTracker()),
               ),
             },
           ),
@@ -98,36 +118,14 @@ class _SideMenuState extends State<SideMenu> {
             ),
             title: Text('Logout'),
             onTap: () {
-              Navigator.of(context).pop();
-              showDialog(
-                  context: context,
-                  builder: (ctx) {
-                    return AlertDialog(
-                      title: Text('Log out?'),
-                      content: Text('Are you sure you want to log out?'),
-                      actions: <Widget>[
-                        FlatButton(
-                            child: Text('No'),
-                            onPressed: () {
-                              Navigator.pop(ctx);
-                            }),
-                        FlatButton(
-                            onPressed: () {
-                              Navigator.pop(ctx);
-
-                              SessionPreferences().setLoggedInStatus(false);
-                              _loggedIn = false;
-                              _loggedInUser = null;
-                              Navigator.push(
-                                ctx,
-                                MaterialPageRoute(
-                                    builder: (ctx) => LoginPage()),
-                              );
-                            },
-                            child: Text('Yes'))
-                      ],
-                    );
-                  });
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+              setState(() {
+                SessionPreferences().setLoggedInStatus(false);
+                _loggedIn = false;
+              });
             },
           ),
         ],

@@ -55,8 +55,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
     URLQueryParams queryParams = new URLQueryParams();
     queryParams.append('email', email);
     String url = await getBaseUrl();
-    HttpClientResponse? response =
-        await getRequestObject(url + 'mobileuser/getCode?email=$email', get);
+    HttpClientResponse? response = await getRequestObject(
+        url + 'mobileuser/getCode?email=$email', get,
+        body: '');
     if (response != null) {
       response.transform(utf8.decoder).listen((data) {
         setState(() {

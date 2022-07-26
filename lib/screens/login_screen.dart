@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_const
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,7 +9,7 @@ import 'package:trackerapp/models/usermodels.dart';
 import 'package:trackerapp/screens/forgotpassword.dart';
 import 'package:trackerapp/screens/home.dart';
 import 'package:trackerapp/screens/selectcompany.dart';
-import 'package:trackerapp/screens/tabs/tabspage.dart';
+
 import 'package:trackerapp/utils/config.dart' as Config;
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -46,6 +44,7 @@ class _State extends State<LoginPage> {
       } else {
         setState(() {
           _companySettingsDone = false;
+          Fluttertoast.showToast(msg: 'Set Company URL');
         });
       }
       if (_companySettingsDone = false) {
@@ -57,6 +56,34 @@ class _State extends State<LoginPage> {
         });
       } else {}
     });
+    SessionPreferences().getLoggedInStatus().then((loggedIn) {
+      if (loggedIn == null || loggedIn == false) {
+        setState(() {
+          _loggedIn = false;
+
+          print("logged in is null");
+        });
+      } else {
+        setState(() {
+          _loggedIn = loggedIn;
+          _loggedIn = true;
+          Navigator.pushReplacement<void, void>(
+              context,
+              MaterialPageRoute<void>(
+                builder: (BuildContext context) => Home(),
+              ));
+          print("logged in not null");
+        });
+        if (loggedIn) {
+          SessionPreferences().getLoggedInUser().then((user) {
+            setState(() {
+              _loggedInUser = user;
+            });
+          });
+        }
+      }
+    });
+
     super.initState();
   }
 
@@ -143,6 +170,9 @@ class _State extends State<LoginPage> {
                                 if (settings.baseUrl == null) {
                                   Fluttertoast.showToast(
                                       msg: 'Set Company URL');
+                                  setState(() {
+                                    _loggingIn = false;
+                                  });
                                 }
                               });
                               if (_loginFormKey.currentState!.validate()) {
@@ -166,6 +196,7 @@ class _State extends State<LoginPage> {
                                 Uri uri = Uri.parse(url +
                                     'mobileuser/login?' +
                                     urqp.toString());
+
                                 print(uri);
                                 HttpClientRequest request =
                                     await httpClient.getUrl(uri);
@@ -194,36 +225,63 @@ class _State extends State<LoginPage> {
                                       print("Login response:::" +
                                           response.toString());
                                       print(data);
-                                      User user =
-                                          User.fromJson(json.decode(data));
-                                      if (user.id! > 0) {
-                                        SessionPreferences()
-                                            .setLoggedInUser(user);
-                                        SessionPreferences()
-                                            .setLoggedInStatus(true);
+                                      if (data != null) {
+                                        User user =
+                                            User.fromJson(json.decode(data));
+                                        if (user.id! > 0) {
+                                          if (user.hrid! > 0) {
+                                            setState(() {
+                                              _loggedIn = true;
+                                              _loggedInUser = user;
+                                            });
+                                            print(user.hrid!);
+                                            SessionPreferences()
+                                                .setLoggedInUser(user);
+                                            SessionPreferences()
+                                                .setLoggedInStatus(true);
 
-                                        setState(() {
-                                          _loggedIn = true;
-                                          _loggedInUser = user;
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TabsPage(selectedIndex: 0)),
-                                          );
-                                        });
-                                        Fluttertoast.showToast(
-                                            msg: 'Welcome $username');
-                                      } else if (user.id! < 0) {
-                                        Fluttertoast.showToast(
-                                            msg:
-                                                'The password you entered is incorrect',
-                                            toastLength: Toast.LENGTH_LONG);
-                                      } else {
-                                        Fluttertoast.showToast(
-                                            msg:
-                                                'Please check your username and password',
-                                            toastLength: Toast.LENGTH_LONG);
+                                            setState(() {
+                                              _loggedIn = true;
+                                              _loggedInUser = user;
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Home()),
+                                              );
+                                            });
+                                            Fluttertoast.showToast(
+                                                msg: 'Welcome $username');
+                                          } else {
+                                            showDialog(
+                                                context: _context,
+                                                builder: (BuildContext bc) {
+                                                  return CupertinoAlertDialog(
+                                                    title: Text(
+                                                        'Account Action Needed'),
+                                                    content: Text(
+                                                        'Your user account is not attached to any Hr_Employee account. Please contact the administrator with this information'),
+                                                    actions: <Widget>[
+                                                      FlatButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(bc);
+                                                          },
+                                                          child: Text('Ok'))
+                                                    ],
+                                                  );
+                                                });
+                                          }
+                                        } else if (user.id! < 0) {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  'The password you entered is incorrect',
+                                              toastLength: Toast.LENGTH_LONG);
+                                        } else {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  'Please check your username and password',
+                                              toastLength: Toast.LENGTH_LONG);
+                                        }
                                       }
                                     });
                                   } else if (statusCode == 500) {

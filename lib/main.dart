@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:trackerapp/screens/tabs/tabspage.dart';
+import 'package:trackerapp/screens/home.dart';
+import 'package:trackerapp/screens/login_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
           scaffoldBackgroundColor: Colors.white, primaryColor: Colors.white),
-      home: TabsPage(selectedIndex: 0),
+      home: LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
