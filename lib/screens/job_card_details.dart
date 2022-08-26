@@ -84,7 +84,10 @@ class _PendingInstJobCardDetailsState extends State<PendingInstJobCardDetails> {
             color: Colors.red,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const Home()),
+            );
           },
         ),
         backgroundColor: Colors.white,

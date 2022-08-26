@@ -73,7 +73,7 @@ class _CreateJobCard extends State<CreateJobCard> {
   int? customerid;
 
   static late var _custName;
-  static late var _custEmail;
+  // static late var _custEmail;
   static late var _custPhone;
   static late var _salesrepId = null;
   static late var _salesrepName = null;
@@ -110,7 +110,7 @@ class _CreateJobCard extends State<CreateJobCard> {
     _financierEmail = null;
     _financierPhone = null;
     _custName = null;
-    _custEmail = null;
+    // _custEmail = null;
     _custPhone = null;
     _techName = null;
     _techId = null;
@@ -170,6 +170,7 @@ class _CreateJobCard extends State<CreateJobCard> {
   final _engineno = TextEditingController();
   final _custname = TextEditingController();
   final _custphone = TextEditingController();
+  final _custEmail = TextEditingController();
   // final _financierid = TextEditingController();
   // final _customerid = TextEditingController();
   final _customertypeid = TextEditingController();
@@ -276,18 +277,21 @@ class _CreateJobCard extends State<CreateJobCard> {
                               percentageComplete = 100;
                             }
                             break;
+                          case 2:
+                            form = _formKey16.currentState;
+                            if (currentForm == 2) {
+                              currentForm = 1;
+                              percentageComplete = 100;
+                            }
+                            break;
                         }
                       });
                     },
                     icon: Icon(
-                      currentForm == 0 || currentForm == 2
-                          ? Icons.error
-                          : Icons.arrow_back,
+                      currentForm == 0 ? Icons.error : Icons.arrow_back,
                       color: Colors.redAccent,
                     ),
-                    label: Text(currentForm == 0 || currentForm == 2
-                        ? "Invalid"
-                        : "Prev"),
+                    label: Text(currentForm == 0 ? "Invalid" : "Prev"),
                     heroTag: null,
                   ),
                 ),
@@ -386,310 +390,289 @@ class _CreateJobCard extends State<CreateJobCard> {
               ),
             ),
             body: SingleChildScrollView(
-              child: Flexible(
-                child: SafeArea(
-                  top: true,
-                  child: Flexible(
-                    child: Column(
+              child: SafeArea(
+                top: true,
+                child: Column(
+                  children: <Widget>[
+                    Stack(
+                      clipBehavior: Clip.none,
                       children: <Widget>[
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: <Widget>[
-                            isLoading
-                                ? const LinearProgressIndicator()
-                                : const SizedBox(),
-                            Diagonal(
-                              position: position,
-                              clipHeight: clipHeight,
-                              child: Container(
-                                color: Colors.white,
-                              ),
-                            ),
-                            Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  const Text(
-                                    'Create Installation Job Card',
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 1.0),
-                                ],
-                              ),
-                            ),
-                          ],
+                        isLoading
+                            ? const LinearProgressIndicator()
+                            : const SizedBox(),
+                        Diagonal(
+                          position: position,
+                          clipHeight: clipHeight,
+                          child: Container(
+                            color: Colors.white,
+                          ),
                         ),
-                        const SizedBox(
-                          height: 0,
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const Text(
+                                'Create Installation Job Card',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 1.0),
+                            ],
+                          ),
                         ),
-                        [
-                          Form(
-                              key: _formKey,
-                              child: Column(children: <Widget>[
-                                Card(
-                                    margin: const EdgeInsets.fromLTRB(
-                                        10, 10, 10, 10),
-                                    elevation: 0,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 20,
-                                          top: 30,
-                                          bottom: 20),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Client Information",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6!
-                                                .copyWith(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                          ),
-                                          const SizedBox(
-                                            height: 1,
-                                          ),
-                                          Text(
-                                            "",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(),
-                                          ),
-                                          const SizedBox(
-                                            height: 1,
-                                          ),
-                                        ],
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 0,
+                    ),
+                    [
+                      Form(
+                          key: _formKey,
+                          child: Column(children: <Widget>[
+                            Card(
+                                margin:
+                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                elevation: 0,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, top: 30, bottom: 20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Client Information",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6!
+                                            .copyWith(
+                                                fontWeight: FontWeight.bold),
                                       ),
-                                    )),
-                                Card(
-                                    margin: const EdgeInsets.fromLTRB(
-                                        10, 10, 10, 10),
-                                    elevation: 0,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 20,
-                                          top: 10,
-                                          bottom: 30),
-                                      child: SizedBox(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                      const SizedBox(
+                                        height: 1,
+                                      ),
+                                      Text(
+                                        "",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2!
+                                            .copyWith(),
+                                      ),
+                                      const SizedBox(
+                                        height: 1,
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            Card(
+                                margin:
+                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                elevation: 0,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, top: 10, bottom: 30),
+                                  child: SizedBox(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
                                           children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "Account Type",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .subtitle2!
-                                                      .copyWith(),
-                                                ),
-                                                Text(
-                                                  "*",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .subtitle2!
-                                                      .copyWith(
-                                                          color: Colors.red),
-                                                )
-                                              ],
+                                            Text(
+                                              "Account Type",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2!
+                                                  .copyWith(),
                                             ),
-                                            DropdownButtonFormField(
-                                              // value: _selectedValue,
-                                              hint: const Text(
-                                                "Enter Client's Account Type",
+                                            Text(
+                                              "*",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2!
+                                                  .copyWith(color: Colors.red),
+                                            )
+                                          ],
+                                        ),
+                                        DropdownButtonFormField(
+                                          // value: _selectedValue,
+                                          hint: const Text(
+                                            "Enter Client's Account Type",
+                                          ),
+                                          value: _selectedAccount,
+                                          isExpanded: true,
+                                          onChanged: (String? value) {
+                                            _toggleFinancier();
+                                            setState(() {
+                                              _selectedAccount = value!;
+                                              if (_selectedAccount ==
+                                                  'Individual') {
+                                                setState(() {
+                                                  isBankSelected = false;
+                                                });
+                                              } else if (_selectedAccount ==
+                                                  'Bank') {
+                                                setState(() {
+                                                  isBankSelected = true;
+                                                });
+                                              }
+                                            });
+                                          },
+                                          onSaved: (String? value) {
+                                            setState(() {
+                                              _selectedAccount = value!;
+                                            });
+                                          },
+                                          validator: (value) {
+                                            if (value != null) {
+                                              return null;
+                                            } else {
+                                              return "can't be empty";
+                                            }
+                                          },
+                                          items: listOfValue.map((String val) {
+                                            return DropdownMenuItem(
+                                              value: val,
+                                              child: Text(
+                                                val,
                                               ),
-                                              value: _selectedAccount,
-                                              isExpanded: true,
-                                              onChanged: (String? value) {
-                                                _toggleFinancier();
-                                                setState(() {
-                                                  _selectedAccount = value!;
-                                                  if (_selectedAccount ==
-                                                      'Individual') {
-                                                    setState(() {
-                                                      isBankSelected = false;
-                                                    });
-                                                  } else if (_selectedAccount ==
-                                                      'Bank') {
-                                                    setState(() {
-                                                      isBankSelected = true;
-                                                    });
-                                                  }
-                                                });
-                                              },
-                                              onSaved: (String? value) {
-                                                setState(() {
-                                                  _selectedAccount = value!;
-                                                });
-                                              },
-                                              validator: (value) {
-                                                if (value != null) {
-                                                  return null;
-                                                } else {
-                                                  return "can't be empty";
-                                                }
-                                              },
-                                              items:
-                                                  listOfValue.map((String val) {
-                                                return DropdownMenuItem(
-                                                  value: val,
-                                                  child: Text(
-                                                    val,
-                                                  ),
-                                                );
-                                              }).toList(),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            _selectedAccount == 'Bank'
-                                                ? Column(
+                                            );
+                                          }).toList(),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        _selectedAccount == 'Bank'
+                                            ? Column(
+                                                children: [
+                                                  Row(
                                                     children: [
-                                                      Row(
-                                                        children: [
-                                                          Text(
-                                                            "Financier Name",
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .subtitle2!
-                                                                .copyWith(),
-                                                          ),
-                                                          Text(
-                                                            "",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .subtitle2!
-                                                                .copyWith(
-                                                                    color: Colors
-                                                                        .red),
-                                                          )
-                                                        ],
+                                                      Text(
+                                                        "Financier Name",
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .subtitle2!
+                                                            .copyWith(),
                                                       ),
-                                                      TextFormField(
-                                                        readOnly:
+                                                      Text(
+                                                        "",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .subtitle2!
+                                                            .copyWith(
+                                                                color:
+                                                                    Colors.red),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  TextFormField(
+                                                    readOnly:
+                                                        _selectedAccount ==
+                                                                'Individual'
+                                                            ? false
+                                                            : true,
+                                                    initialValue:
+                                                        _selectedAccount ==
+                                                                'Individual'
+                                                            ? ""
+                                                            : _financierName,
+                                                    enabled:
+                                                        isBankSelected == true
+                                                            ? true
+                                                            : false,
+                                                    onSaved: (value) => {
+                                                      unloadCustomer(),
+                                                    },
+                                                    keyboardType:
+                                                        TextInputType.name,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                            hintText:
+                                                                "Enter financier's name"),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "Loan Officer Name",
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .subtitle2!
+                                                            .copyWith(),
+                                                      ),
+                                                      Text(
+                                                        "",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .subtitle2!
+                                                            .copyWith(
+                                                                color:
+                                                                    Colors.red),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  TextFormField(
+                                                    validator: (value) => value!
+                                                                .isEmpty &&
                                                             _selectedAccount ==
-                                                                    'Individual'
-                                                                ? false
-                                                                : true,
-                                                        initialValue:
-                                                            _selectedAccount ==
-                                                                    'Individual'
-                                                                ? ""
-                                                                : _financierName,
-                                                        enabled:
-                                                            isBankSelected ==
-                                                                    true
-                                                                ? true
-                                                                : false,
-                                                        onSaved: (value) => {
-                                                          unloadCustomer(),
-                                                        },
-                                                        keyboardType:
-                                                            TextInputType.name,
-                                                        decoration:
-                                                            const InputDecoration(
-                                                                hintText:
-                                                                    "Enter financier's name"),
+                                                                'Bank'
+                                                        ? "This field is required"
+                                                        : null,
+                                                    controller:
+                                                        _loanofficername,
+                                                    onSaved: (value) => {},
+                                                    keyboardType:
+                                                        TextInputType.name,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                            hintText:
+                                                                "Enter Loan Officer's name"),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "Loan Officer Phone",
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .subtitle2!
+                                                            .copyWith(),
                                                       ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          Text(
-                                                            "Loan Officer Name",
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .subtitle2!
-                                                                .copyWith(),
-                                                          ),
-                                                          Text(
-                                                            "",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .subtitle2!
-                                                                .copyWith(
-                                                                    color: Colors
-                                                                        .red),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      TextFormField(
-                                                        validator: (value) => value!
-                                                                    .isEmpty &&
-                                                                _selectedAccount ==
-                                                                    'Bank'
-                                                            ? "This field is required"
-                                                            : null,
-                                                        controller:
-                                                            _loanofficername,
-                                                        onSaved: (value) => {},
-                                                        keyboardType:
-                                                            TextInputType.name,
-                                                        decoration:
-                                                            const InputDecoration(
-                                                                hintText:
-                                                                    "Enter Loan Officer's name"),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          Text(
-                                                            "Loan Officer Phone",
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .subtitle2!
-                                                                .copyWith(),
-                                                          ),
-                                                          Text(
-                                                            "",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .subtitle2!
-                                                                .copyWith(
-                                                                    color: Colors
-                                                                        .red),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      TextFormField(
-                                                        validator: (value) => _selectedAccount ==
+                                                      Text(
+                                                        "",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .subtitle2!
+                                                            .copyWith(
+                                                                color:
+                                                                    Colors.red),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  TextFormField(
+                                                    validator: (value) =>
+                                                        _selectedAccount ==
                                                                 'Bank'
                                                             ? value!.isEmpty ||
                                                                     value.length <
@@ -701,760 +684,249 @@ class _CreateJobCard extends State<CreateJobCard> {
                                                                 ? "Enter valid phone number (0712345678)"
                                                                 : null
                                                             : null,
-                                                        controller:
-                                                            _loanofficerphone,
-                                                        onSaved: (value) => {
-                                                          unloadCustomer(),
-                                                        },
-                                                        keyboardType:
-                                                            TextInputType.name,
-                                                        decoration:
-                                                            const InputDecoration(
-                                                                hintText:
-                                                                    "Enter Loan Officer's Phone"),
-                                                      ),
-                                                    ],
-                                                  )
-                                                : Container(),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "Client Name",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .subtitle2!
-                                                      .copyWith(),
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      _toggle();
-                                                    });
-                                                  },
-                                                  child: Text(
-                                                    "Existing Client",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .subtitle2!
-                                                        .copyWith(
-                                                            color: Colors.red),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            isExistingClient == true
-                                                ? SearchableDropdown(
-                                                    hint: const Text(
-                                                      "Existing Client",
-                                                    ),
-
-                                                    isExpanded: true,
-                                                    onChanged: (value) {
-                                                      (value) => value == null
-                                                          ? 'field required'
-                                                          : null;
-                                                      _selectedValue = value;
-                                                      _custid = value != null
-                                                          ? value['custid']
-                                                          : null;
-                                                      _custName = value != null
-                                                          ? value['company']
-                                                          : null;
-                                                      _custPhone = value != null
-                                                          ? value['mobile']
-                                                          : null;
-                                                      _custEmail = value != null
-                                                          ? ['email']
-                                                          : null;
-                                                      setState(() {
-                                                        // _selectedValue = value!;
-                                                      });
-                                                      print(_selectedValue);
-                                                      print(_custName);
-                                                      print(_custid);
-                                                      print(_custPhone);
-                                                      _dropdownError = null;
+                                                    controller:
+                                                        _loanofficerphone,
+                                                    onSaved: (value) => {
+                                                      unloadCustomer(),
                                                     },
-
-                                                    // isCaseSensitiveSearch: true,
-                                                    searchHint: const Text(
-                                                      'Select Existing Client ',
-                                                      style: TextStyle(
-                                                          fontSize: 20),
-                                                    ),
-                                                    items: customersJson
-                                                        .map((val) {
-                                                      return DropdownMenuItem(
-                                                        child: getListTile(val),
-                                                        value: val,
-                                                      );
-                                                    }).toList(),
-                                                  )
-                                                : TextFormField(
-                                                    controller: _custname,
-                                                    validator: (value) => value!
-                                                                .isEmpty &&
-                                                            isExistingClient ==
-                                                                false
-                                                        ? "This field is required"
-                                                        : null,
-                                                    onSaved: (value) =>
-                                                        {custName},
                                                     keyboardType:
                                                         TextInputType.name,
                                                     decoration:
                                                         const InputDecoration(
                                                             hintText:
-                                                                "Enter client's name"),
+                                                                "Enter Loan Officer's Phone"),
                                                   ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "Phone Number",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .subtitle2!
-                                                      .copyWith(),
-                                                ),
-                                                Text(
-                                                  "*",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .subtitle2!
-                                                      .copyWith(
-                                                          color: Colors.red),
-                                                )
-                                              ],
-                                            ),
-                                            TextFormField(
-                                              controller: _custphone,
-                                              initialValue:
-                                                  isExistingClient == true
-                                                      ? _custPhone
-                                                      : null,
-                                              validator: (value) =>
-                                                  isExistingClient == false
-                                                      ? value!.isEmpty ||
-                                                              value.length <
-                                                                      10 ==
-                                                                  true ||
-                                                              value.length >
-                                                                      10 ==
-                                                                  true
-                                                          ? "Enter valid phone number (0712345678)"
-                                                          : null
-                                                      : null,
-                                              readOnly: isExistingClient == true
-                                                  ? true
-                                                  : false,
-                                              // initialValue: financierid == null
-                                              //     ? ""
-                                              //     : _financierPhone,
-                                              onSaved: (value) =>
-                                                  {loanofficerName},
-                                              keyboardType: TextInputType.phone,
-                                              decoration: const InputDecoration(
-                                                  hintText: "e.g 0711223344"),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "Email",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .subtitle2!
-                                                      .copyWith(),
-                                                ),
-                                                Text(
-                                                  "*",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .subtitle2!
-                                                      .copyWith(
-                                                          color: Colors.red),
-                                                )
-                                              ],
-                                            ),
-                                            TextFormField(
-                                              // initialValue:
-                                              //     isExistingClient == true
-                                              //         ? _custEmail
-                                              //         : null,
-                                              readOnly: isExistingClient == true
-                                                  ? true
-                                                  : false,
-                                              validator: isExistingClient ==
-                                                      false
-                                                  ? (String? input) {
-                                                      bool emailValid = RegExp(
-                                                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                                          .hasMatch(input!);
-                                                      if (emailValid == true) {
-                                                        return null;
-                                                      } else {
-                                                        return "Email a valid email";
-                                                      }
-                                                    }
-                                                  : null,
-                                              onSaved: (value) =>
-                                                  {loanofficerEmail},
-                                              keyboardType:
-                                                  TextInputType.emailAddress,
-                                              decoration: const InputDecoration(
-                                                  hintText:
-                                                      "Enter client's email"),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                          ],
+                                                ],
+                                              )
+                                            : Container(),
+                                        const SizedBox(
+                                          height: 10,
                                         ),
-                                      ),
-                                    ))
-                              ])),
-                          Form(
-                              key: _formKey16,
-                              child: Column(children: <Widget>[
-                                Card(
-                                    margin: const EdgeInsets.fromLTRB(
-                                        10, 10, 10, 10),
-                                    elevation: 0,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 20,
-                                          top: 30,
-                                          bottom: 20),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Vehicle Details",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6!
-                                                .copyWith(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                          ),
-                                          const SizedBox(
-                                            height: 1,
-                                          ),
-                                          Text(
-                                            "",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(),
-                                          ),
-                                          const SizedBox(
-                                            height: 1,
-                                          ),
-                                        ],
-                                      ),
-                                    )),
-                                Card(
-                                    margin: const EdgeInsets.fromLTRB(
-                                        10, 10, 10, 10),
-                                    elevation: 0,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 20,
-                                          top: 30,
-                                          bottom: 30),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Registration No",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(),
-                                              ),
-                                              Text(
-                                                "*",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(
-                                                        color: Colors.red),
-                                              )
-                                            ],
-                                          ),
-                                          TextFormField(
-                                            controller: _vehiclereg,
-                                            validator: (value) => value!.isEmpty
-                                                ? "This field is required"
-                                                : null,
-                                            onSaved: (value) => {vehicleReg},
-                                            keyboardType: TextInputType.name,
-                                            decoration: const InputDecoration(
-                                                hintText:
-                                                    "Enter Vehicle Registration No"),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Model",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(),
-                                              ),
-                                              Text(
-                                                "*",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(
-                                                        color: Colors.red),
-                                              )
-                                            ],
-                                          ),
-                                          TextFormField(
-                                            controller: _carmodel,
-                                            validator: (value) => value!.isEmpty
-                                                ? "This field is required"
-                                                : null,
-                                            onSaved: (value) => {carModel},
-                                            keyboardType: TextInputType.name,
-                                            decoration: const InputDecoration(
-                                                hintText:
-                                                    "Enter Vehicle Model"),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Vehicle Type",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(),
-                                              ),
-                                            ],
-                                          ),
-                                          TextFormField(
-                                            controller: _vehicletype,
-                                            onSaved: (value) => {},
-                                            keyboardType: TextInputType.name,
-                                            decoration: const InputDecoration(
-                                                hintText: "Enter Vehicle Type"),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Chassis No",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(),
-                                              ),
-                                            ],
-                                          ),
-                                          TextFormField(
-                                            controller: _chassisno,
-                                            onSaved: (value) => {chassisNo},
-                                            keyboardType: TextInputType.text,
-                                            decoration: const InputDecoration(
-                                                hintText:
-                                                    "Enter Vehicle Chassis No"),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Engine No",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(),
-                                              ),
-                                            ],
-                                          ),
-                                          TextFormField(
-                                            controller: _engineno,
-                                            onSaved: (value) => {engineNo},
-                                            keyboardType: TextInputType.text,
-                                            decoration: const InputDecoration(
-                                                hintText:
-                                                    "Enter Vehicle Engine No"),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Color",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(),
-                                              ),
-                                            ],
-                                          ),
-                                          TextFormField(
-                                            controller: _vehiclecolor,
-                                            onSaved: (value) => {vehicleColor},
-                                            keyboardType: TextInputType.text,
-                                            decoration: const InputDecoration(
-                                                hintText:
-                                                    "Enter Vehicle Color"),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Location",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(),
-                                              ),
-                                              Text(
-                                                "*",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(
-                                                        color: Colors.red),
-                                              )
-                                            ],
-                                          ),
-                                          TextFormField(
-                                            controller: _location,
-                                            validator: (value) => value!.isEmpty
-                                                ? "This field is required"
-                                                : null,
-                                            onSaved: (value) =>
-                                                {installationLocation},
-                                            keyboardType: TextInputType.text,
-                                            decoration: const InputDecoration(
-                                                hintText:
-                                                    "Enter Vehicle Location"),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "No of Trackers",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(),
-                                              ),
-                                              Text(
-                                                "*",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(
-                                                        color: Colors.red),
-                                              )
-                                            ],
-                                          ),
-                                          TextFormField(
-                                            controller: _notracker,
-                                            validator: (value) => value!.isEmpty
-                                                ? "This field is required"
-                                                : null,
-                                            onSaved: (value) => {noTracker},
-                                            keyboardType: TextInputType.number,
-                                            decoration: const InputDecoration(
-                                                hintText:
-                                                    "Enter Vehicle No of Trackers"),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Preferred Installer",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(),
-                                              ),
-                                              Text(
-                                                "*",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(
-                                                        color: Colors.red),
-                                              )
-                                            ],
-                                          ),
-                                          SearchableDropdown(
-                                            hint: const Text(
-                                              "Enter Preferred Installer",
-                                            ),
-                                            isExpanded: true,
-                                            onChanged: (value) {
-                                              (value) => value == null
-                                                  ? 'field required'
-                                                  : null;
-                                              _selectedInstaller = value;
-                                              _techId = value != null
-                                                  ? value['empid']
-                                                  : null;
-                                              _techName = value != null
-                                                  ? value['empname']
-                                                  : null;
-                                              setState(() {
-                                                // _selectedValue = value!;
-                                              });
-                                              print(_selectedInstaller);
-                                              print(_techName);
-                                              print(_techId);
-                                              SessionPreferences()
-                                                  .getSelectedTechnician()
-                                                  .then((customer) {
-                                                setState(() {
-                                                  _selectedInstaller = value;
-                                                  _techId = value['empid'];
-                                                  _techName = value['empname'];
-                                                });
-                                              });
-                                            },
-
-                                            value: _selectedInstaller,
-
-                                            // isCaseSensitiveSearch: true,
-                                            searchHint: new Text(
-                                              'Select Existing Client ',
-                                              style:
-                                                  new TextStyle(fontSize: 20),
-                                            ),
-                                            items: techniciansJson.map((val) {
-                                              return DropdownMenuItem(
-                                                child: Text(val['empname']),
-                                                value: val,
-                                              );
-                                            }).toList(),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Sales Person",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(),
-                                              ),
-                                              Text(
-                                                "*",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(
-                                                        color: Colors.red),
-                                              )
-                                            ],
-                                          ),
-                                          TextFormField(
-                                            readOnly: true,
-                                            initialValue: _username,
-                                            onSaved: (value) => {},
-                                            keyboardType: TextInputType.number,
-                                            decoration: const InputDecoration(
-                                                hintText: "Sales person name"),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Installation Branch",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(),
-                                              ),
-                                              Text(
-                                                "*",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(
-                                                        color: Colors.red),
-                                              )
-                                            ],
-                                          ),
-                                          TextFormField(
-                                            readOnly: true,
-                                            initialValue: _costcenter,
-                                            onSaved: (value) => {},
-                                            keyboardType: TextInputType.number,
-                                            decoration: const InputDecoration(
-                                                hintText:
-                                                    "Enter Vehicle No of Trackers"),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          CheckboxListTile(
-                                            controlAffinity:
-                                                ListTileControlAffinity
-                                                    .trailing,
-                                            title: Text(
-                                              'Install Fuel Sensor',
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Client Name",
                                               overflow: TextOverflow.ellipsis,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .subtitle2!
                                                   .copyWith(),
                                             ),
-                                            value: isOther6,
-                                            activeColor: Colors.red,
-                                            onChanged: (bool? value) {
-                                              setState(() {
-                                                isOther6 = value!;
-                                              });
-                                            },
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Remarks",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2!
-                                                    .copyWith(),
-                                              ),
-                                              Text(
-                                                "*",
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  _toggle();
+                                                });
+                                              },
+                                              child: Text(
+                                                "Existing Client",
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .subtitle2!
                                                     .copyWith(
                                                         color: Colors.red),
-                                              )
-                                            ],
-                                          ),
-                                          TextFormField(
-                                            controller: _remarks,
-                                            validator: (value) => value!.isEmpty
-                                                ? "* This field is required"
-                                                : null,
-                                            onSaved: (value) => {remarks},
-                                            keyboardType: TextInputType.text,
-                                            decoration: const InputDecoration(
-                                                hintText: "Enter Remarks"),
-                                          ),
-                                          TextField(
-                                            controller:
-                                                _dateinput, //editing controller of this TextField
-                                            decoration: const InputDecoration(
-                                              icon: Icon(
-                                                Icons.calendar_today,
-                                                color: Colors.red,
-                                              ), //icon of text field
+                                              ),
                                             ),
-                                            readOnly:
-                                                true, //set it true, so that user will not able to edit text
-                                            onTap: () async {
-                                              DateTime? pickedDate =
-                                                  await showDatePicker(
-                                                      context: context,
-                                                      initialDate:
-                                                          DateTime.now(),
-                                                      firstDate: DateTime(
-                                                          2000), //DateTime.now() - not to allow to choose before today.
-                                                      lastDate: DateTime(2101));
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        isExistingClient == true
+                                            ? SearchableDropdown(
+                                                hint: const Text(
+                                                  "Existing Client",
+                                                ),
 
-                                              if (pickedDate != null) {
-                                                print(
-                                                    pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                                                String formattedDate =
-                                                    DateFormat('dd/MM/yyyy')
-                                                        .format(pickedDate);
-                                                print(
-                                                    formattedDate); //formatted date output using intl package =>  2021-03-16
-                                                //you can implement different kind of Date Format here according to your requirement
+                                                isExpanded: true,
+                                                onChanged: (value) {
+                                                  _selectedValue = value;
+                                                  _custid = value != null
+                                                      ? value['custid']
+                                                      : null;
+                                                  _custName = value != null
+                                                      ? value['company']
+                                                      : null;
+                                                  _custPhone = value != null
+                                                      ? value['mobile']
+                                                      : null;
+                                                  // _custEmail = value != null
+                                                  //     ? ['email']
+                                                  //     : null;
+                                                  setState(() {
+                                                    // _selectedValue = value!;
+                                                  });
+                                                  print(_selectedValue);
+                                                  print(_custName);
+                                                  print(_custid);
+                                                  print(_custPhone);
+                                                  _dropdownError = null;
+                                                },
 
-                                                setState(() {
-                                                  _dateinput.text =
-                                                      formattedDate; //set output date to TextField value.
-                                                });
-                                              } else {
-                                                print("Date is not selected");
-                                              }
-                                            },
-                                          )
-                                        ],
+                                                // isCaseSensitiveSearch: true,
+                                                searchHint: const Text(
+                                                  'Select Existing Client ',
+                                                  style:
+                                                      TextStyle(fontSize: 20),
+                                                ),
+                                                items: customersJson.map((val) {
+                                                  return DropdownMenuItem(
+                                                    child: getListTile(val),
+                                                    value: val,
+                                                  );
+                                                }).toList(),
+                                              )
+                                            : TextFormField(
+                                                controller: _custname,
+                                                validator: (value) => value!
+                                                            .isEmpty &&
+                                                        isExistingClient ==
+                                                            false
+                                                    ? "This field is required"
+                                                    : null,
+                                                onSaved: (value) => {custName},
+                                                keyboardType:
+                                                    TextInputType.name,
+                                                decoration: const InputDecoration(
+                                                    hintText:
+                                                        "Enter client's name"),
+                                              ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Phone Number",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2!
+                                                  .copyWith(),
+                                            ),
+                                            Text(
+                                              "",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2!
+                                                  .copyWith(color: Colors.red),
+                                            )
+                                          ],
+                                        ),
+                                        TextFormField(
+                                          controller: _custphone,
+                                          // initialValue: isExistingClient == true
+                                          //     ? _custPhone
+                                          //     : null,
+                                          validator: (value) => isExistingClient ==
+                                                  false
+                                              ? value!.isEmpty
+                                                  ? "Select Existing Customer or Enter phone number"
+                                                  : value.length < 10 == true ||
+                                                          value.length > 10 ==
+                                                              true
+                                                      ? "Enter valid phone number (0712345678)"
+                                                      : null
+                                              : null,
+                                          readOnly: isExistingClient == true
+                                              ? true
+                                              : false,
+                                          // initialValue: financierid == null
+                                          //     ? ""
+                                          //     : _financierPhone,
+                                          onSaved: (value) => {loanofficerName},
+                                          keyboardType: TextInputType.phone,
+                                          decoration: const InputDecoration(
+                                              hintText: "e.g 0711223344"),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Email",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2!
+                                                  .copyWith(),
+                                            ),
+                                            Text(
+                                              "",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2!
+                                                  .copyWith(color: Colors.red),
+                                            )
+                                          ],
+                                        ),
+                                        TextFormField(
+                                          controller: _custEmail,
+                                          readOnly: isExistingClient == true
+                                              ? true
+                                              : false,
+                                          onSaved: (value) =>
+                                              {loanofficerEmail},
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          decoration: const InputDecoration(
+                                              hintText: "Enter client's email"),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ))
+                          ])),
+                      Form(
+                          key: _formKey16,
+                          child: Column(children: <Widget>[
+                            Card(
+                                margin:
+                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                elevation: 0,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, top: 30, bottom: 20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Vehicle Details",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6!
+                                            .copyWith(
+                                                fontWeight: FontWeight.bold),
                                       ),
-                                    ))
-                              ])),
-                          Column(children: <Widget>[
+                                      const SizedBox(
+                                        height: 1,
+                                      ),
+                                      Text(
+                                        "",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2!
+                                            .copyWith(),
+                                      ),
+                                      const SizedBox(
+                                        height: 1,
+                                      ),
+                                    ],
+                                  ),
+                                )),
                             Card(
                                 margin:
                                     const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -1469,25 +941,444 @@ class _CreateJobCard extends State<CreateJobCard> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        "",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6!
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Registration No",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                          Text(
+                                            "*",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(color: Colors.red),
+                                          )
+                                        ],
+                                      ),
+                                      TextFormField(
+                                        controller: _vehiclereg,
+                                        validator: (value) => value!.isEmpty
+                                            ? "This field is required"
+                                            : null,
+                                        onSaved: (value) => {vehicleReg},
+                                        keyboardType: TextInputType.name,
+                                        decoration: const InputDecoration(
+                                            hintText:
+                                                "Enter Vehicle Registration No"),
                                       ),
                                       const SizedBox(
                                         height: 10,
                                       ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Model",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                          Text(
+                                            "*",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(color: Colors.red),
+                                          )
+                                        ],
+                                      ),
+                                      TextFormField(
+                                        controller: _carmodel,
+                                        validator: (value) => value!.isEmpty
+                                            ? "This field is required"
+                                            : null,
+                                        onSaved: (value) => {carModel},
+                                        keyboardType: TextInputType.name,
+                                        decoration: const InputDecoration(
+                                            hintText: "Enter Vehicle Model"),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Chassis No",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                        ],
+                                      ),
+                                      TextFormField(
+                                        controller: _chassisno,
+                                        onSaved: (value) => {chassisNo},
+                                        keyboardType: TextInputType.text,
+                                        decoration: const InputDecoration(
+                                            hintText:
+                                                "Enter Vehicle Chassis No"),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Engine No",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                        ],
+                                      ),
+                                      TextFormField(
+                                        controller: _engineno,
+                                        onSaved: (value) => {engineNo},
+                                        keyboardType: TextInputType.text,
+                                        decoration: const InputDecoration(
+                                            hintText:
+                                                "Enter Vehicle Engine No"),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Color",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                        ],
+                                      ),
+                                      TextFormField(
+                                        controller: _vehiclecolor,
+                                        onSaved: (value) => {vehicleColor},
+                                        keyboardType: TextInputType.text,
+                                        decoration: const InputDecoration(
+                                            hintText: "Enter Vehicle Color"),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Location",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                          Text(
+                                            "*",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(color: Colors.red),
+                                          )
+                                        ],
+                                      ),
+                                      TextFormField(
+                                        controller: _location,
+                                        validator: (value) => value!.isEmpty
+                                            ? "This field is required"
+                                            : null,
+                                        onSaved: (value) =>
+                                            {installationLocation},
+                                        keyboardType: TextInputType.text,
+                                        decoration: const InputDecoration(
+                                            hintText: "Enter Vehicle Location"),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "No of Trackers",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                          Text(
+                                            "*",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(color: Colors.red),
+                                          )
+                                        ],
+                                      ),
+                                      TextFormField(
+                                        controller: _notracker,
+                                        validator: (value) => value!.isEmpty
+                                            ? "This field is required"
+                                            : null,
+                                        onSaved: (value) => {noTracker},
+                                        keyboardType: TextInputType.number,
+                                        decoration: const InputDecoration(
+                                            hintText:
+                                                "Enter Vehicle No of Trackers"),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Preferred Installer",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                          Text(
+                                            "*",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(color: Colors.red),
+                                          )
+                                        ],
+                                      ),
+                                      SearchableDropdown(
+                                        hint: const Text(
+                                          "Enter Preferred Installer",
+                                        ),
+                                        isExpanded: true,
+                                        onChanged: (value) {
+                                          (value) => value == null
+                                              ? 'field required'
+                                              : null;
+                                          _selectedInstaller = value;
+                                          _techId = value != null
+                                              ? value['empid']
+                                              : null;
+                                          _techName = value != null
+                                              ? value['empname']
+                                              : null;
+                                          setState(() {
+                                            // _selectedValue = value!;
+                                          });
+                                          print(_selectedInstaller);
+                                          print(_techName);
+                                          print(_techId);
+                                          SessionPreferences()
+                                              .getSelectedTechnician()
+                                              .then((customer) {
+                                            setState(() {
+                                              _selectedInstaller = value;
+                                              _techId = value['empid'];
+                                              _techName = value['empname'];
+                                            });
+                                          });
+                                        },
+
+                                        value: _selectedInstaller,
+
+                                        // isCaseSensitiveSearch: true,
+                                        searchHint: new Text(
+                                          'Select Existing Client ',
+                                          style: new TextStyle(fontSize: 20),
+                                        ),
+                                        items: techniciansJson.map((val) {
+                                          return DropdownMenuItem(
+                                            child: Text(val['empname']),
+                                            value: val,
+                                          );
+                                        }).toList(),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Installation Branch",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                          Text(
+                                            "*",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(color: Colors.red),
+                                          )
+                                        ],
+                                      ),
+                                      TextFormField(
+                                        readOnly: true,
+                                        initialValue: _costcenter,
+                                        onSaved: (value) => {},
+                                        keyboardType: TextInputType.number,
+                                        decoration: const InputDecoration(
+                                            hintText:
+                                                "Enter Vehicle No of Trackers"),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      CheckboxListTile(
+                                        controlAffinity:
+                                            ListTileControlAffinity.trailing,
+                                        title: Text(
+                                          'Install Fuel Sensor',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2!
+                                              .copyWith(),
+                                        ),
+                                        value: isOther6,
+                                        activeColor: Colors.red,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            isOther6 = value!;
+                                          });
+                                        },
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Remarks",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                          Text(
+                                            "",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(color: Colors.red),
+                                          )
+                                        ],
+                                      ),
+                                      TextFormField(
+                                        controller: _remarks,
+                                        onSaved: (value) => {remarks},
+                                        keyboardType: TextInputType.text,
+                                        decoration: const InputDecoration(
+                                            hintText: "Enter Remarks"),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Installation Date",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                          Text(
+                                            "",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(color: Colors.red),
+                                          )
+                                        ],
+                                      ),
+                                      TextField(
+                                        controller:
+                                            _dateinput, //editing controller of this TextField
+                                        decoration: const InputDecoration(
+                                          icon: Icon(
+                                            Icons.calendar_today,
+                                            color: Colors.red,
+                                          ), //icon of text field
+                                        ),
+                                        readOnly:
+                                            true, //set it true, so that user will not able to edit text
+                                        onTap: () async {
+                                          DateTime? pickedDate =
+                                              await showDatePicker(
+                                                  context: context,
+                                                  initialDate: DateTime.now(),
+                                                  firstDate: DateTime(
+                                                      2000), //DateTime.now() - not to allow to choose before today.
+                                                  lastDate: DateTime(2101));
+
+                                          if (pickedDate != null) {
+                                            print(
+                                                pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                                            String formattedDate =
+                                                DateFormat('dd/MM/yyyy')
+                                                    .format(pickedDate);
+                                            print(
+                                                formattedDate); //formatted date output using intl package =>  2021-03-16
+                                            //you can implement different kind of Date Format here according to your requirement
+
+                                            setState(() {
+                                              _dateinput.text =
+                                                  formattedDate; //set output date to TextField value.
+                                            });
+                                          } else {
+                                            print("Date is not selected");
+                                          }
+                                        },
+                                      )
                                     ],
                                   ),
-                                )),
-                          ])
-                        ][currentForm]
-                      ],
-                    ),
-                  ),
+                                ))
+                          ])),
+                      Column(children: <Widget>[
+                        Card(
+                            margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                            elevation: 0,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 30, bottom: 30),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6!
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              ),
+                            )),
+                      ])
+                    ][currentForm]
+                  ],
                 ),
               ),
             ))
@@ -1561,7 +1452,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                                   _searchString = value;
                                 });
                               })
-                          : Text(
+                          : const Text(
                               'Search Financier by company name,email or phone number'),
                       actions: <Widget>[
                         Visibility(
@@ -1587,16 +1478,17 @@ class _CreateJobCard extends State<CreateJobCard> {
   // User? _loggedInUser;
   Widget getListTile(val) {
     return ListTile(
-      leading: Text(val['company'] ?? ''),
-      title: Text(val['mobile'] ?? ''),
+      leading: Text(val['mobile'] ?? ''),
+      title: Text(val['company'] ?? ''),
+      trailing: Text(val['email'] ?? ''),
     );
   }
 
   _fetchCustomers() async {
     String url = await Config.getBaseUrl();
 
-    HttpClientResponse response =
-        await Config.getRequestObject(url + 'customer/$_hrid', Config.get);
+    HttpClientResponse response = await Config.getRequestObject(
+        url + 'trackerjobcard/customer/?type=1&param=', Config.get);
     if (response != null) {
       print(response);
       response.transform(utf8.decoder).transform(LineSplitter()).listen((data) {
@@ -1665,9 +1557,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(name != null
-                        ? 'Financier email: $name'
-                        : 'Financier email: Undefined'),
+                    Text(name != null ? 'Name: $name' : 'Name: Undefined'),
                     // Text('Financier balance: $bal'),
                     // Text('PDCheque balance: $pdBal'),
                     // Text('Available Credit: $creditLimit')
@@ -1805,9 +1695,8 @@ class _CreateJobCard extends State<CreateJobCard> {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(company != null
-                        ? 'Financier email: $company'
-                        : 'Financier email: Undefined'),
+                    Text(
+                        company != null ? 'Name: $company' : 'Name: Undefined'),
                     // Text('Financier balance: $bal'),
                     // Text('PDCheque balance: $pdBal'),
                     // Text('Available Credit: $creditLimit')
@@ -1940,9 +1829,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                     String engineno = _engineno.text.trim();
                     String custname = _custname.text.trim();
                     String custphone = _custphone.text.trim();
-                    // String financierid = _financierid.text;
-                    // String customerid = _customerid.text;
-                    // String customertypeid = _customertypeid.text;
+
                     int notracker = int.parse(_notracker.text);
                     String fuelsensor = _fuelsensor.text.trim();
                     String location = _location.text.trim();
@@ -1987,7 +1874,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                           "installationdate": dateinput.toString(),
                           "userid": _userid,
                           "technicianid": _techId,
-                          "remarks": remarks
+                          "remarks": remarks == null ? "" : remarks
                         }));
 
                     print(jsonEncode(<String, dynamic>{
@@ -2017,7 +1904,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                       "installationdate": dateinput.toString(),
                       "userid": _userid,
                       "technicianid": _techId,
-                      "remarks": remarks
+                      "remarks": remarks != null ? remarks : ""
                     }));
                     if (response != null) {
                       int statusCode = response.statusCode;

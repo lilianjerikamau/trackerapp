@@ -174,9 +174,7 @@ class _FinancierReceiptState extends State<FinancierReceipt> with RouteAware {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(name != null
-                        ? 'Financier email: $name'
-                        : 'Financier email: Undefined'),
+                    Text(name != null ? 'Name: $name' : 'Name: Undefined'),
                     // Text('Financier balance: $bal'),
                     // Text('PDCheque balance: $pdBal'),
                     // Text('Available Credit: $creditLimit')
@@ -189,7 +187,7 @@ class _FinancierReceiptState extends State<FinancierReceipt> with RouteAware {
                     String? custName = customer.company;
 
                     String itemDesc = _itemDescController.text.trim();
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => CreateJobCard(

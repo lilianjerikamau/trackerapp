@@ -16,7 +16,7 @@ class _SideMenuState extends State<SideMenu> {
       if (loggedIn == null) {
         setState(() {
           _loggedIn = false;
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),
           );
@@ -37,99 +37,106 @@ class _SideMenuState extends State<SideMenu> {
   BuildContext? _context;
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      backgroundColor: Colors.white,
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            child: Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.asset(
-                  'images/logo.png',
-                  height: 150.0,
-                  width: 100.0,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Drawer(
+          backgroundColor: Colors.white,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: const Icon(
+                        Icons.person,
+                        color: Colors.black,
+                        size: 150,
+                      ),
+                    ),
+                    color: Theme.of(context).primaryColorDark),
+                decoration:
+                    BoxDecoration(color: Theme.of(context).primaryColorDark),
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.home,
+                  color: Colors.black,
+                ),
+                title:
+                    const Text('Home', style: TextStyle(color: Colors.black)),
+                onTap: () => {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Home()),
+                  )
+                },
+              ),
+              // ListTile(
+              //   leading: const Icon(
+              //     Icons.track_changes,
+              //     color: Colors.black,
+              //   ),
+              //   title: const Text('Tracker',
+              //       style: TextStyle(
+              //         color: Colors.black,
+              //       )),
+              //   onTap: () => {
+              //     Navigator.pushReplacement(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => CreateTracker()),
+              //     ),
+              //   },
+              // ),
+              // ListTile(
+              //   leading: const Icon(
+              //     Icons.work,
+              //     color: Colors.black,
+              //   ),
+              //   title: const Text('Job-card',
+              //       style: TextStyle(
+              //         color: Colors.black,
+              //       )),
+              //   onTap: () => {
+              //     Navigator.pushReplacement(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => CreateTracker()),
+              //     ),
+              //   },
+              // ),
+              const SizedBox(
+                height: 150,
+              ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: ListTile(
+                  hoverColor: Colors.black,
+                  dense: true,
+                  visualDensity: const VisualDensity(vertical: -4),
+                  leading: const Icon(
+                    Icons.power_settings_new,
+                    color: Colors.black,
+                  ),
+                  title: const Text('Logout'),
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                    setState(() {
+                      SessionPreferences().setLoggedInStatus(false);
+                      _loggedIn = false;
+                    });
+                  },
                 ),
               ),
-              color: Colors.red,
-            ),
-            decoration: new BoxDecoration(
-              color: Colors.red,
-            ),
+            ],
           ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-              color: Colors.black,
-            ),
-            title: Text('Home', style: TextStyle(color: Colors.black)),
-            onTap: () => {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-              )
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.track_changes,
-              color: Colors.black,
-            ),
-            title: const Text('Tracker',
-                style: TextStyle(
-                  color: Colors.black,
-                )),
-            onTap: () => {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => CreateTracker()),
-              ),
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.work,
-              color: Colors.black,
-            ),
-            title: const Text('Job-card',
-                style: TextStyle(
-                  color: Colors.black,
-                )),
-            onTap: () => {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => CreateTracker()),
-              ),
-            },
-          ),
-          const SizedBox(
-            height: 150,
-          ),
-          ListTile(
-            hoverColor: Colors.black,
-            dense: true,
-            visualDensity: VisualDensity(vertical: -4),
-            leading: Icon(
-              Icons.power_settings_new,
-              color: Colors.black,
-            ),
-            title: Text('Logout'),
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
-              setState(() {
-                SessionPreferences().setLoggedInStatus(false);
-                _loggedIn = false;
-              });
-            },
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

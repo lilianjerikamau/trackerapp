@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:ui';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:trackerapp/database/sessionpreferences.dart';
 import 'package:trackerapp/models/jobcardmodels.dart';
 import 'package:trackerapp/models/usermodels.dart';
+import 'package:trackerapp/models/invoicemodels.dart';
 import 'package:trackerapp/screens/create_installation_job_card.dart';
 import 'package:trackerapp/screens/create_maintenace_job_card.dart';
 import 'package:trackerapp/screens/create_tracker.dart';
@@ -19,6 +21,10 @@ import 'package:trackerapp/screens/maintain_tracker.dart';
 import 'package:trackerapp/screens/selectcompany.dart';
 import 'package:trackerapp/screens/sidemenu/side_menu.dart';
 import 'package:trackerapp/utils/config.dart' as Config;
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:intl/intl.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import '../utils/config.dart';
 
 class Home extends StatefulWidget {
   final id;
@@ -59,33 +65,42 @@ class _HomeState extends State<Home> {
   List<JobCard> _pendingInstJobCards = [];
   List<JobCard> _pendingAllJobCards = [];
   List<JobCard> _pendingMaintJobCards = [];
+  List<Invoice>? _invoiceList = [];
+  Invoice? _selectedInvoice = null;
+  String _message = 'Specify a date range and press search';
   int? noJobCards;
+  int? _noPaidInvoices;
+  int? _noUnPaidInvoices;
   int? noInstJobCards;
   int? noMaintJobCards;
   List pendinInstJobCardsJson = [];
-  late String _pdBal = 'Loading ... ',
-      _custBal = 'Loading ... ',
-      _creditLimit = 'Loading ... ',
-      _availableCredit = 'Loading ... ',
-      _fromDate = 'Loading ...',
-      _toDate = 'Loading ...',
-      _imgFromSettings,
+  late String _imgFromSettings,
       _companyURL,
       _companyDomainUrl,
       _versionFromServer;
   late List<Widget> _actions;
   List<String> _jobCardTypes = ['Installation', 'Maintenance']; // Option 2
   late String _dropDownValue; // Option 2
+  static DateFormat _format = DateFormat('yyyy-MM-dd');
+  DateFormat _forDisplay = new DateFormat('d/MMMM/yyyy');
+  GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  TextEditingController _invTotalController = new TextEditingController();
+  TextEditingController _fromDateController = new TextEditingController();
+  TextEditingController _toDateController = new TextEditingController();
+  TextEditingController _grandTTController = new TextEditingController();
+  static var myDate = DateTime.parse(DateTime.now().toString());
+  static var fromDate = myDate.subtract(Duration(days: 30));
+  static var toDate = DateTime.now();
+  static String formattedFromDate = _format.format(fromDate);
+  static String formattedToDate = _format.format(toDate);
+  var _formattedFromDate = DateTime.parse(formattedFromDate);
+  var _formattedToDate = DateTime.parse(formattedToDate);
   // final prefix1.Stack<Widget> _pageStack = prefix1.Stack();
   // PackageInfo _packageInfo;
   // Widget _body;
   // int _buildNumberFromServer;
-  bool _loggedIn = false,
-      _loggingIn = false,
-      _showPass = true,
-      pressedOnce = false,
-      _setUpPrint = false,
-      _supDialogShown = false;
+  bool _loggedIn = false, _loggingIn = false;
+
   // _companySettingsDone = false;
   // _updateDialogShown = false;
   final _userNameInput = TextEditingController();
@@ -97,8 +112,12 @@ class _HomeState extends State<Home> {
   final _homeScaffoldKey = GlobalKey<ScaffoldState>();
   final _loginFormKey = GlobalKey<FormState>();
 
-  final imageUrl = "/AnchorERP/erp/images/?file=companylogo.png&pfdrid_c=true";
-  final imageHttp = "https://";
+  @override
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    super.setState(fn);
+  }
+
   // List<JobCard>? _pendingInstJobCards;
   @override
   void initState() {
@@ -109,7 +128,7 @@ class _HomeState extends State<Home> {
       if (loggedIn == null) {
         setState(() {
           _loggedIn = false;
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),
           );
@@ -131,6 +150,8 @@ class _HomeState extends State<Home> {
             _fetchPendingInstallationJobCard();
             _fetchPendingMaintJobCard();
             _fetchAllPendingJobCard();
+            _fetchUnpaidInvoices();
+            _fetchPaidInvoices();
           });
         }
       }
@@ -139,7 +160,8 @@ class _HomeState extends State<Home> {
     super.initState();
     bool isJobCardDetailTapped = false;
     bool isJobCardMaintDetailTapped = false;
-
+    bool isPaidJobCard = false;
+    bool isUnPaidJobCard = false;
     bool isAllJobCardTapped = false;
   }
 
@@ -158,13 +180,20 @@ class _HomeState extends State<Home> {
   //   }
   // }
   bool isJobCardDetailTapped = false;
+  bool isPaidJobCard = false;
+  bool isUnPaidJobCard = false;
   bool isJobCardMaintDetailTapped = false;
   bool isAllJobCardTapped = false;
   @override
   Widget build(BuildContext context) {
+    String? client = _selectedInvoice != null ? _selectedInvoice!.client : '';
+    Object? invoceamt =
+        _selectedInvoice != null ? _selectedInvoice!.invoiceamt : 0;
     return isJobCardDetailTapped == false &&
             isJobCardMaintDetailTapped == false &&
-            isAllJobCardTapped == false
+            isAllJobCardTapped == false &&
+            isPaidJobCard == false &&
+            isUnPaidJobCard == false
         ? Scaffold(
             backgroundColor: Colors.grey[200],
             drawer: SideMenu(),
@@ -267,12 +296,66 @@ class _HomeState extends State<Home> {
                                         SizedBox(
                                           width: 10,
                                         ),
-                                        Text("Approved",
+                                        Text("Approved : 0",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2!
                                                 .copyWith()),
                                       ],
+                                    ),
+                                  ),
+                                  Divider(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        isPaidJobCard = true;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Icon(Icons.monetization_on),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                              _noPaidInvoices != null
+                                                  ? "Paid Invoices : $_noPaidInvoices"
+                                                  : "Paid Invoices : 0",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2!
+                                                  .copyWith()),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Divider(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        isUnPaidJobCard = true;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Icon(Icons.money_off_rounded),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                              _noUnPaidInvoices != null
+                                                  ? "Unpaid Invoices : $_noUnPaidInvoices"
+                                                  : "Unpaid Invoices : 0",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2!
+                                                  .copyWith()),
+                                        ],
+                                      ),
                                     ),
                                   )
                                 ],
@@ -311,7 +394,7 @@ class _HomeState extends State<Home> {
                                               )),
                                           GestureDetector(
                                               onTap: () {
-                                                Navigator.push(
+                                                Navigator.pushReplacement(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
@@ -361,7 +444,7 @@ class _HomeState extends State<Home> {
                                               )),
                                           GestureDetector(
                                               onTap: () {
-                                                Navigator.push(
+                                                Navigator.pushReplacement(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
@@ -533,7 +616,7 @@ class _HomeState extends State<Home> {
                                             )),
                                         GestureDetector(
                                             onTap: () {
-                                              Navigator.push(
+                                              Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
@@ -583,7 +666,7 @@ class _HomeState extends State<Home> {
                                             )),
                                         GestureDetector(
                                             onTap: () {
-                                              Navigator.push(
+                                              Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
@@ -618,7 +701,7 @@ class _HomeState extends State<Home> {
                       color: Colors.red,
                     ),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => const Home()),
                       );
@@ -629,7 +712,7 @@ class _HomeState extends State<Home> {
                 ),
                 body: _body(),
               )
-            : isJobCardMaintDetailTapped
+            : isJobCardMaintDetailTapped == true
                 ? Scaffold(
                     backgroundColor: Colors.grey[200],
                     appBar: AppBar(
@@ -643,7 +726,7 @@ class _HomeState extends State<Home> {
                           color: Colors.red,
                         ),
                         onPressed: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const Home()),
@@ -655,30 +738,408 @@ class _HomeState extends State<Home> {
                     ),
                     body: _body1(),
                   )
-                : Scaffold(
-                    backgroundColor: Colors.grey[200],
-                    appBar: AppBar(
-                      title: const Text(
-                        'Pending All Job Cards',
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                      leading: IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: Colors.red,
+                : isAllJobCardTapped == true
+                    ? Scaffold(
+                        backgroundColor: Colors.grey[200],
+                        appBar: AppBar(
+                          title: const Text(
+                            'Pending All Job Cards',
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                          leading: IconButton(
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Home()),
+                              );
+                            },
+                          ),
+                          backgroundColor: Colors.white,
+                          elevation: 0.0,
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Home()),
+                        body: _body2())
+                    : isPaidJobCard == true
+                        ? WillPopScope(
+                            onWillPop: () async {
+                              if (_selectedInvoice != null) {
+                                setState(() {
+                                  _selectedInvoice = null;
+                                });
+                                return false;
+                              } else if (_invoiceList != null) {
+                                setState(() {
+                                  _invoiceList = null;
+                                });
+                                return false;
+                              }
+                              return true;
+                            },
+                            child: Scaffold(
+                                appBar: AppBar(
+                                  leading: IconButton(
+                                    icon: Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const Home()),
+                                      );
+                                    },
+                                  ),
+                                  title: Text(_selectedInvoice != null
+                                      ? 'Selected Invoice'
+                                      : 'Invoice History'),
+                                ),
+                                body: Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.all(15.0),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Form(
+                                        key: _formKey,
+                                        child: Container(
+                                          padding: EdgeInsets.all(10.0),
+                                          color: Colors.white70,
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                  child: DateTimeField(
+                                                decoration: InputDecoration(
+                                                    border: OutlineInputBorder(
+                                                        borderSide:
+                                                            BorderSide()),
+                                                    labelText: 'From Date'),
+                                                format: _format,
+                                                onShowPicker: (ctx, currVal) {
+                                                  return showDatePicker(
+                                                      context: ctx,
+                                                      initialDate:
+                                                          DateTime.now(),
+                                                      firstDate: DateTime(1900),
+                                                      lastDate: DateTime.now());
+                                                },
+                                                validator: (value) {
+                                                  if (value == null) {
+                                                    return 'Enter from Date';
+                                                  }
+                                                  return null;
+                                                },
+                                                controller: _fromDateController,
+                                                onChanged: (value) {
+                                                  if (value != null) {
+                                                    String toDate =
+                                                        _toDateController.text;
+                                                    if (toDate.isNotEmpty) {
+                                                      DateTime toDt =
+                                                          _format.parse(toDate);
+                                                      if (value.isAfter(toDt)) {
+                                                        setState(() {
+                                                          _fromDateController
+                                                              .clear();
+                                                        });
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (ctx) {
+                                                              return AlertDialog(
+                                                                title: Text(
+                                                                    'Wrong input'),
+                                                                content: Text(
+                                                                    'From date cannot come after to date'),
+                                                                actions: <
+                                                                    Widget>[
+                                                                  FlatButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            ctx);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Ok'))
+                                                                ],
+                                                              );
+                                                            });
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )),
+                                              Expanded(
+                                                  child: DateTimeField(
+                                                decoration: InputDecoration(
+                                                    border: OutlineInputBorder(
+                                                        borderSide:
+                                                            BorderSide()),
+                                                    labelText: 'To Date'),
+                                                format: _format,
+                                                onShowPicker: (ctx, currVal) {
+                                                  return showDatePicker(
+                                                      context: ctx,
+                                                      initialDate:
+                                                          DateTime.now(),
+                                                      firstDate: DateTime(1900),
+                                                      lastDate: DateTime.now());
+                                                },
+                                                validator: (value) {
+                                                  if (value == null) {
+                                                    return 'Enter to Date';
+                                                  }
+                                                  return null;
+                                                },
+                                                controller: _toDateController,
+                                                onChanged: (value) {
+                                                  if (value != null) {
+                                                    String fromDate =
+                                                        _fromDateController
+                                                            .text;
+                                                    if (fromDate.isNotEmpty) {
+                                                      DateTime fmDt = _format
+                                                          .parse(fromDate);
+                                                      if (value
+                                                          .isBefore(fmDt)) {
+                                                        setState(() {
+                                                          _toDateController
+                                                              .clear();
+                                                        });
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (ctx) {
+                                                              return AlertDialog(
+                                                                title: Text(
+                                                                    'Wrong input'),
+                                                                content: Text(
+                                                                    'From date cannot come after to date'),
+                                                                actions: <
+                                                                    Widget>[
+                                                                  FlatButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            ctx);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Ok'))
+                                                                ],
+                                                              );
+                                                            });
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ))
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(child: _itemsBody()),
+                                      _baseView()
+                                    ],
+                                  ),
+                                )),
+                          )
+                        : WillPopScope(
+                            onWillPop: () async {
+                              if (_selectedInvoice != null) {
+                                setState(() {
+                                  _selectedInvoice = null;
+                                });
+                                return false;
+                              } else if (_invoiceList != null) {
+                                setState(() {
+                                  _invoiceList = null;
+                                });
+                                return false;
+                              }
+                              return true;
+                            },
+                            child: Scaffold(
+                                appBar: AppBar(
+                                  leading: IconButton(
+                                    icon: Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const Home()),
+                                      );
+                                    },
+                                  ),
+                                  title: Text(_selectedInvoice != null
+                                      ? 'Selected Invoice'
+                                      : 'Invoice History'),
+                                ),
+                                body: Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.all(15.0),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Form(
+                                        key: _formKey,
+                                        child: Container(
+                                          padding: EdgeInsets.all(10.0),
+                                          color: Colors.white70,
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                  child: DateTimeField(
+                                                decoration: InputDecoration(
+                                                    border: OutlineInputBorder(
+                                                        borderSide:
+                                                            BorderSide()),
+                                                    labelText: 'From Date'),
+                                                format: _format,
+                                                onShowPicker: (ctx, currVal) {
+                                                  return showDatePicker(
+                                                      context: ctx,
+                                                      initialDate:
+                                                          DateTime.now(),
+                                                      firstDate: DateTime(1900),
+                                                      lastDate: DateTime.now());
+                                                },
+                                                validator: (value) {
+                                                  if (value == null) {
+                                                    return 'Enter from Date';
+                                                  }
+                                                  return null;
+                                                },
+                                                controller: _fromDateController,
+                                                onChanged: (value) {
+                                                  if (value != null) {
+                                                    String toDate =
+                                                        _toDateController.text;
+                                                    if (toDate.isNotEmpty) {
+                                                      DateTime toDt =
+                                                          _format.parse(toDate);
+                                                      if (value.isAfter(toDt)) {
+                                                        setState(() {
+                                                          _fromDateController
+                                                              .clear();
+                                                        });
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (ctx) {
+                                                              return AlertDialog(
+                                                                title: Text(
+                                                                    'Wrong input'),
+                                                                content: Text(
+                                                                    'From date cannot come after to date'),
+                                                                actions: <
+                                                                    Widget>[
+                                                                  FlatButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            ctx);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Ok'))
+                                                                ],
+                                                              );
+                                                            });
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )),
+                                              Expanded(
+                                                  child: DateTimeField(
+                                                decoration: InputDecoration(
+                                                    border: OutlineInputBorder(
+                                                        borderSide:
+                                                            BorderSide()),
+                                                    labelText: 'To Date'),
+                                                format: _format,
+                                                onShowPicker: (ctx, currVal) {
+                                                  return showDatePicker(
+                                                      context: ctx,
+                                                      initialDate:
+                                                          DateTime.now(),
+                                                      firstDate: DateTime(1900),
+                                                      lastDate: DateTime.now());
+                                                },
+                                                validator: (value) {
+                                                  if (value == null) {
+                                                    return 'Enter to Date';
+                                                  }
+                                                  return null;
+                                                },
+                                                controller: _toDateController,
+                                                onChanged: (value) {
+                                                  if (value != null) {
+                                                    String fromDate =
+                                                        _fromDateController
+                                                            .text;
+                                                    if (fromDate.isNotEmpty) {
+                                                      DateTime fmDt = _format
+                                                          .parse(fromDate);
+                                                      if (value
+                                                          .isBefore(fmDt)) {
+                                                        setState(() {
+                                                          _toDateController
+                                                              .clear();
+                                                        });
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (ctx) {
+                                                              return AlertDialog(
+                                                                title: Text(
+                                                                    'Wrong input'),
+                                                                content: Text(
+                                                                    'From date cannot come after to date'),
+                                                                actions: <
+                                                                    Widget>[
+                                                                  FlatButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            ctx);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Ok'))
+                                                                ],
+                                                              );
+                                                            });
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ))
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(child: _itemsBody1()),
+                                      _baseView1()
+                                    ],
+                                  ),
+                                )),
                           );
-                        },
-                      ),
-                      backgroundColor: Colors.white,
-                      elevation: 0.0,
-                    ),
-                    body: _body2());
   }
 
   _fetchAllPendingJobCard() async {
@@ -709,7 +1170,7 @@ class _HomeState extends State<Home> {
           });
         } else {
           setState(() {
-            // _message = 'You have not been assigned any customers';
+            _message = 'You have not been assigned any customers';
           });
         }
       });
@@ -757,7 +1218,7 @@ class _HomeState extends State<Home> {
                 onTap: () {
                   // SessionPreferences().setSelectedJobCard(jobCard);
 
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => PendingInstJobCardDetails(
@@ -824,7 +1285,7 @@ class _HomeState extends State<Home> {
           });
         } else {
           setState(() {
-            // _message = 'You have not been assigned any customers';
+            _message = 'You have not been assigned any customers';
           });
         }
       });
@@ -872,7 +1333,7 @@ class _HomeState extends State<Home> {
                 onTap: () {
                   // SessionPreferences().setSelectedJobCard(jobCard);
 
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => PendingInstJobCardDetails(
@@ -948,6 +1409,62 @@ class _HomeState extends State<Home> {
     }
   }
 
+  _fetchUnpaidInvoices() async {
+    String url = await getBaseUrl();
+    HttpClientResponse response = await getRequestObject(
+      url +
+          '/tracker/pendinginvoice/69?from=$formattedFromDate&to=$formattedToDate',
+      get,
+    );
+    if (response != null) {
+      response.transform(utf8.decoder).listen((data) {
+        var jsonResponse = json.decode(data);
+        var list = jsonResponse as List;
+        setState(() {
+          formattedFromDate != null ? print(formattedFromDate) : "null";
+          print(formattedToDate);
+          _noUnPaidInvoices = list.length;
+        });
+        List<Invoice> objs = list.map<Invoice>((json) {
+          return Invoice.fromJson(json);
+        }).toList();
+        print('Data fetched: -> $jsonResponse');
+        Invoice invObj = objs.first;
+        setState(() {
+          _selectedInvoice = invObj;
+        });
+      });
+    }
+  }
+
+  _fetchPaidInvoices() async {
+    String url = await getBaseUrl();
+    HttpClientResponse response = await getRequestObject(
+      url +
+          '/tracker/paidinvoice/69?from=$formattedFromDate&to=$formattedToDate',
+      get,
+    );
+    if (response != null) {
+      response.transform(utf8.decoder).listen((data) {
+        var jsonResponse = json.decode(data);
+        var list = jsonResponse as List;
+        setState(() {
+          formattedFromDate != null ? print(formattedFromDate) : "null";
+          print(formattedToDate);
+          _noPaidInvoices = list.length;
+        });
+        List<Invoice> objs = list.map<Invoice>((json) {
+          return Invoice.fromJson(json);
+        }).toList();
+        print('Data fetched: -> $jsonResponse');
+        Invoice invObj = objs.first;
+        setState(() {
+          _selectedInvoice = invObj;
+        });
+      });
+    }
+  }
+
   _listViewBuilder(List<JobCard> data) {
     return ListView.builder(
         itemBuilder: (bc, i) {
@@ -987,7 +1504,7 @@ class _HomeState extends State<Home> {
                 onTap: () {
                   // SessionPreferences().setSelectedJobCard(jobCard);
 
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => PendingInstJobCardDetails(
@@ -1023,6 +1540,395 @@ class _HomeState extends State<Home> {
     }
     return Center(
       child: Text('No pending job cards'),
+    );
+  }
+
+  _itemsBody() {
+    if (_invoiceList != null) {
+      if (_invoiceList!.isNotEmpty) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+              itemBuilder: (ctx, i) {
+                Invoice item = _invoiceList!.elementAt(i);
+                int? id = item.id;
+                String? vegreg = item.vegreg;
+                String? client = item.client;
+                int? balance = item.balance;
+                int? invoiceamt = item.invoiceamt;
+                return Container(
+                  color: Colors.white70,
+                  child: Column(
+                    children: <Widget>[
+                      Card(
+                        child: ListTile(
+                          leading: Icon(Icons.monetization_on),
+                          title: Text('Customer: $client'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Vehicle Registration: $vegreg'),
+                              Text('Invoice Amount: ' + invoiceamt.toString()),
+                            ],
+                          ),
+                          onTap: () async {
+                            setState(() {
+                              formattedFromDate != null
+                                  ? print(formattedFromDate)
+                                  : "null";
+                              print(formattedToDate);
+                              _noUnPaidInvoices = _invoiceList!.length;
+                            });
+                            // ProgressDialog dialog =
+                            //     new ProgressDialog(_context);
+                            // dialog.style(message: 'Loading invoice ... ');
+                            // dialog.show();
+                            String url = await getBaseUrl();
+                            HttpClientResponse response =
+                                await getRequestObject(
+                              url +
+                                  'https://erpqa.netrixbiz.com/AnchorERP/fused/api/tracker/paidinvoice/69?from=$formattedFromDate&to=$formattedToDate',
+                              get,
+                            );
+                            if (response != null) {
+                              response.transform(utf8.decoder).listen((data) {
+                                var jsonResponse = json.decode(data);
+                                var list = jsonResponse as List;
+                                List<Invoice> objs = list.map<Invoice>((json) {
+                                  return Invoice.fromJson(json);
+                                }).toList();
+                                print('Data fetched: -> $jsonResponse');
+                                Invoice invObj = objs.first;
+                                setState(() {
+                                  _selectedInvoice = invObj;
+                                  _noPaidInvoices = _invoiceList!.length;
+                                });
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      Divider()
+                    ],
+                  ),
+                );
+              },
+              itemCount: _invoiceList!.length),
+        );
+      } else {
+        // _message = 'No transactions found for the date range specified';
+      }
+    }
+    return Center(
+        // child: Text(_message),
+        );
+  }
+
+  _baseView() {
+    // if (_invoiceList != null && _invoiceList!.isNotEmpty) {
+    //   return Padding(
+    //     padding: const EdgeInsets.all(10.0),
+    //     child: TextFormField(
+    //       controller: _grandTTController,
+    //       enabled: false,
+    //       decoration: InputDecoration(
+    //           border: OutlineInputBorder(borderSide: BorderSide()),
+    //           labelText: 'Total invoice for time period'),
+    //     ),
+    //   );
+    // }
+    return CupertinoButton(
+        color: Colors.red,
+        child: Text('Search'),
+        onPressed: () async {
+          int? salesRepId = _loggedInUser.hrid;
+          if (_formKey.currentState!.validate()) {
+            String fromDate = _fromDateController.text;
+            String toDate = _toDateController.text;
+            ProgressDialog d = ProgressDialog(
+              context, type: ProgressDialogType.Normal,
+              isDismissible: true,
+
+              /// your body here
+              customBody: LinearProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
+                backgroundColor: Colors.white,
+              ),
+            );
+            d.style(message: 'Fetching items ... ');
+            d.show();
+            String url = await getBaseUrl();
+            HttpClientResponse response = await getRequestObject(
+                url +
+                    'tracker/paidinvoice/$salesRepId?from=$fromDate&to=$toDate',
+                get);
+            print(fromDate);
+            print(toDate);
+
+            d.hide();
+            if (response != null) {
+              response
+                  .transform(utf8.decoder)
+                  .transform(LineSplitter())
+                  .listen((data) {
+                var jsonResponse = json.decode(data);
+                var list = jsonResponse as List;
+                List<Invoice> items = list.map<Invoice>((json) {
+                  return Invoice.fromJson(json);
+                }).toList();
+                double tt = 0;
+                // items.forEach((item) {
+                //   tt += item.invoiceamt;
+                // });
+                setState(() {
+                  _invoiceList = items;
+                  _grandTTController.text =
+                      NumberFormat.currency(symbol: '').format(tt);
+                });
+              });
+            }
+          }
+        });
+  }
+
+  _listViewBuilder3(List<Invoice> details) {
+    return Container(
+      color: Colors.white70,
+      child: ListView.builder(
+          itemBuilder: (ctx, i) {
+            Invoice detail = details.elementAt(i);
+            String ttPrice =
+                NumberFormat.currency(symbol: '').format(detail.invoiceamt);
+            String unitPrice =
+                NumberFormat.currency(symbol: '').format(detail.balance);
+            String? qty = detail.mobile;
+            String? itemName = detail.client;
+            int? discount = detail.balance;
+            return Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Card(
+                    elevation: 15.0,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      color: Colors.blueGrey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text('Item description: $itemName',
+                              style: TextStyle(fontSize: 15)),
+                          Text('Unit Price: $unitPrice',
+                              style: TextStyle(fontSize: 15)),
+                          Text('Ordered quantity: $qty',
+                              style: TextStyle(fontSize: 15)),
+                          Text('Discount amount: $discount',
+                              style: TextStyle(fontSize: 15)),
+                          //  Text('Total Price: $ttPrice',
+                          //    style: TextStyle(fontSize: 15)),
+                          //  SizedBox(height: 20,),
+                          Text('Paybill No: $discount',
+                              style: TextStyle(fontSize: 15)),
+                          Text('Account No: $itemName',
+                              style: TextStyle(fontSize: 15))
+                        ],
+                      ),
+                    )));
+          },
+          itemCount: details.length),
+    );
+  }
+
+  _itemsBody1() {
+    if (_invoiceList != null) {
+      if (_invoiceList!.isNotEmpty) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+              itemBuilder: (ctx, i) {
+                Invoice item = _invoiceList!.elementAt(i);
+                int? id = item.id;
+                String? vegreg = item.vegreg;
+                String? client = item.client;
+                int? balance = item.balance;
+                int? invoiceamt = item.invoiceamt;
+                return Container(
+                  color: Colors.white70,
+                  child: Column(
+                    children: <Widget>[
+                      Card(
+                        elevation: 10,
+                        child: ListTile(
+                          leading: Icon(Icons.monetization_on),
+                          title: Text('Customer: $client'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text('Vehicle Registration: $vegreg'),
+                              Text('Invove Amount: ' + invoiceamt.toString()),
+                            ],
+                          ),
+                          onTap: () async {
+                            setState(() {});
+                            // ProgressDialog dialog =
+                            //     new ProgressDialog(_context);
+                            // dialog.style(message: 'Loading invoice ... ');
+                            // dialog.show();
+                            String url = await getBaseUrl();
+                            HttpClientResponse response =
+                                await getRequestObject(
+                              url +
+                                  'https://erpqa.netrixbiz.com/AnchorERP/fused/api/tracker/pendinginvoice/69?from=$formattedFromDate&to=$formattedToDate',
+                              get,
+                            );
+                            if (response != null) {
+                              response.transform(utf8.decoder).listen((data) {
+                                var jsonResponse = json.decode(data);
+                                var list = jsonResponse as List;
+                                setState(() {
+                                  formattedFromDate != null
+                                      ? print(formattedFromDate)
+                                      : "null";
+                                  print(formattedToDate);
+                                  _noUnPaidInvoices = list.length;
+                                });
+                                List<Invoice> objs = list.map<Invoice>((json) {
+                                  return Invoice.fromJson(json);
+                                }).toList();
+                                print('Data fetched: -> $jsonResponse');
+                                Invoice invObj = objs.first;
+                                setState(() {
+                                  _selectedInvoice = invObj;
+                                });
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      Divider()
+                    ],
+                  ),
+                );
+              },
+              itemCount: _invoiceList!.length),
+        );
+      } else {
+        // _message = 'No transactions found for the date range specified';
+      }
+    }
+    return Center(
+        // child: Text(_message),
+        );
+  }
+
+  _baseView1() {
+    // if (_invoiceList != null && _invoiceList!.isNotEmpty) {
+    //   return Padding(
+    //     padding: const EdgeInsets.all(10.0),
+    //     child: TextFormField(
+    //       controller: _grandTTController,
+    //       enabled: false,
+    //       decoration: InputDecoration(
+    //           border: OutlineInputBorder(borderSide: BorderSide()),
+    //           labelText: 'Total invoice for time period'),
+    //     ),
+    //   );
+    // }
+    return CupertinoButton(
+        color: Colors.red,
+        child: Text('Search'),
+        onPressed: () async {
+          int? salesRepId = _loggedInUser.hrid;
+          if (_formKey.currentState!.validate()) {
+            String fromDate = _fromDateController.text;
+            String toDate = _toDateController.text;
+            ProgressDialog d = ProgressDialog(
+              context, type: ProgressDialogType.Normal,
+              isDismissible: true,
+
+              /// your body here
+              customBody: LinearProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
+                backgroundColor: Colors.white,
+              ),
+            );
+            d.style(message: 'Fetching items ... ');
+            d.show();
+            String url = await getBaseUrl();
+            HttpClientResponse response = await getRequestObject(
+                url +
+                    'tracker/pendinginvoice/$salesRepId?from=$fromDate&to=$toDate',
+                get);
+            print(fromDate);
+            print(toDate);
+
+            d.hide();
+            if (response != null) {
+              response
+                  .transform(utf8.decoder)
+                  .transform(LineSplitter())
+                  .listen((data) {
+                var jsonResponse = json.decode(data);
+                var list = jsonResponse as List;
+                List<Invoice> items = list.map<Invoice>((json) {
+                  return Invoice.fromJson(json);
+                }).toList();
+                double tt = 0;
+                // items.forEach((item) {
+                //   tt += item.invoiceamt;
+                // });
+                setState(() {
+                  _invoiceList = items;
+                  _grandTTController.text =
+                      NumberFormat.currency(symbol: '').format(tt);
+                });
+              });
+            }
+          }
+        });
+  }
+
+  _listViewBuilder4(List<Invoice> details) {
+    return Container(
+      color: Colors.white70,
+      child: ListView.builder(
+          itemBuilder: (ctx, i) {
+            Invoice detail = details.elementAt(i);
+            String ttPrice =
+                NumberFormat.currency(symbol: '').format(detail.invoiceamt);
+            String unitPrice =
+                NumberFormat.currency(symbol: '').format(detail.balance);
+            String? qty = detail.mobile;
+            String? itemName = detail.client;
+            int? discount = detail.balance;
+            return Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Card(
+                    elevation: 15.0,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      color: Colors.blueGrey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text('Item description: $itemName',
+                              style: TextStyle(fontSize: 15)),
+                          Text('Unit Price: $unitPrice',
+                              style: TextStyle(fontSize: 15)),
+                          Text('Ordered quantity: $qty',
+                              style: TextStyle(fontSize: 15)),
+                          Text('Discount amount: $discount',
+                              style: TextStyle(fontSize: 15)),
+                          //  Text('Total Price: $ttPrice',
+                          //    style: TextStyle(fontSize: 15)),
+                          //  SizedBox(height: 20,),
+                          Text('Paybill No: $discount',
+                              style: TextStyle(fontSize: 15)),
+                          Text('Account No: $itemName',
+                              style: TextStyle(fontSize: 15))
+                        ],
+                      ),
+                    )));
+          },
+          itemCount: details.length),
     );
   }
 }

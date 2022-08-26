@@ -116,7 +116,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
   bool value1inspaf16 = true;
 
   int currentForm = 0;
-
+  int? currentFormState;
   int percentageComplete = 0;
   late User _loggedInUser;
   int? _userid;
@@ -125,6 +125,8 @@ class _MaintainTrackerState extends State<MaintainTracker> {
   String? _branchName;
   int? _costcenterid;
   String? _searchString;
+  String? _dropdownDeviceError;
+  String? _dropdownIMEIError;
   // String? _custPhone;
   String? _deviceSerialNo;
   String? _deviceDescription;
@@ -215,18 +217,22 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                               percentageComplete = 100;
                             }
                             break;
+                          case 3:
+                            form = _formKey16.currentState;
+
+                            if (currentForm == 3) {
+                              currentForm = 2;
+                              percentageComplete = 100;
+                            }
+                            break;
                         }
                       });
                     },
                     icon: Icon(
-                      currentForm == 0 || currentForm == 4
-                          ? Icons.error
-                          : Icons.arrow_back,
+                      currentForm == 0 ? Icons.error : Icons.arrow_back,
                       color: Colors.redAccent,
                     ),
-                    label: Text(currentForm == 0 || currentForm == 4
-                        ? "Invalid"
-                        : "Prev"),
+                    label: Text(currentForm == 0 ? "Invalid" : "Prev"),
                     heroTag: null,
                   ),
                 ),
@@ -262,8 +268,20 @@ class _MaintainTrackerState extends State<MaintainTracker> {
 
                             if (form.validate()) {
                               form.save();
-                              currentForm = 2;
-                              percentageComplete = 50;
+
+                              // _checkDuplicates();
+                              if (_selectedImei != null) {
+                                if (_selectedDevice != null) {
+                                  currentForm = 2;
+                                  percentageComplete = 25;
+                                } else {
+                                  setState(() => _dropdownDeviceError =
+                                      "This field is required");
+                                }
+                              } else {
+                                setState(() => _dropdownIMEIError =
+                                    "This field is required");
+                              }
                             } else {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
@@ -297,10 +315,10 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                         }
                       });
                     },
-                    icon: Icon(currentForm == 4
+                    icon: Icon(currentForm == 3
                         ? Icons.upload_rounded
                         : Icons.arrow_forward),
-                    label: Text(currentForm == 4 ? "finish" : "Next"),
+                    label: Text(currentForm == 3 ? "submit" : "Next"),
                     heroTag: null,
                   ),
                 ),
@@ -651,39 +669,6 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                       Row(
                                         children: [
                                           Text(
-                                            "Vehicle Type",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(),
-                                          ),
-                                          Text(
-                                            "",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(color: Colors.red),
-                                          )
-                                        ],
-                                      ),
-                                      TextFormField(
-                                        readOnly: true,
-                                        controller: _vehtype,
-                                        onSaved: (value) => {},
-                                        keyboardType: TextInputType.text,
-                                        decoration: const InputDecoration(
-                                            hintText: "Enter Vehicle Type"),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
                                             "Engine No",
                                             overflow: TextOverflow.ellipsis,
                                             style: Theme.of(context)
@@ -711,39 +696,6 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                         decoration: const InputDecoration(
                                             hintText:
                                                 "Enter Vehicle Engine No"),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Sales Person",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(),
-                                          ),
-                                          Text(
-                                            "*",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(color: Colors.red),
-                                          )
-                                        ],
-                                      ),
-                                      TextFormField(
-                                        initialValue: _userName,
-                                        readOnly: true,
-                                        onSaved: (value) => {},
-                                        keyboardType: TextInputType.text,
-                                        decoration: const InputDecoration(
-                                            hintText: "Sales Person"),
                                       ),
                                       const SizedBox(
                                         height: 10,
@@ -843,24 +795,27 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
-                                          (value) => value == null
-                                              ? 'field required'
-                                              : null;
-                                          _selectedImei = value;
-                                          _imeinoId = value != null
-                                              ? value['id']
-                                              : null;
-                                          _deviceSerialNo = value != null
-                                              ? value['serialno']
-                                              : null;
-                                          _deviceDescription = value != null
-                                              ? value['description']
-                                              : null;
+                                          _checkDuplicates();
+                                          setState(() {
+                                            _selectedImei = value != null
+                                                ? value
+                                                : 'Select IMEI Device';
+                                            _imeinoId = value != null
+                                                ? value['id']
+                                                : null;
+                                            _deviceSerialNo = value != null
+                                                ? value['serialno']
+                                                : null;
+                                            _deviceDescription = value != null
+                                                ? value['description']
+                                                : null;
 
-                                          print(_selectedImei);
-                                          print(_imeinoId);
-                                          print(_deviceSerialNo);
-                                          print(_deviceDescription);
+                                            print(_selectedImei);
+                                            print(_imeinoId);
+                                            print(_deviceSerialNo);
+                                            print(_deviceDescription);
+                                            _dropdownIMEIError = null;
+                                          });
                                         },
 
                                         // isCaseSensitiveSearch: true,
@@ -875,6 +830,13 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                           );
                                         }).toList(),
                                       ),
+                                      _dropdownIMEIError == null
+                                          ? SizedBox.shrink()
+                                          : Text(
+                                              _dropdownIMEIError ?? "",
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -903,9 +865,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
-                                          (value) => value == null
-                                              ? 'field required'
-                                              : null;
+                                          // _checkDuplicates();
                                           _selectedImei1 = value;
                                           _imeinoId1 = value != null
                                               ? value['id']
@@ -921,11 +881,12 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                           print(_imeinoId);
                                           print(_deviceSerialNo);
                                           print(_deviceDescription);
+                                          // set2.add(_selectedImei1);
                                         },
 
                                         // isCaseSensitiveSearch: true,
                                         searchHint: const Text(
-                                          'Backup1 IMEI Number',
+                                          'Select Backup1 IMEI Number',
                                           style: TextStyle(fontSize: 20),
                                         ),
                                         items: devicesJson.map((val) {
@@ -959,10 +920,11 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                       ),
                                       SearchableDropdown(
                                         hint: const Text(
-                                          "Backup2 IMEI Number",
+                                          "Select Backup2 IMEI Number",
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
+                                          _checkDuplicates();
                                           (value) => value == null
                                               ? 'field required'
                                               : null;
@@ -976,7 +938,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                           _deviceDescription = value != null
                                               ? value['description']
                                               : null;
-
+                                          // set2.add(_selectedImei2);
                                           print(_selectedImei);
                                           print(_imeinoId);
                                           print(_deviceSerialNo);
@@ -1023,24 +985,33 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
-                                          (value) => value == null
-                                              ? 'field required'
-                                              : null;
-                                          _selectedDevice = value;
-                                          _devicenoId = value != null
-                                              ? value['id']
-                                              : null;
-                                          _deviceSerialNo = value != null
-                                              ? value['serialno']
-                                              : null;
-                                          _deviceDescription = value != null
-                                              ? value['description']
-                                              : null;
+                                          _checkDuplicates();
+                                          setState(() {
+                                            (value) => value == null
+                                                ? 'field required'
+                                                : null;
+                                            _selectedDevice = value;
+                                            _devicenoId = value != null
+                                                ? value['id']
+                                                : null;
+                                            _deviceSerialNo = value != null
+                                                ? value['serialno']
+                                                : null;
+                                            _deviceDescription = value != null
+                                                ? value['description']
+                                                : null;
+                                            // set2.add(_selectedDevice);
+                                            // print(_selectedImei);
+                                            // print(_imeinoId);
+                                            // print(_deviceSerialNo);
+                                            // print(_deviceDescription);
+                                            _dropdownDeviceError = null;
+                                          });
                                         },
 
                                         // isCaseSensitiveSearch: true,
                                         searchHint: const Text(
-                                          'Select Device No ',
+                                          'Device No',
                                           style: TextStyle(fontSize: 20),
                                         ),
                                         items: devicesJson.map((val) {
@@ -1050,6 +1021,13 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                           );
                                         }).toList(),
                                       ),
+                                      _dropdownDeviceError == null
+                                          ? SizedBox.shrink()
+                                          : Text(
+                                              _dropdownDeviceError ?? "",
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -1078,6 +1056,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
+                                          _checkDuplicates();
                                           (value) => value == null
                                               ? 'field required'
                                               : null;
@@ -1091,11 +1070,12 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                           _deviceDescription = value != null
                                               ? value['description']
                                               : null;
+                                          // set2.add(_selectedDevice1);
                                         },
 
                                         // isCaseSensitiveSearch: true,
                                         searchHint: const Text(
-                                          'Select Backup1 Device No ',
+                                          'Select Backup1 Device No',
                                           style: TextStyle(fontSize: 20),
                                         ),
                                         items: devicesJson.map((val) {
@@ -1133,6 +1113,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
+                                          _checkDuplicates();
                                           (value) => value == null
                                               ? 'field required'
                                               : null;
@@ -1151,6 +1132,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                           // print(_imeinoId);
                                           // print(_deviceSerialNo);
                                           // print(_deviceDescription);
+                                          // set2.add(_selectedDevice2);
                                         },
 
                                         // isCaseSensitiveSearch: true,
@@ -1164,9 +1146,6 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                             value: val,
                                           );
                                         }).toList(),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
                                       ),
                                       const SizedBox(
                                         height: 10,
@@ -1192,9 +1171,6 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                       ),
                                       TextFormField(
                                         controller: _remarks,
-                                        validator: (value) => value!.isEmpty
-                                            ? "This field is required"
-                                            : null,
                                         onSaved: (value) => {},
                                         keyboardType: TextInputType.text,
                                         decoration: const InputDecoration(
@@ -1748,10 +1724,10 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                               margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                               elevation: 0.9,
                               shape: const RoundedRectangleBorder(
-                                  side: const BorderSide(
+                                  side: BorderSide(
                                       color: Colors.redAccent, width: 1),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10.0))),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
                               child: Padding(
                                 padding: const EdgeInsets.only(
                                     left: 0, right: 0, top: 30, bottom: 30),
@@ -2160,12 +2136,12 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                 style: const TextStyle(color: Colors.black),
               ),
               leading: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.arrow_back,
                   color: Colors.red,
                 ),
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => const Home()),
                   );
@@ -2301,8 +2277,8 @@ class _MaintainTrackerState extends State<MaintainTracker> {
         context: context,
         builder: (ctx) {
           return AlertDialog(
-            title: Text('Log out?'),
-            content: Text('Are you sure you want to log out?'),
+            title: Text('Submit?'),
+            content: Text('Are you sure you want to Submit?'),
             actions: <Widget>[
               FlatButton(
                   child: Text('No'),
@@ -2464,7 +2440,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
         "Success!",
         style: TextStyle(color: Colors.green),
       ),
-      content: Text("You have successfully created  a Job Card"),
+      content: Text("You have successfully created  a Tracker"),
       actions: [
         okButton,
       ],
@@ -2521,9 +2497,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(name != null
-                        ? 'Financier email: $name'
-                        : 'Financier email: Undefined'),
+                    Text(name != null ? 'Name : $name' : 'Name : Undefined'),
                   ],
                 ),
                 onTap: () {
@@ -2544,5 +2518,108 @@ class _MaintainTrackerState extends State<MaintainTracker> {
           );
         },
         itemCount: data.length);
+  }
+
+  void _checkDuplicates() {
+    // print(_imeinoId);
+    // print((_imeinoId == _imeinoId));
+    // if ((_imeinoId != null) == true) {
+    //   if ((_imeinoId == _imeinoId1) == true ||
+    //       (_imeinoId == _imeinoId2) == true ||
+    //       (_imeinoId == _devicenoId) == true ||
+    //       (_imeinoId == _devicenoId1) == true ||
+    //       (_imeinoId == _devicenoId2) == true) {
+    //     // Fluttertoast.showToast(msg: 'Duplicate value for IME1 Device');
+    //     setState(() {
+    //       currentFormState = 0;
+    //     });
+    //   } else {
+    //     setState(() {
+    //       currentFormState = 5;
+    //     });
+    //   }
+    // }
+    // if ((_imeinoId1 != null) == true) {
+    //   if ((_imeinoId1 == _imeinoId) == true ||
+    //       (_imeinoId1 == _imeinoId2) == true ||
+    //       (_imeinoId1 == _devicenoId) == true ||
+    //       (_imeinoId1 == _devicenoId1) == true ||
+    //       (_imeinoId1 == _devicenoId2) == true) {
+    //     setState(() {
+    //       currentFormState = 0;
+    //     });
+    //     // Fluttertoast.showToast(msg: 'Duplicate values for BACKUP1 IMEI NUMBER');
+    //   } else {
+    //     setState(() {
+    //       currentFormState = 5;
+    //     });
+    //   }
+    // }
+    // if ((_imeinoId2 != null) == true) {
+    //   if ((_imeinoId2 == _imeinoId) == true ||
+    //       (_imeinoId2 == _imeinoId1) == true ||
+    //       (_imeinoId2 == _devicenoId) == true ||
+    //       (_imeinoId2 == _devicenoId1) == true ||
+    //       (_imeinoId2 == _devicenoId2) == true) {
+    //     setState(() {
+    //       currentFormState = 0;
+    //     });
+    //     // Fluttertoast.showToast(msg: 'Duplicate values for BACKUP2 IMEI NUMBER');
+    //   } else {
+    //     setState(() {
+    //       currentFormState = 5;
+    //     });
+    //   }
+    // }
+    // if ((_devicenoId != null) == true) {
+    //   if ((_devicenoId == _imeinoId) == true ||
+    //       (_devicenoId == _imeinoId1) == true ||
+    //       (_devicenoId == _imeinoId2) == true ||
+    //       (_devicenoId == _devicenoId1) == true ||
+    //       (_devicenoId == _devicenoId2) == true) {
+    //     setState(() {
+    //       currentFormState = 0;
+    //     });
+    //     // Fluttertoast.showToast(msg: 'Duplicate values for Device Number');
+    //   } else {
+    //     setState(() {
+    //       currentFormState = 5;
+    //     });
+    //   }
+    // }
+    // if ((_devicenoId1 != null) == true) {
+    //   if ((_devicenoId1 == _imeinoId) == true ||
+    //       (_devicenoId1 == _imeinoId1) == true ||
+    //       (_devicenoId1 == _imeinoId2) == true ||
+    //       (_devicenoId1 == _devicenoId) == true ||
+    //       (_devicenoId1 == _devicenoId2) == true) {
+    //     setState(() {
+    //       currentFormState = 0;
+    //     });
+    //     // Fluttertoast.showToast(
+    //     // msg: 'Duplicate values for BACKUP1 DEVICE NUMBER');
+    //   } else {
+    //     setState(() {
+    //       currentFormState = 5;
+    //     });
+    //   }
+    // }
+    // if ((_devicenoId2 != null) == true) {
+    //   if ((_devicenoId2 == _imeinoId) == true ||
+    //       (_devicenoId2 == _imeinoId1) == true ||
+    //       (_devicenoId2 == _imeinoId2) == true ||
+    //       (_devicenoId2 == _devicenoId) == true ||
+    //       (_devicenoId2 == _devicenoId1) == true) {
+    //     setState(() {
+    //       currentFormState = 0;
+    //     });
+    //     // Fluttertoast.showToast(
+    //     // msg: 'Duplicate values for BACKUP2 DEVICE NUMBER');
+    //   } else {
+    //     setState(() {
+    //       currentFormState = 5;
+    //     });
+    //   }
+    // }
   }
 }

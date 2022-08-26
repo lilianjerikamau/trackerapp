@@ -144,8 +144,9 @@ class _MaintainJobCard extends State<MaintainJobCard> {
                         form = _formKey16.currentState;
                         if (form.validate()) {
                           form.save();
-                          currentForm = 1;
+
                           percentageComplete = 100;
+                          _submit();
                         } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
@@ -155,17 +156,13 @@ class _MaintainJobCard extends State<MaintainJobCard> {
                             duration: Duration(seconds: 3),
                           ));
                         }
-
-                        break;
-                      case 1:
-                        _submit();
                     }
                   });
                 },
                 icon: Icon(currentForm == 1
                     ? Icons.upload_rounded
                     : Icons.arrow_forward),
-                label: Text(currentForm == 1 ? "finish" : "next"),
+                label: Text(currentForm == 1 ? "Submit" : "Submit"),
               ),
             ),
           ],
@@ -505,7 +502,7 @@ class _MaintainJobCard extends State<MaintainJobCard> {
                                             .copyWith(),
                                       ),
                                       Text(
-                                        "*",
+                                        "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2!
@@ -515,12 +512,31 @@ class _MaintainJobCard extends State<MaintainJobCard> {
                                   ),
                                   TextFormField(
                                     controller: _remarks,
-                                    validator: (value) => value!.isEmpty
-                                        ? "* This field is required"
-                                        : null,
                                     keyboardType: TextInputType.text,
                                     decoration: const InputDecoration(
                                         hintText: "Enter Remarks"),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Timeline",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2!
+                                            .copyWith(),
+                                      ),
+                                      Text(
+                                        "",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2!
+                                            .copyWith(color: Colors.red),
+                                      )
+                                    ],
                                   ),
                                   TextField(
                                     controller:
@@ -604,6 +620,7 @@ class _MaintainJobCard extends State<MaintainJobCard> {
       leading: Text(val['vehReg'] ?? ''),
       title: Text(val['customer'] ?? ''),
       trailing: Text(val['model'] ?? ''),
+      subtitle: Text(val['custmobile'] ?? ''),
     );
   }
 
@@ -717,19 +734,19 @@ class _MaintainJobCard extends State<MaintainJobCard> {
                           "installationdate": dateinput.toString(),
                           "userid": _userid,
                           "technicianid": _techId,
-                          "remarks": remarks
+                          "remarks": remarks == null ? "" : remarks,
                         }));
 
                     print(jsonEncode(<String, dynamic>{
                       "jobcardtypeid": 1,
-                      "trackeridid": _trackerid,
+                      "trackerid": _trackerid,
                       "addition": isOther6,
                       "removed": isOther5,
                       "location": location,
                       "installationdate": dateinput.toString(),
                       "userid": _userid,
                       "technicianid": _techId,
-                      "remarks": remarks
+                      "remarks": remarks == null ? "" : remarks,
                     }));
                     if (response != null) {
                       int statusCode = response.statusCode;
@@ -785,7 +802,7 @@ void _showDialog(BuildContext context) {
       "Success!",
       style: TextStyle(color: Colors.green),
     ),
-    content: Text("You have successfully posted receipt"),
+    content: Text("You have successfully posted Job Card"),
     actions: [
       okButton,
     ],

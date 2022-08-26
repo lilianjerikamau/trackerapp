@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -115,7 +116,7 @@ class _CreateTracker extends State<CreateTracker> {
   bool value1inspaf16 = true;
 
   int currentForm = 0;
-
+  int? currentFormState;
   int percentageComplete = 0;
   late User _loggedInUser;
   int? _userid;
@@ -124,6 +125,8 @@ class _CreateTracker extends State<CreateTracker> {
   String? _branchName;
   int? _costcenterid;
   String? _searchString;
+  String? _dropdownDeviceError;
+  String? _dropdownIMEIError;
   // String? _custPhone;
   String? _deviceSerialNo;
   String? _deviceDescription;
@@ -144,6 +147,7 @@ class _CreateTracker extends State<CreateTracker> {
   double clipHeight = containerHeight * 0.35;
   DiagonalPosition position = DiagonalPosition.BOTTOM_LEFT;
   final size = 200.0;
+  HashSet<String> set2 = new HashSet<String>();
   @override
   void initState() {
     isSelectedJobCard = false;
@@ -214,18 +218,22 @@ class _CreateTracker extends State<CreateTracker> {
                               percentageComplete = 100;
                             }
                             break;
+                          case 3:
+                            form = _formKey16.currentState;
+
+                            if (currentForm == 3) {
+                              currentForm = 2;
+                              percentageComplete = 100;
+                            }
+                            break;
                         }
                       });
                     },
                     icon: Icon(
-                      currentForm == 0 || currentForm == 3
-                          ? Icons.error
-                          : Icons.arrow_back,
+                      currentForm == 0 ? Icons.error : Icons.arrow_back,
                       color: Colors.redAccent,
                     ),
-                    label: Text(currentForm == 0 || currentForm == 3
-                        ? "Invalid"
-                        : "Prev"),
+                    label: Text(currentForm == 0 ? "Invalid" : "Prev"),
                     heroTag: null,
                   ),
                 ),
@@ -257,62 +265,23 @@ class _CreateTracker extends State<CreateTracker> {
                             }
                             break;
                           case 1:
-
-                            // _selectedImei1 != null &&
-                            // _selectedImei2 != null &&
-                            // _selectedDevice != null &&
-                            // _selectedDevice1 != null &&
-                            // _selectedDevice2 != null
                             form = _formKey3.currentState;
+                            print(_selectedImei1);
+                            print(_selectedDevice2);
+                            print(_selectedImei != _selectedDevice);
                             if (form.validate()) {
+                              form.save();
                               if (_selectedImei != null) {
-                                if ((_selectedImei == _selectedDevice ||
-                                        _selectedImei == _selectedDevice1 ||
-                                        _selectedImei == _selectedDevice2 ||
-                                        _selectedImei == _selectedImei1 ||
-                                        _selectedImei == _selectedImei2) ||
-                                    (_selectedImei1 == _selectedDevice ||
-                                        _selectedImei1 == _selectedDevice1 ||
-                                        _selectedImei1 == _selectedDevice2 ||
-                                        _selectedImei1 == _selectedImei ||
-                                        _selectedImei1 == _selectedImei2) ||
-                                    (_selectedImei2 == _selectedDevice ||
-                                        _selectedImei2 == _selectedDevice1 ||
-                                        _selectedImei2 == _selectedDevice ||
-                                        _selectedImei2 == _selectedImei1 ||
-                                        _selectedImei2 == _selectedImei2) ||
-                                    (_selectedDevice == _selectedImei ||
-                                        _selectedDevice == _selectedDevice1 ||
-                                        _selectedDevice == _selectedDevice2 ||
-                                        _selectedDevice == _selectedImei1 ||
-                                        _selectedDevice == _selectedImei2) ||
-                                    (_selectedDevice1 == _selectedImei ||
-                                        _selectedDevice1 == _selectedDevice ||
-                                        _selectedDevice1 == _selectedDevice2 ||
-                                        _selectedDevice1 == _selectedImei1 ||
-                                        _selectedDevice1 == _selectedImei2) ||
-                                    (_selectedDevice2 == _selectedImei ||
-                                        _selectedDevice2 == _selectedDevice ||
-                                        _selectedDevice2 == _selectedDevice1 ||
-                                        _selectedDevice2 == _selectedImei1 ||
-                                        _selectedDevice2 == _selectedImei2)) {
-                                  Fluttertoast.showToast(
-                                      msg:
-                                          'Duplicate IMEI Number or Device Number ');
+                                if (_selectedDevice != null) {
+                                  currentForm = 2;
+                                  percentageComplete = 25;
                                 } else {
-                                  setState(() {
-                                    _selectedImei == 0 &&
-                                        _selectedImei1 == 0 &&
-                                        _selectedImei2 == 0 &&
-                                        _selectedDevice == 0 &&
-                                        _selectedDevice1 == 0 &&
-                                        _selectedDevice2 == 0;
-                                  });
+                                  setState(() => _dropdownDeviceError =
+                                      "This field is required");
                                 }
                               } else {
-                                setState() {
-                                  _selectedImei == 0;
-                                }
+                                setState(() => _dropdownIMEIError =
+                                    "This field is required");
                               }
                             } else {
                               ScaffoldMessenger.of(context)
@@ -350,7 +319,7 @@ class _CreateTracker extends State<CreateTracker> {
                     icon: Icon(currentForm == 3
                         ? Icons.upload_rounded
                         : Icons.arrow_forward),
-                    label: Text(currentForm == 3 ? "finish" : "Next"),
+                    label: Text(currentForm == 3 ? "Submit" : "Next"),
                     heroTag: null,
                   ),
                 ),
@@ -728,36 +697,7 @@ class _CreateTracker extends State<CreateTracker> {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Vehicle Type",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(),
-                                          ),
-                                          Text(
-                                            "",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(color: Colors.red),
-                                          )
-                                        ],
-                                      ),
-                                      TextFormField(
-                                        readOnly: true,
-                                        controller: _vehtype,
-                                        onSaved: (value) => {},
-                                        keyboardType: TextInputType.text,
-                                        decoration: const InputDecoration(
-                                            hintText: "Enter Vehicle Type"),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
+
                                       Row(
                                         children: [
                                           Text(
@@ -884,36 +824,36 @@ class _CreateTracker extends State<CreateTracker> {
                                             hintText: "Enter Region"),
                                       ),
 
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Sales Person",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(),
-                                          ),
-                                          Text(
-                                            "*",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(color: Colors.red),
-                                          )
-                                        ],
-                                      ),
-                                      TextFormField(
-                                        initialValue: _userName,
-                                        readOnly: true,
-                                        onSaved: (value) => {},
-                                        keyboardType: TextInputType.text,
-                                        decoration: const InputDecoration(
-                                            hintText: "Sales Person"),
-                                      ),
+                                      // const SizedBox(
+                                      //   height: 10,
+                                      // ),
+                                      // Row(
+                                      //   children: [
+                                      //     Text(
+                                      //       "Sales Person",
+                                      //       overflow: TextOverflow.ellipsis,
+                                      //       style: Theme.of(context)
+                                      //           .textTheme
+                                      //           .subtitle2!
+                                      //           .copyWith(),
+                                      //     ),
+                                      //     Text(
+                                      //       "*",
+                                      //       style: Theme.of(context)
+                                      //           .textTheme
+                                      //           .subtitle2!
+                                      //           .copyWith(color: Colors.red),
+                                      //     )
+                                      //   ],
+                                      // ),
+                                      // TextFormField(
+                                      //   initialValue: _userName,
+                                      //   readOnly: true,
+                                      //   onSaved: (value) => {},
+                                      //   keyboardType: TextInputType.text,
+                                      //   decoration: const InputDecoration(
+                                      //       hintText: "Sales Person"),
+                                      // ),
                                       // const SizedBox(
                                       //   height: 10,
                                       // ),
@@ -944,9 +884,7 @@ class _CreateTracker extends State<CreateTracker> {
                                       //   decoration: const InputDecoration(
                                       //       hintText: "Installation Branch"),
                                       // ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
+
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -1026,23 +964,28 @@ class _CreateTracker extends State<CreateTracker> {
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
-                                          _selectedImei = value != null
-                                              ? value
-                                              : 'Select IMEI Device';
-                                          _imeinoId = value != null
-                                              ? value['id']
-                                              : null;
-                                          _deviceSerialNo = value != null
-                                              ? value['serialno']
-                                              : null;
-                                          _deviceDescription = value != null
-                                              ? value['description']
-                                              : null;
+                                          setState(() {
+                                            _checkDuplicates();
+                                            _selectedImei = value != null
+                                                ? value
+                                                : 'Select IMEI Device';
+                                            _imeinoId = value != null
+                                                ? value['id']
+                                                : null;
+                                            _deviceSerialNo = value != null
+                                                ? value['serialno']
+                                                : null;
+                                            _deviceDescription = value != null
+                                                ? value['description']
+                                                : null;
+                                            _dropdownIMEIError = null;
+                                            print(_selectedImei);
+                                            print(_imeinoId);
+                                            print(_deviceSerialNo);
+                                            print(_deviceDescription);
 
-                                          print(_selectedImei);
-                                          print(_imeinoId);
-                                          print(_deviceSerialNo);
-                                          print(_deviceDescription);
+                                            // set2.add(_selectedImei);
+                                          });
                                         },
 
                                         // isCaseSensitiveSearch: true,
@@ -1057,6 +1000,13 @@ class _CreateTracker extends State<CreateTracker> {
                                           );
                                         }).toList(),
                                       ),
+                                      _dropdownIMEIError == null
+                                          ? SizedBox.shrink()
+                                          : Text(
+                                              _dropdownIMEIError ?? "",
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -1085,9 +1035,7 @@ class _CreateTracker extends State<CreateTracker> {
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
-                                          (value) => value == null
-                                              ? 'field required'
-                                              : null;
+                                          _checkDuplicates();
                                           _selectedImei1 = value;
                                           _imeinoId1 = value != null
                                               ? value['id']
@@ -1103,6 +1051,7 @@ class _CreateTracker extends State<CreateTracker> {
                                           print(_imeinoId);
                                           print(_deviceSerialNo);
                                           print(_deviceDescription);
+                                          // set2.add(_selectedImei1);
                                         },
 
                                         // isCaseSensitiveSearch: true,
@@ -1145,9 +1094,8 @@ class _CreateTracker extends State<CreateTracker> {
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
-                                          (value) => value == null
-                                              ? 'field required'
-                                              : null;
+                                          _checkDuplicates();
+
                                           _selectedImei2 = value;
                                           _imeinoId2 = value != null
                                               ? value['id']
@@ -1158,7 +1106,7 @@ class _CreateTracker extends State<CreateTracker> {
                                           _deviceDescription = value != null
                                               ? value['description']
                                               : null;
-
+                                          // set2.add(_selectedImei2);
                                           print(_selectedImei);
                                           print(_imeinoId);
                                           print(_deviceSerialNo);
@@ -1205,24 +1153,26 @@ class _CreateTracker extends State<CreateTracker> {
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
-                                          (value) => value == null
-                                              ? 'field required'
-                                              : null;
-                                          _selectedDevice = value;
-                                          _devicenoId = value != null
-                                              ? value['id']
-                                              : null;
-                                          _deviceSerialNo = value != null
-                                              ? value['serialno']
-                                              : null;
-                                          _deviceDescription = value != null
-                                              ? value['description']
-                                              : null;
+                                          setState(() {
+                                            _checkDuplicates();
 
-                                          // print(_selectedImei);
-                                          // print(_imeinoId);
-                                          // print(_deviceSerialNo);
-                                          // print(_deviceDescription);
+                                            _selectedDevice = value;
+                                            _devicenoId = value != null
+                                                ? value['id']
+                                                : null;
+                                            _deviceSerialNo = value != null
+                                                ? value['serialno']
+                                                : null;
+                                            _deviceDescription = value != null
+                                                ? value['description']
+                                                : null;
+                                            // set2.add(_selectedDevice);
+                                            // print(_selectedImei);
+                                            // print(_imeinoId);
+                                            // print(_deviceSerialNo);
+                                            // print(_deviceDescription);
+                                            _dropdownDeviceError = null;
+                                          });
                                         },
 
                                         // isCaseSensitiveSearch: true,
@@ -1237,6 +1187,13 @@ class _CreateTracker extends State<CreateTracker> {
                                           );
                                         }).toList(),
                                       ),
+                                      _dropdownDeviceError == null
+                                          ? SizedBox.shrink()
+                                          : Text(
+                                              _dropdownDeviceError ?? "",
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -1265,6 +1222,7 @@ class _CreateTracker extends State<CreateTracker> {
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
+                                          _checkDuplicates();
                                           (value) => value == null
                                               ? 'field required'
                                               : null;
@@ -1278,6 +1236,7 @@ class _CreateTracker extends State<CreateTracker> {
                                           _deviceDescription = value != null
                                               ? value['description']
                                               : null;
+                                          // set2.add(_selectedDevice1);
                                         },
 
                                         // isCaseSensitiveSearch: true,
@@ -1320,6 +1279,7 @@ class _CreateTracker extends State<CreateTracker> {
                                         ),
                                         isExpanded: true,
                                         onChanged: (value) {
+                                          _checkDuplicates();
                                           (value) => value == null
                                               ? 'field required'
                                               : null;
@@ -1338,6 +1298,7 @@ class _CreateTracker extends State<CreateTracker> {
                                           // print(_imeinoId);
                                           // print(_deviceSerialNo);
                                           // print(_deviceDescription);
+                                          // set2.add(_selectedDevice2);
                                         },
 
                                         // isCaseSensitiveSearch: true,
@@ -2401,7 +2362,6 @@ class _CreateTracker extends State<CreateTracker> {
 
   _fetchDeviceDetails() async {
     String url = await Config.getBaseUrl();
-
     HttpClientResponse response = await Config.getRequestObject(
         url + 'tracker/device/?cc=$_costcenterid&tech=$_hrid&param=0',
         Config.get);
@@ -2476,8 +2436,8 @@ class _CreateTracker extends State<CreateTracker> {
         context: context,
         builder: (ctx) {
           return AlertDialog(
-            title: Text('Log out?'),
-            content: Text('Are you sure you want to log out?'),
+            title: Text('Submit?'),
+            content: Text('Are you sure you want to submit'),
             actions: <Widget>[
               FlatButton(
                   child: Text('No'),
@@ -2653,7 +2613,7 @@ class _CreateTracker extends State<CreateTracker> {
         "Success!",
         style: TextStyle(color: Colors.green),
       ),
-      content: Text("You have successfully created  a Job Card"),
+      content: Text("You have successfully created  a Tracker"),
       actions: [
         okButton,
       ],
@@ -2710,9 +2670,7 @@ class _CreateTracker extends State<CreateTracker> {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(name != null
-                        ? 'Financier email: $name'
-                        : 'Financier email: Undefined'),
+                    Text(name != null ? 'Name: $name' : 'Name: Undefined'),
                   ],
                 ),
                 onTap: () {
@@ -2733,5 +2691,108 @@ class _CreateTracker extends State<CreateTracker> {
           );
         },
         itemCount: data.length);
+  }
+
+  void _checkDuplicates() {
+    // print(_imeinoId);
+    // print((_imeinoId == _imeinoId));
+    // if ((_imeinoId != null) == true) {
+    //   if ((_imeinoId == _imeinoId1) == true ||
+    //       (_imeinoId == _imeinoId2) == true ||
+    //       (_imeinoId == _devicenoId) == true ||
+    //       (_imeinoId == _devicenoId1) == true ||
+    //       (_imeinoId == _devicenoId2) == true) {
+    //     // Fluttertoast.showToast(msg: 'Duplicate value for IME1 Device');
+    //     setState(() {
+    //       currentFormState = 0;
+    //     });
+    //   } else {
+    //     setState(() {
+    //       currentFormState = 5;
+    //     });
+    //   }
+    // }
+    // if ((_imeinoId1 != null) == true) {
+    //   if ((_imeinoId1 == _imeinoId) == true ||
+    //       (_imeinoId1 == _imeinoId2) == true ||
+    //       (_imeinoId1 == _devicenoId) == true ||
+    //       (_imeinoId1 == _devicenoId1) == true ||
+    //       (_imeinoId1 == _devicenoId2) == true) {
+    //     setState(() {
+    //       currentFormState = 0;
+    //     });
+    //     // Fluttertoast.showToast(msg: 'Duplicate values for BACKUP1 IMEI NUMBER');
+    //   } else {
+    //     setState(() {
+    //       currentFormState = 5;
+    //     });
+    //   }
+    // }
+    // if ((_imeinoId2 != null) == true) {
+    //   if ((_imeinoId2 == _imeinoId) == true ||
+    //       (_imeinoId2 == _imeinoId1) == true ||
+    //       (_imeinoId2 == _devicenoId) == true ||
+    //       (_imeinoId2 == _devicenoId1) == true ||
+    //       (_imeinoId2 == _devicenoId2) == true) {
+    //     setState(() {
+    //       currentFormState = 0;
+    //     });
+    //     // Fluttertoast.showToast(msg: 'Duplicate values for BACKUP2 IMEI NUMBER');
+    //   } else {
+    //     setState(() {
+    //       currentFormState = 5;
+    //     });
+    //   }
+    // }
+    // if ((_devicenoId != null) == true) {
+    //   if ((_devicenoId == _imeinoId) == true ||
+    //       (_devicenoId == _imeinoId1) == true ||
+    //       (_devicenoId == _imeinoId2) == true ||
+    //       (_devicenoId == _devicenoId1) == true ||
+    //       (_devicenoId == _devicenoId2) == true) {
+    //     setState(() {
+    //       currentFormState = 0;
+    //     });
+    //     // Fluttertoast.showToast(msg: 'Duplicate values for Device Number');
+    //   } else {
+    //     setState(() {
+    //       currentFormState = 5;
+    //     });
+    //   }
+    // }
+    // if ((_devicenoId1 != null) == true) {
+    //   if ((_devicenoId1 == _imeinoId) == true ||
+    //       (_devicenoId1 == _imeinoId1) == true ||
+    //       (_devicenoId1 == _imeinoId2) == true ||
+    //       (_devicenoId1 == _devicenoId) == true ||
+    //       (_devicenoId1 == _devicenoId2) == true) {
+    //     setState(() {
+    //       currentFormState = 0;
+    //     });
+    //     // Fluttertoast.showToast(
+    //     // msg: 'Duplicate values for BACKUP1 DEVICE NUMBER');
+    //   } else {
+    //     setState(() {
+    //       currentFormState = 5;
+    //     });
+    //   }
+    // }
+    // if ((_devicenoId2 != null) == true) {
+    //   if ((_devicenoId2 == _imeinoId) == true ||
+    //       (_devicenoId2 == _imeinoId1) == true ||
+    //       (_devicenoId2 == _imeinoId2) == true ||
+    //       (_devicenoId2 == _devicenoId) == true ||
+    //       (_devicenoId2 == _devicenoId1) == true) {
+    //     setState(() {
+    //       currentFormState = 0;
+    //     });
+    //     // Fluttertoast.showToast(
+    //     // msg: 'Duplicate values for BACKUP2 DEVICE NUMBER');
+    //   } else {
+    //     setState(() {
+    //       currentFormState = 5;
+    //     });
+    //   }
+    // }
   }
 }

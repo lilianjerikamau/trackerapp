@@ -106,7 +106,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                     child: Text('Continue'),
                     onPressed: () {
                       if (_codeInput.currentState!.validate()) {
-                        Navigator.push(widget.context,
+                        Navigator.pushReplacement(widget.context,
                             MaterialPageRoute(builder: (ctx) {
                           return NewPass(forgotPass);
                         }));

@@ -17,6 +17,7 @@ class ChooseCompany extends StatefulWidget {
 class _ChooseCompanyState extends State<ChooseCompany> {
   final _companysettingurl = new TextEditingController();
   final _companyUrlKey = GlobalKey<FormState>();
+  late String? _imgFromSettings;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,18 +56,17 @@ class _ChooseCompanyState extends State<ChooseCompany> {
                 } else {
                   SessionPreferences()
                       .setCompanySettings(CompanySettings(
-                          baseUrl: erpUrl +
-                              _companysettingurl.text.trim() +
-                              domainUrl,
+                          baseUrl: erpUrl + _companysettingurl.text + domainUrl,
                           imageName: 'logo.png'))
                       .then((value) {
                     widget.companySelected('logo.png');
                   });
+                  _loadImageFromSettings();
                   Fluttertoast.showToast(
                       msg: "Company setting updated successfully....",
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.BOTTOM,
-                      textColor: Colors.red);
+                      textColor: Colors.amberAccent);
                   Navigator.pushReplacement<void, void>(
                       context,
                       MaterialPageRoute<void>(
@@ -130,5 +130,12 @@ class _ChooseCompanyState extends State<ChooseCompany> {
         ),
       ),
     );
+  }
+
+  void _loadImageFromSettings() async {
+    CompanySettings settings = await SessionPreferences().getCompanySettings();
+    setState(() {
+      _imgFromSettings = settings.imageName;
+    });
   }
 }
