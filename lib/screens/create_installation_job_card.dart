@@ -25,6 +25,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:api_cache_manager/api_cache_manager.dart';
 import 'package:api_cache_manager/models/cache_db_model.dart';
 import 'package:query_params/query_params.dart';
+import 'package:camera/camera.dart';
 
 class CreateJobCard extends StatefulWidget {
   final custID;
@@ -48,6 +49,9 @@ List technicians = [];
 
 class _CreateJobCard extends State<CreateJobCard> {
   late User _loggedInUser;
+  List<CameraDescription>? cameras; //list out the camera available
+  CameraController? controller; //controller for camera
+  XFile? image; //for captured image
 
   int? _userid;
   int? _custid;
@@ -100,6 +104,7 @@ class _CreateJobCard extends State<CreateJobCard> {
 
   @override
   void initState() {
+    loadCamera();
     DateTime dateTime = DateTime.now();
     String formattedDate = DateFormat('yyyy/MM/dd').format(dateTime);
     _dateinput.text = formattedDate; //set the initial value of text field
@@ -131,6 +136,7 @@ class _CreateJobCard extends State<CreateJobCard> {
     // _financierName = widget.custName;
     isBankSelected = false;
     isFinancierSelected = false;
+    iscameraopen = false;
     // isExistingClient = true;
     // print(customerid);
 
@@ -147,6 +153,23 @@ class _CreateJobCard extends State<CreateJobCard> {
 
     _fetchTechnicians();
     super.initState();
+  }
+
+  loadCamera() async {
+    cameras = await availableCameras();
+    if (cameras != null) {
+      controller = CameraController(cameras![0], ResolutionPreset.max);
+      //cameras[0] = first camera, change to 1 to another camera
+
+      controller!.initialize().then((_) {
+        if (!mounted) {
+          return;
+        }
+        setState(() {});
+      });
+    } else {
+      print("NO any camera found");
+    }
   }
 
   bool _searchmode = false;
@@ -208,6 +231,7 @@ class _CreateJobCard extends State<CreateJobCard> {
   bool isOtherEnabled3 = false;
   bool? isBankSelected;
   bool? isFinancierSelected;
+  bool? iscameraopen;
   bool isExistingClient = false;
   bool isExistingFinancier = false;
   bool isOther5 = false;
@@ -898,7 +922,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                                         Radius.circular(10.0))),
                                 child: Padding(
                                   padding: const EdgeInsets.only(
-                                      left: 20, right: 20, top: 30, bottom: 20),
+                                      left: 20, right: 20, top: 10, bottom: 5),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -910,16 +934,6 @@ class _CreateJobCard extends State<CreateJobCard> {
                                             .headline6!
                                             .copyWith(
                                                 fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(
-                                        height: 1,
-                                      ),
-                                      Text(
-                                        "",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2!
-                                            .copyWith(),
                                       ),
                                       const SizedBox(
                                         height: 1,
@@ -1209,37 +1223,37 @@ class _CreateJobCard extends State<CreateJobCard> {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Installation Branch",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(),
-                                          ),
-                                          Text(
-                                            "*",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(color: Colors.red),
-                                          )
-                                        ],
-                                      ),
-                                      TextFormField(
-                                        readOnly: true,
-                                        initialValue: _costcenter,
-                                        onSaved: (value) => {},
-                                        keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                            hintText:
-                                                "Enter Vehicle No of Trackers"),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
+                                      // Row(
+                                      //   children: [
+                                      //     Text(
+                                      //       "Installation Branch",
+                                      //       overflow: TextOverflow.ellipsis,
+                                      //       style: Theme.of(context)
+                                      //           .textTheme
+                                      //           .subtitle2!
+                                      //           .copyWith(),
+                                      //     ),
+                                      //     Text(
+                                      //       "*",
+                                      //       style: Theme.of(context)
+                                      //           .textTheme
+                                      //           .subtitle2!
+                                      //           .copyWith(color: Colors.red),
+                                      //     )
+                                      //   ],
+                                      // ),
+                                      // TextFormField(
+                                      //   readOnly: true,
+                                      //   initialValue: _costcenter,
+                                      //   onSaved: (value) => {},
+                                      //   keyboardType: TextInputType.number,
+                                      //   decoration: const InputDecoration(
+                                      //       hintText:
+                                      //           "Enter Vehicle No of Trackers"),
+                                      // ),
+                                      // const SizedBox(
+                                      //   height: 10,
+                                      // ),
                                       CheckboxListTile(
                                         controlAffinity:
                                             ListTileControlAffinity.trailing,
@@ -1345,7 +1359,10 @@ class _CreateJobCard extends State<CreateJobCard> {
                                             print("Date is not selected");
                                           }
                                         },
-                                      )
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
                                     ],
                                   ),
                                 ))
@@ -1458,12 +1475,13 @@ class _CreateJobCard extends State<CreateJobCard> {
                         Visibility(
                           visible: !_searchmode,
                           child: IconButton(
-                              icon: Icon(Icons.search),
-                              onPressed: () {
-                                setState(() {
-                                  _searchmode = true;
-                                });
-                              }),
+                            icon: Icon(Icons.search),
+                            onPressed: () {
+                              setState(() {
+                                _searchmode = true;
+                              });
+                            },
+                          ),
                         )
                       ],
                     ),

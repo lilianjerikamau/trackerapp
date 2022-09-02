@@ -22,6 +22,7 @@ import 'package:trackerapp/widgets/validators.dart';
 // import 'package:seedfund/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:camera/camera.dart';
 
 class CreateTracker extends StatefulWidget {
   _CreateTracker createState() => _CreateTracker();
@@ -30,6 +31,9 @@ class CreateTracker extends StatefulWidget {
 const TWO_PI = 3.14 * .6;
 
 class _CreateTracker extends State<CreateTracker> {
+  List<CameraDescription>? cameras; //list out the camera available
+  CameraController? controller; //controller for camera
+  XFile? image; //for captured image
   TextEditingController dateinput = TextEditingController();
   late BuildContext _context;
   TextEditingController _searchController = new TextEditingController();
@@ -40,6 +44,7 @@ class _CreateTracker extends State<CreateTracker> {
   List<JobCard> _pendingInstJobCards = [];
   List<Device> _devicesJson = [];
   JobCard? jobCard;
+  String? filepath;
   List<JobCard>? _jobcards;
   final _installationdate = TextEditingController();
   final _remarks = TextEditingController();
@@ -139,6 +144,7 @@ class _CreateTracker extends State<CreateTracker> {
   int? _jobCardId;
   int? noJobCards;
   bool? isSelectedJobCard;
+  bool? iscameraon;
   late String otherValue1;
   late String otherValue2;
   late String otherValue3;
@@ -150,7 +156,9 @@ class _CreateTracker extends State<CreateTracker> {
   HashSet<String> set2 = new HashSet<String>();
   @override
   void initState() {
+    loadCamera();
     isSelectedJobCard = false;
+    iscameraon = false;
     _custName = null;
     _custPhone = null;
     _vehmodel = null;
@@ -176,10 +184,27 @@ class _CreateTracker extends State<CreateTracker> {
     });
   }
 
+  loadCamera() async {
+    cameras = await availableCameras();
+    if (cameras != null) {
+      controller = CameraController(cameras![0], ResolutionPreset.max);
+      //cameras[0] = first camera, change to 1 to another camera
+
+      controller!.initialize().then((_) {
+        if (!mounted) {
+          return;
+        }
+        setState(() {});
+      });
+    } else {
+      print("NO any camera found");
+    }
+  }
+
   bool _searchmode = false;
 
   Widget build(BuildContext context) {
-    return isSelectedJobCard == false
+    return isSelectedJobCard == false && iscameraon == false
         ? Scaffold(
             floatingActionButton: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -341,7 +366,7 @@ class _CreateTracker extends State<CreateTracker> {
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => Home()),
+                          MaterialPageRoute(builder: (context) => const Home()),
                         );
                       },
                     ),
@@ -384,7 +409,7 @@ class _CreateTracker extends State<CreateTracker> {
                             ],
                           ),
                         )),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                       ],
@@ -458,7 +483,7 @@ class _CreateTracker extends State<CreateTracker> {
                                                 .copyWith(),
                                           ),
                                           GestureDetector(
-                                            child: Icon(
+                                            child: const Icon(
                                               Icons.attach_file,
                                               color: Colors.red,
                                               size: 30.0,
@@ -471,7 +496,7 @@ class _CreateTracker extends State<CreateTracker> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 20,
                                       ),
                                       Row(
@@ -634,6 +659,33 @@ class _CreateTracker extends State<CreateTracker> {
                                       ),
                                       const SizedBox(
                                         height: 10,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            iscameraon = true;
+                                          });
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "Take a photo",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2!
+                                                  .copyWith(),
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            const Icon(
+                                              Icons.camera,
+                                              color: Colors.red,
+                                              size: 30.0,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -1001,11 +1053,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         }).toList(),
                                       ),
                                       _dropdownIMEIError == null
-                                          ? SizedBox.shrink()
+                                          ? const SizedBox.shrink()
                                           : Text(
                                               _dropdownIMEIError ?? "",
-                                              style:
-                                                  TextStyle(color: Colors.red),
+                                              style: const TextStyle(
+                                                  color: Colors.red),
                                             ),
                                       const SizedBox(
                                         height: 10,
@@ -1188,11 +1240,11 @@ class _CreateTracker extends State<CreateTracker> {
                                         }).toList(),
                                       ),
                                       _dropdownDeviceError == null
-                                          ? SizedBox.shrink()
+                                          ? const SizedBox.shrink()
                                           : Text(
                                               _dropdownDeviceError ?? "",
-                                              style:
-                                                  TextStyle(color: Colors.red),
+                                              style: const TextStyle(
+                                                  color: Colors.red),
                                             ),
                                       const SizedBox(
                                         height: 10,
@@ -2295,30 +2347,85 @@ class _CreateTracker extends State<CreateTracker> {
                 ),
               ),
             ))
-        : Scaffold(
-            backgroundColor: Colors.grey[200],
-            appBar: AppBar(
-              title: const Text(
-                'Pending Job Cards',
-                style: const TextStyle(color: Colors.black),
-              ),
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.red,
+        : isSelectedJobCard == true
+            ? Scaffold(
+                backgroundColor: Colors.grey[200],
+                appBar: AppBar(
+                  title: const Text(
+                    'Pending Job Cards',
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  leading: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.red,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Home()),
+                      );
+                    },
+                  ),
+                  backgroundColor: Colors.white,
+                  elevation: 0.0,
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Home()),
-                  );
-                },
-              ),
-              backgroundColor: Colors.white,
-              elevation: 0.0,
-            ),
-            body: _body(),
-          );
+                body: _body(),
+              )
+            : Scaffold(
+                appBar: AppBar(
+                  title: const Text("Capture Image from Camera"),
+                  backgroundColor: Colors.redAccent,
+                ),
+                body: Container(
+                    child: Column(children: [
+                  Container(
+                      height: 300,
+                      width: 400,
+                      child: controller == null
+                          ? const Center(child: Text("Loading Camera..."))
+                          : !controller!.value.isInitialized
+                              ? const Center(
+                                  child: const CircularProgressIndicator(),
+                                )
+                              : CameraPreview(controller!)),
+                  ElevatedButton.icon(
+                    //image capture button
+                    onPressed: () async {
+                      try {
+                        if (controller != null) {
+                          //check if contrller is not null
+                          if (controller!.value.isInitialized) {
+                            //check if controller is initialized
+                            image =
+                                await controller!.takePicture(); //capture image
+                            setState(() {
+                              iscameraon = false;
+                              filepath = File(image!.path).toString();
+                              print(filepath);
+                            });
+                          }
+                        }
+                      } catch (e) {
+                        print(e); //show error
+                      }
+                    },
+                    icon: const Icon(Icons.camera),
+                    label: const Text("Capture"),
+                  ),
+                  Container(
+                    //show captured image
+                    padding: const EdgeInsets.all(30),
+                    child: image == null
+                        ? const Text("No image captured")
+                        : Image.file(
+                            File(image!.path),
+                            height: 300,
+                          ),
+                    //display captured image
+                  )
+                ])),
+              );
   }
 
   _fetchPendingInstallationJobCard() async {
@@ -2329,7 +2436,10 @@ class _CreateTracker extends State<CreateTracker> {
     if (response != null) {
       print(response);
 
-      response.transform(utf8.decoder).transform(LineSplitter()).listen((data) {
+      response
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())
+          .listen((data) {
         var jsonResponse = json.decode(data);
 
         print(jsonResponse);
@@ -2367,7 +2477,10 @@ class _CreateTracker extends State<CreateTracker> {
         Config.get);
     if (response != null) {
       print(response);
-      response.transform(utf8.decoder).transform(LineSplitter()).listen((data) {
+      response
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())
+          .listen((data) {
         var jsonResponse = json.decode(data);
         setState(() {
           devicesJson = jsonResponse;
@@ -2402,7 +2515,10 @@ class _CreateTracker extends State<CreateTracker> {
         url + 'trackerjobcard/technician/', Config.get);
     if (response != null) {
       print(response);
-      response.transform(utf8.decoder).transform(LineSplitter()).listen((data) {
+      response
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())
+          .listen((data) {
         var jsonResponse = json.decode(data);
         print(jsonResponse);
         setState(() {
@@ -2436,11 +2552,11 @@ class _CreateTracker extends State<CreateTracker> {
         context: context,
         builder: (ctx) {
           return AlertDialog(
-            title: Text('Submit?'),
-            content: Text('Are you sure you want to submit'),
+            title: const Text('Submit?'),
+            content: const Text('Are you sure you want to submit'),
             actions: <Widget>[
               FlatButton(
-                  child: Text('No'),
+                  child: const Text('No'),
                   onPressed: () {
                     Navigator.pop(ctx);
                   }),
@@ -2457,7 +2573,8 @@ class _CreateTracker extends State<CreateTracker> {
 
                     String remarks = _remarks.text.trim();
                     String dateinput = _dateinput.text;
-                    LinearProgressIndicator dial = LinearProgressIndicator();
+                    LinearProgressIndicator dial =
+                        const LinearProgressIndicator();
 
                     String demoUrl = await Config.getBaseUrl();
                     Uri url = Uri.parse(demoUrl + 'tracker/');
@@ -2585,7 +2702,7 @@ class _CreateTracker extends State<CreateTracker> {
                           msg: 'There was no response from the server');
                     }
                   },
-                  child: Text('Yes'))
+                  child: const Text('Yes'))
             ],
           );
         });
@@ -2600,20 +2717,20 @@ class _CreateTracker extends State<CreateTracker> {
 
   void _showDialog(BuildContext context) {
     Widget okButton = TextButton(
-      child: Text("OK"),
+      child: const Text("OK"),
       onPressed: () {
         Navigator.of(context).pop();
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => Home()));
+            .push(MaterialPageRoute(builder: (context) => const Home()));
       },
     );
 
     AlertDialog alert = AlertDialog(
-      title: Text(
+      title: const Text(
         "Success!",
-        style: TextStyle(color: Colors.green),
+        style: const TextStyle(color: Colors.green),
       ),
-      content: Text("You have successfully created  a Tracker"),
+      content: const Text("You have successfully created  a Tracker"),
       actions: [
         okButton,
       ],
@@ -2635,8 +2752,8 @@ class _CreateTracker extends State<CreateTracker> {
 
       return _listViewBuilder(_pendingInstJobCards);
     }
-    return Center(
-      child: Text('No pending job cards'),
+    return const Center(
+      child: const Text('No pending job cards'),
     );
   }
 
@@ -2665,7 +2782,7 @@ class _CreateTracker extends State<CreateTracker> {
             child: Container(
               color: Colors.white70,
               child: ListTile(
-                leading: Icon(Icons.person),
+                leading: const Icon(Icons.person),
                 title: Text(name),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
