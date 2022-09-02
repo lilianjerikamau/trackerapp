@@ -89,7 +89,7 @@ class _HomeState extends State<Home> {
   TextEditingController _toDateController = new TextEditingController();
   TextEditingController _grandTTController = new TextEditingController();
   static var myDate = DateTime.parse(DateTime.now().toString());
-  static var fromDate = myDate.subtract(Duration(days: 30));
+  static var fromDate = myDate.subtract(const Duration(days: 30));
   static var toDate = DateTime.now();
   static String formattedFromDate = _format.format(fromDate);
   static String formattedToDate = _format.format(toDate);
@@ -200,7 +200,7 @@ class _HomeState extends State<Home> {
             appBar: AppBar(
               title: const Text(
                 'Home',
-                style: const TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.black),
               ),
               leading: Builder(
                 builder: (BuildContext context) {
@@ -216,6 +216,22 @@ class _HomeState extends State<Home> {
                   );
                 },
               ),
+              actions: [
+                IconButton(
+                    icon: const Icon(Icons.notifications, color: Colors.red),
+                    onPressed: () async {
+                      ProgressDialog dial = new ProgressDialog(context);
+                      dial.style(message: 'Refreshing dashboard data');
+                      dial.show();
+
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Home()),
+                      );
+                      print('----------------> CALLS MADE !!!!!!!!!!!');
+                      dial.hide();
+                    }),
+              ],
               backgroundColor: Colors.white,
               elevation: 0.0,
             ),
@@ -223,7 +239,7 @@ class _HomeState extends State<Home> {
                 ? SingleChildScrollView(
                     child: Column(
                       children: [
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: Card(
                             shape: const RoundedRectangleBorder(
@@ -235,18 +251,18 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             elevation: 2,
-                            margin: EdgeInsets.all(12.0),
+                            margin: const EdgeInsets.all(12.0),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
                                 children: [
-                                  SizedBox(),
+                                  const SizedBox(),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        children: [
+                                        children: const [
                                           Text('Job Card Details',
                                               style: TextStyle(
                                                 fontSize: 20.0,
@@ -259,7 +275,7 @@ class _HomeState extends State<Home> {
                                           ),
                                         ]),
                                   ),
-                                  Divider(),
+                                  const Divider(),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: GestureDetector(
@@ -272,8 +288,8 @@ class _HomeState extends State<Home> {
                                       },
                                       child: Row(
                                         children: <Widget>[
-                                          Icon(Icons.pending),
-                                          SizedBox(
+                                          const Icon(Icons.pending),
+                                          const SizedBox(
                                             width: 10,
                                           ),
                                           Text(
@@ -287,13 +303,13 @@ class _HomeState extends State<Home> {
                                       ),
                                     ),
                                   ),
-                                  Divider(),
+                                  const Divider(),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
                                       children: <Widget>[
-                                        Icon(Icons.check),
-                                        SizedBox(
+                                        const Icon(Icons.check),
+                                        const SizedBox(
                                           width: 10,
                                         ),
                                         Text("Approved : 0",
@@ -304,7 +320,7 @@ class _HomeState extends State<Home> {
                                       ],
                                     ),
                                   ),
-                                  Divider(),
+                                  const Divider(),
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -315,8 +331,8 @@ class _HomeState extends State<Home> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Row(
                                         children: <Widget>[
-                                          Icon(Icons.monetization_on),
-                                          SizedBox(
+                                          const Icon(Icons.monetization_on),
+                                          const SizedBox(
                                             width: 10,
                                           ),
                                           Text(
@@ -331,7 +347,7 @@ class _HomeState extends State<Home> {
                                       ),
                                     ),
                                   ),
-                                  Divider(),
+                                  const Divider(),
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -342,8 +358,8 @@ class _HomeState extends State<Home> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Row(
                                         children: <Widget>[
-                                          Icon(Icons.money_off_rounded),
-                                          SizedBox(
+                                          const Icon(Icons.money_off_rounded),
+                                          const SizedBox(
                                             width: 10,
                                           ),
                                           Text(
@@ -363,10 +379,10 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: Card(
-                            shape: RoundedRectangleBorder(
+                            shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15.0)),
                               side: BorderSide(
@@ -375,7 +391,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             elevation: 2,
-                            margin: EdgeInsets.all(12.0),
+                            margin: const EdgeInsets.all(12.0),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -386,7 +402,7 @@ class _HomeState extends State<Home> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text('Installation Job Card',
+                                          const Text('Installation Job Card',
                                               style: TextStyle(
                                                 fontSize: 20.0,
                                                 color: Colors.black,
@@ -398,25 +414,25 @@ class _HomeState extends State<Home> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          CreateJobCard()),
+                                                          const CreateJobCard()),
                                                 );
                                               },
-                                              child: Icon(
+                                              child: const Icon(
                                                 Icons.add,
                                                 color: Colors.red,
                                               )),
                                         ]),
                                   ),
-                                  SizedBox(),
+                                  const SizedBox(),
                                 ],
                               ),
                             ),
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: Card(
-                            shape: RoundedRectangleBorder(
+                            shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15.0)),
                               side: BorderSide(
@@ -425,7 +441,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             elevation: 2,
-                            margin: EdgeInsets.all(12.0),
+                            margin: const EdgeInsets.all(12.0),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -436,7 +452,7 @@ class _HomeState extends State<Home> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text('Maintenance Job Card',
+                                          const Text('Maintenance Job Card',
                                               style: TextStyle(
                                                 fontSize: 20.0,
                                                 color: Colors.black,
@@ -451,13 +467,13 @@ class _HomeState extends State<Home> {
                                                           MaintainJobCard()),
                                                 );
                                               },
-                                              child: Icon(
+                                              child: const Icon(
                                                 Icons.add,
                                                 color: Colors.red,
                                               )),
                                         ]),
                                   ),
-                                  SizedBox(),
+                                  const SizedBox(),
                                 ],
                               ),
                             ),
@@ -468,10 +484,10 @@ class _HomeState extends State<Home> {
                   )
                 : Column(
                     children: [
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: Card(
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(15.0)),
                             side: BorderSide(
@@ -480,7 +496,7 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                           elevation: 2,
-                          margin: EdgeInsets.all(12.0),
+                          margin: const EdgeInsets.all(12.0),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
@@ -492,7 +508,7 @@ class _HomeState extends State<Home> {
                                   child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: [
+                                      children: const [
                                         Text('Tracker Details',
                                             style: TextStyle(
                                               fontSize: 20.0,
@@ -505,7 +521,7 @@ class _HomeState extends State<Home> {
                                         ),
                                       ]),
                                 ),
-                                SizedBox(),
+                                const SizedBox(),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: GestureDetector(
@@ -516,8 +532,8 @@ class _HomeState extends State<Home> {
                                     },
                                     child: Row(
                                       children: <Widget>[
-                                        Icon(Icons.pending_actions),
-                                        SizedBox(
+                                        const Icon(Icons.pending_actions),
+                                        const SizedBox(
                                           width: 10,
                                         ),
                                         Text("Pending Approval :$noJobCards",
@@ -529,7 +545,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                 ),
-                                Divider(),
+                                const Divider(),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: GestureDetector(
@@ -540,8 +556,8 @@ class _HomeState extends State<Home> {
                                     },
                                     child: Row(
                                       children: <Widget>[
-                                        Icon(Icons.pending),
-                                        SizedBox(
+                                        const Icon(Icons.pending),
+                                        const SizedBox(
                                           width: 10,
                                         ),
                                         Text(
@@ -554,7 +570,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                 ),
-                                Divider(),
+                                const Divider(),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: GestureDetector(
@@ -565,8 +581,8 @@ class _HomeState extends State<Home> {
                                     },
                                     child: Row(
                                       children: <Widget>[
-                                        Icon(Icons.pending_outlined),
-                                        SizedBox(
+                                        const Icon(Icons.pending_outlined),
+                                        const SizedBox(
                                           width: 10,
                                         ),
                                         Text(
@@ -579,16 +595,16 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                 ),
-                                Divider(),
+                                const Divider(),
                               ],
                             ),
                           ),
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: Card(
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(15.0)),
                             side: BorderSide(
@@ -597,7 +613,7 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                           elevation: 2,
-                          margin: EdgeInsets.all(12.0),
+                          margin: const EdgeInsets.all(12.0),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
@@ -608,7 +624,7 @@ class _HomeState extends State<Home> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('Installation Tracker',
+                                        const Text('Installation Tracker',
                                             style: TextStyle(
                                               fontSize: 20.0,
                                               color: Colors.black,
@@ -623,22 +639,22 @@ class _HomeState extends State<Home> {
                                                         CreateTracker()),
                                               );
                                             },
-                                            child: Icon(
+                                            child: const Icon(
                                               Icons.add,
                                               color: Colors.red,
                                             )),
                                       ]),
                                 ),
-                                SizedBox(),
+                                const SizedBox(),
                               ],
                             ),
                           ),
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: Card(
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(15.0)),
                             side: BorderSide(
@@ -647,7 +663,7 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                           elevation: 2,
-                          margin: EdgeInsets.all(12.0),
+                          margin: const EdgeInsets.all(12.0),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
@@ -658,7 +674,7 @@ class _HomeState extends State<Home> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('Maintenance Tracker',
+                                        const Text('Maintenance Tracker',
                                             style: TextStyle(
                                               fontSize: 20.0,
                                               color: Colors.black,
@@ -670,16 +686,16 @@ class _HomeState extends State<Home> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        MaintainTracker()),
+                                                        const MaintainTracker()),
                                               );
                                             },
-                                            child: Icon(
+                                            child: const Icon(
                                               Icons.add,
                                               color: Colors.red,
                                             )),
                                       ]),
                                 ),
-                                SizedBox(),
+                                const SizedBox(),
                               ],
                             ),
                           ),
@@ -693,10 +709,10 @@ class _HomeState extends State<Home> {
                 appBar: AppBar(
                   title: const Text(
                     'Pending Installation Job Cards',
-                    style: const TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.black),
                   ),
                   leading: IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.arrow_back,
                       color: Colors.red,
                     ),
@@ -718,10 +734,10 @@ class _HomeState extends State<Home> {
                     appBar: AppBar(
                       title: const Text(
                         'Pending Maintenance Job Cards',
-                        style: const TextStyle(color: Colors.black),
+                        style: TextStyle(color: Colors.black),
                       ),
                       leading: IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.arrow_back,
                           color: Colors.red,
                         ),
@@ -744,10 +760,10 @@ class _HomeState extends State<Home> {
                         appBar: AppBar(
                           title: const Text(
                             'Pending All Job Cards',
-                            style: const TextStyle(color: Colors.black),
+                            style: TextStyle(color: Colors.black),
                           ),
                           leading: IconButton(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.arrow_back,
                               color: Colors.red,
                             ),
@@ -782,7 +798,7 @@ class _HomeState extends State<Home> {
                             child: Scaffold(
                                 appBar: AppBar(
                                   leading: IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.arrow_back,
                                       color: Colors.white,
                                     ),
@@ -800,19 +816,19 @@ class _HomeState extends State<Home> {
                                 ),
                                 body: Container(
                                   color: Colors.white,
-                                  padding: EdgeInsets.all(15.0),
+                                  padding: const EdgeInsets.all(15.0),
                                   child: Column(
                                     children: <Widget>[
                                       Form(
                                         key: _formKey,
                                         child: Container(
-                                          padding: EdgeInsets.all(10.0),
+                                          padding: const EdgeInsets.all(10.0),
                                           color: Colors.white70,
                                           child: Row(
                                             children: <Widget>[
                                               Expanded(
                                                   child: DateTimeField(
-                                                decoration: InputDecoration(
+                                                decoration: const InputDecoration(
                                                     border: OutlineInputBorder(
                                                         borderSide:
                                                             BorderSide()),
@@ -849,9 +865,9 @@ class _HomeState extends State<Home> {
                                                             context: context,
                                                             builder: (ctx) {
                                                               return AlertDialog(
-                                                                title: Text(
+                                                                title: const Text(
                                                                     'Wrong input'),
-                                                                content: Text(
+                                                                content: const Text(
                                                                     'From date cannot come after to date'),
                                                                 actions: <
                                                                     Widget>[
@@ -861,7 +877,7 @@ class _HomeState extends State<Home> {
                                                                         Navigator.pop(
                                                                             ctx);
                                                                       },
-                                                                      child: Text(
+                                                                      child: const Text(
                                                                           'Ok'))
                                                                 ],
                                                               );
@@ -870,14 +886,14 @@ class _HomeState extends State<Home> {
                                                     }
                                                   }
                                                 },
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
                                                         FontWeight.bold),
                                               )),
                                               Expanded(
                                                   child: DateTimeField(
-                                                decoration: InputDecoration(
+                                                decoration: const InputDecoration(
                                                     border: OutlineInputBorder(
                                                         borderSide:
                                                             BorderSide()),
@@ -916,9 +932,9 @@ class _HomeState extends State<Home> {
                                                             context: context,
                                                             builder: (ctx) {
                                                               return AlertDialog(
-                                                                title: Text(
+                                                                title: const Text(
                                                                     'Wrong input'),
-                                                                content: Text(
+                                                                content: const Text(
                                                                     'From date cannot come after to date'),
                                                                 actions: <
                                                                     Widget>[
@@ -928,7 +944,7 @@ class _HomeState extends State<Home> {
                                                                         Navigator.pop(
                                                                             ctx);
                                                                       },
-                                                                      child: Text(
+                                                                      child: const Text(
                                                                           'Ok'))
                                                                 ],
                                                               );
@@ -937,7 +953,7 @@ class _HomeState extends State<Home> {
                                                     }
                                                   }
                                                 },
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -968,177 +984,173 @@ class _HomeState extends State<Home> {
                               return true;
                             },
                             child: Scaffold(
-                                appBar: AppBar(
-                                  leading: IconButton(
-                                    icon: Icon(
-                                      Icons.arrow_back,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => const Home()),
-                                      );
-                                    },
+                              appBar: AppBar(
+                                leading: IconButton(
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.white,
                                   ),
-                                  title: Text(_selectedInvoice != null
-                                      ? 'Selected Invoice'
-                                      : 'Invoice History'),
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const Home()),
+                                    );
+                                  },
                                 ),
-                                body: Container(
-                                  color: Colors.white,
-                                  padding: EdgeInsets.all(15.0),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Form(
-                                        key: _formKey,
-                                        child: Container(
-                                          padding: EdgeInsets.all(10.0),
-                                          color: Colors.white70,
-                                          child: Row(
-                                            children: <Widget>[
-                                              Expanded(
-                                                  child: DateTimeField(
-                                                decoration: InputDecoration(
-                                                    border: OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide()),
-                                                    labelText: 'From Date'),
-                                                format: _format,
-                                                onShowPicker: (ctx, currVal) {
-                                                  return showDatePicker(
-                                                      context: ctx,
-                                                      initialDate:
-                                                          DateTime.now(),
-                                                      firstDate: DateTime(1900),
-                                                      lastDate: DateTime.now());
-                                                },
-                                                validator: (value) {
-                                                  if (value == null) {
-                                                    return 'Enter from Date';
-                                                  }
-                                                  return null;
-                                                },
-                                                controller: _fromDateController,
-                                                onChanged: (value) {
-                                                  if (value != null) {
-                                                    String toDate =
-                                                        _toDateController.text;
-                                                    if (toDate.isNotEmpty) {
-                                                      DateTime toDt =
-                                                          _format.parse(toDate);
-                                                      if (value.isAfter(toDt)) {
-                                                        setState(() {
-                                                          _fromDateController
-                                                              .clear();
-                                                        });
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (ctx) {
-                                                              return AlertDialog(
-                                                                title: Text(
-                                                                    'Wrong input'),
-                                                                content: Text(
-                                                                    'From date cannot come after to date'),
-                                                                actions: <
-                                                                    Widget>[
-                                                                  FlatButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        Navigator.pop(
-                                                                            ctx);
-                                                                      },
-                                                                      child: Text(
-                                                                          'Ok'))
-                                                                ],
-                                                              );
-                                                            });
-                                                      }
-                                                    }
-                                                  }
-                                                },
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )),
-                                              Expanded(
-                                                  child: DateTimeField(
-                                                decoration: InputDecoration(
-                                                    border: OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide()),
-                                                    labelText: 'To Date'),
-                                                format: _format,
-                                                onShowPicker: (ctx, currVal) {
-                                                  return showDatePicker(
-                                                      context: ctx,
-                                                      initialDate:
-                                                          DateTime.now(),
-                                                      firstDate: DateTime(1900),
-                                                      lastDate: DateTime.now());
-                                                },
-                                                validator: (value) {
-                                                  if (value == null) {
-                                                    return 'Enter to Date';
-                                                  }
-                                                  return null;
-                                                },
-                                                controller: _toDateController,
-                                                onChanged: (value) {
-                                                  if (value != null) {
-                                                    String fromDate =
+                                title: Text(_selectedInvoice != null
+                                    ? 'Selected Invoice'
+                                    : 'Invoice History'),
+                              ),
+                              body: Container(
+                                color: Colors.white,
+                                padding: const EdgeInsets.all(15.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    Form(
+                                      key: _formKey,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(10.0),
+                                        color: Colors.white70,
+                                        child: Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                                child: DateTimeField(
+                                              decoration: const InputDecoration(
+                                                  border: OutlineInputBorder(
+                                                      borderSide: BorderSide()),
+                                                  labelText: 'From Date'),
+                                              format: _format,
+                                              onShowPicker: (ctx, currVal) {
+                                                return showDatePicker(
+                                                    context: ctx,
+                                                    initialDate: DateTime.now(),
+                                                    firstDate: DateTime(1900),
+                                                    lastDate: DateTime.now());
+                                              },
+                                              validator: (value) {
+                                                if (value == null) {
+                                                  return 'Enter from Date';
+                                                }
+                                                return null;
+                                              },
+                                              controller: _fromDateController,
+                                              onChanged: (value) {
+                                                if (value != null) {
+                                                  String toDate =
+                                                      _toDateController.text;
+                                                  if (toDate.isNotEmpty) {
+                                                    DateTime toDt =
+                                                        _format.parse(toDate);
+                                                    if (value.isAfter(toDt)) {
+                                                      setState(() {
                                                         _fromDateController
-                                                            .text;
-                                                    if (fromDate.isNotEmpty) {
-                                                      DateTime fmDt = _format
-                                                          .parse(fromDate);
-                                                      if (value
-                                                          .isBefore(fmDt)) {
-                                                        setState(() {
-                                                          _toDateController
-                                                              .clear();
-                                                        });
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (ctx) {
-                                                              return AlertDialog(
-                                                                title: Text(
-                                                                    'Wrong input'),
-                                                                content: Text(
-                                                                    'From date cannot come after to date'),
-                                                                actions: <
-                                                                    Widget>[
-                                                                  FlatButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        Navigator.pop(
-                                                                            ctx);
-                                                                      },
-                                                                      child: Text(
-                                                                          'Ok'))
-                                                                ],
-                                                              );
-                                                            });
-                                                      }
+                                                            .clear();
+                                                      });
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (ctx) {
+                                                            return AlertDialog(
+                                                              title: const Text(
+                                                                  'Wrong input'),
+                                                              content: const Text(
+                                                                  'From date cannot come after to date'),
+                                                              actions: <Widget>[
+                                                                FlatButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator
+                                                                          .pop(
+                                                                              ctx);
+                                                                    },
+                                                                    child:
+                                                                        const Text(
+                                                                            'Ok'))
+                                                              ],
+                                                            );
+                                                          });
                                                     }
                                                   }
-                                                },
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ))
-                                            ],
-                                          ),
+                                                }
+                                              },
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                            Expanded(
+                                                child: DateTimeField(
+                                              decoration: const InputDecoration(
+                                                  border: OutlineInputBorder(
+                                                      borderSide: BorderSide()),
+                                                  labelText: 'To Date'),
+                                              format: _format,
+                                              onShowPicker: (ctx, currVal) {
+                                                return showDatePicker(
+                                                    context: ctx,
+                                                    initialDate: DateTime.now(),
+                                                    firstDate: DateTime(1900),
+                                                    lastDate: DateTime.now());
+                                              },
+                                              validator: (value) {
+                                                if (value == null) {
+                                                  return 'Enter to Date';
+                                                }
+                                                return null;
+                                              },
+                                              controller: _toDateController,
+                                              onChanged: (value) {
+                                                if (value != null) {
+                                                  String fromDate =
+                                                      _fromDateController.text;
+                                                  if (fromDate.isNotEmpty) {
+                                                    DateTime fmDt =
+                                                        _format.parse(fromDate);
+                                                    if (value.isBefore(fmDt)) {
+                                                      setState(() {
+                                                        _toDateController
+                                                            .clear();
+                                                      });
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (ctx) {
+                                                          return AlertDialog(
+                                                            title: const Text(
+                                                                'Wrong input'),
+                                                            content: const Text(
+                                                                'From date cannot come after to date'),
+                                                            actions: <Widget>[
+                                                              FlatButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator
+                                                                        .pop(
+                                                                            ctx);
+                                                                  },
+                                                                  child:
+                                                                      const Text(
+                                                                          'Ok'))
+                                                            ],
+                                                          );
+                                                        },
+                                                      );
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold),
+                                            ))
+                                          ],
                                         ),
                                       ),
-                                      Expanded(child: _itemsBody1()),
-                                      _baseView1()
-                                    ],
-                                  ),
-                                )),
+                                    ),
+                                    Expanded(child: _itemsBody1()),
+                                    _baseView1()
+                                  ],
+                                ),
+                              ),
+                            ),
                           );
   }
 
@@ -1149,7 +1161,10 @@ class _HomeState extends State<Home> {
         url + 'trackerjobcard/pending/$_hrid?type=3', Config.get);
     if (response != null) {
       print(response);
-      response.transform(utf8.decoder).transform(LineSplitter()).listen((data) {
+      response
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())
+          .listen((data) {
         var jsonResponse = json.decode(data);
         setState(() {
           pendinInstJobCardsJson = jsonResponse;
@@ -1204,7 +1219,7 @@ class _HomeState extends State<Home> {
             child: Container(
               color: Colors.white70,
               child: ListTile(
-                leading: Icon(Icons.pending),
+                leading: const Icon(Icons.pending),
                 title: Text(name),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1252,7 +1267,7 @@ class _HomeState extends State<Home> {
 
       return _listViewBuilder1(_pendingMaintJobCards);
     }
-    return Center(
+    return const Center(
       child: Text('No pending job cards'),
     );
   }
@@ -1264,7 +1279,10 @@ class _HomeState extends State<Home> {
         url + 'trackerjobcard/pending/$_hrid?type=0', Config.get);
     if (response != null) {
       print(response);
-      response.transform(utf8.decoder).transform(LineSplitter()).listen((data) {
+      response
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())
+          .listen((data) {
         var jsonResponse = json.decode(data);
         setState(() {
           pendinInstJobCardsJson = jsonResponse;
@@ -1319,7 +1337,7 @@ class _HomeState extends State<Home> {
             child: Container(
               color: Colors.white70,
               child: ListTile(
-                leading: Icon(Icons.pending),
+                leading: const Icon(Icons.pending),
                 title: Text(name),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1367,7 +1385,7 @@ class _HomeState extends State<Home> {
 
       return _listViewBuilder2(_pendingAllJobCards);
     }
-    return Center(
+    return const Center(
       child: Text('No pending job cards'),
     );
   }
@@ -1379,7 +1397,10 @@ class _HomeState extends State<Home> {
         url + 'trackerjobcard/pending/$_hrid?type=1', Config.get);
     if (response != null) {
       print(response);
-      response.transform(utf8.decoder).transform(LineSplitter()).listen((data) {
+      response
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())
+          .listen((data) {
         var jsonResponse = json.decode(data);
         setState(() {
           pendinInstJobCardsJson = jsonResponse;
@@ -1490,7 +1511,7 @@ class _HomeState extends State<Home> {
             child: Container(
               color: Colors.white70,
               child: ListTile(
-                leading: Icon(Icons.pending),
+                leading: const Icon(Icons.pending),
                 title: Text(name),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1538,7 +1559,7 @@ class _HomeState extends State<Home> {
 
       return _listViewBuilder(_pendingInstJobCards);
     }
-    return Center(
+    return const Center(
       child: Text('No pending job cards'),
     );
   }
@@ -1562,7 +1583,7 @@ class _HomeState extends State<Home> {
                     children: <Widget>[
                       Card(
                         child: ListTile(
-                          leading: Icon(Icons.monetization_on),
+                          leading: const Icon(Icons.monetization_on),
                           title: Text('Customer: $client'),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1608,7 +1629,7 @@ class _HomeState extends State<Home> {
                           },
                         ),
                       ),
-                      Divider()
+                      const Divider()
                     ],
                   ),
                 );
@@ -1619,7 +1640,7 @@ class _HomeState extends State<Home> {
         // _message = 'No transactions found for the date range specified';
       }
     }
-    return Center(
+    return const Center(
         // child: Text(_message),
         );
   }
@@ -1639,7 +1660,7 @@ class _HomeState extends State<Home> {
     // }
     return CupertinoButton(
         color: Colors.red,
-        child: Text('Search'),
+        child: const Text('Search'),
         onPressed: () async {
           int? salesRepId = _loggedInUser.hrid;
           if (_formKey.currentState!.validate()) {
@@ -1650,7 +1671,7 @@ class _HomeState extends State<Home> {
               isDismissible: true,
 
               /// your body here
-              customBody: LinearProgressIndicator(
+              customBody: const LinearProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
                 backgroundColor: Colors.white,
               ),
@@ -1669,7 +1690,7 @@ class _HomeState extends State<Home> {
             if (response != null) {
               response
                   .transform(utf8.decoder)
-                  .transform(LineSplitter())
+                  .transform(const LineSplitter())
                   .listen((data) {
                 var jsonResponse = json.decode(data);
                 var list = jsonResponse as List;
@@ -1705,30 +1726,30 @@ class _HomeState extends State<Home> {
             String? itemName = detail.client;
             int? discount = detail.balance;
             return Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Card(
                     elevation: 15.0,
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
                       color: Colors.blueGrey,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text('Item description: $itemName',
-                              style: TextStyle(fontSize: 15)),
+                              style: const TextStyle(fontSize: 15)),
                           Text('Unit Price: $unitPrice',
-                              style: TextStyle(fontSize: 15)),
+                              style: const TextStyle(fontSize: 15)),
                           Text('Ordered quantity: $qty',
-                              style: TextStyle(fontSize: 15)),
+                              style: const TextStyle(fontSize: 15)),
                           Text('Discount amount: $discount',
-                              style: TextStyle(fontSize: 15)),
+                              style: const TextStyle(fontSize: 15)),
                           //  Text('Total Price: $ttPrice',
                           //    style: TextStyle(fontSize: 15)),
                           //  SizedBox(height: 20,),
                           Text('Paybill No: $discount',
-                              style: TextStyle(fontSize: 15)),
+                              style: const TextStyle(fontSize: 15)),
                           Text('Account No: $itemName',
-                              style: TextStyle(fontSize: 15))
+                              style: const TextStyle(fontSize: 15))
                         ],
                       ),
                     )));
@@ -1757,7 +1778,7 @@ class _HomeState extends State<Home> {
                       Card(
                         elevation: 10,
                         child: ListTile(
-                          leading: Icon(Icons.monetization_on),
+                          leading: const Icon(Icons.monetization_on),
                           title: Text('Customer: $client'),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1803,7 +1824,7 @@ class _HomeState extends State<Home> {
                           },
                         ),
                       ),
-                      Divider()
+                      const Divider()
                     ],
                   ),
                 );
@@ -1814,7 +1835,7 @@ class _HomeState extends State<Home> {
         // _message = 'No transactions found for the date range specified';
       }
     }
-    return Center(
+    return const Center(
         // child: Text(_message),
         );
   }
@@ -1834,7 +1855,7 @@ class _HomeState extends State<Home> {
     // }
     return CupertinoButton(
         color: Colors.red,
-        child: Text('Search'),
+        child: const Text('Search'),
         onPressed: () async {
           int? salesRepId = _loggedInUser.hrid;
           if (_formKey.currentState!.validate()) {
@@ -1845,7 +1866,7 @@ class _HomeState extends State<Home> {
               isDismissible: true,
 
               /// your body here
-              customBody: LinearProgressIndicator(
+              customBody: const LinearProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
                 backgroundColor: Colors.white,
               ),
@@ -1864,7 +1885,7 @@ class _HomeState extends State<Home> {
             if (response != null) {
               response
                   .transform(utf8.decoder)
-                  .transform(LineSplitter())
+                  .transform(const LineSplitter())
                   .listen((data) {
                 var jsonResponse = json.decode(data);
                 var list = jsonResponse as List;
@@ -1900,30 +1921,30 @@ class _HomeState extends State<Home> {
             String? itemName = detail.client;
             int? discount = detail.balance;
             return Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Card(
                     elevation: 15.0,
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
                       color: Colors.blueGrey,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text('Item description: $itemName',
-                              style: TextStyle(fontSize: 15)),
+                              style: const TextStyle(fontSize: 15)),
                           Text('Unit Price: $unitPrice',
-                              style: TextStyle(fontSize: 15)),
+                              style: const TextStyle(fontSize: 15)),
                           Text('Ordered quantity: $qty',
-                              style: TextStyle(fontSize: 15)),
+                              style: const TextStyle(fontSize: 15)),
                           Text('Discount amount: $discount',
-                              style: TextStyle(fontSize: 15)),
+                              style: const TextStyle(fontSize: 15)),
                           //  Text('Total Price: $ttPrice',
                           //    style: TextStyle(fontSize: 15)),
                           //  SizedBox(height: 20,),
                           Text('Paybill No: $discount',
-                              style: TextStyle(fontSize: 15)),
+                              style: const TextStyle(fontSize: 15)),
                           Text('Account No: $itemName',
-                              style: TextStyle(fontSize: 15))
+                              style: const TextStyle(fontSize: 15))
                         ],
                       ),
                     )));
