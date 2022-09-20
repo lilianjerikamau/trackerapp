@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // ignore: must_be_immutable
 class NewPass extends StatefulWidget {
   String status;
-  NewPass(this.status);
+  NewPass(this.status, {Key? key}) : super(key: key);
 
   @override
   _NewPassState createState() => _NewPassState();
@@ -43,10 +42,10 @@ class _NewPassState extends State<NewPass> {
   Widget build(BuildContext context) {
     _context = context;
     return Scaffold(
-      appBar: AppBar(title: Text('Change Password')),
+      appBar: AppBar(title: const Text('Change Password')),
       body: Container(
         color: Colors.white70,
-        padding: EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
         child: Form(
           key: _formKey,
           child: ListView(
@@ -55,7 +54,7 @@ class _NewPassState extends State<NewPass> {
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Visibility(
                     visible: widget.status == changePass,
-                    child: Text('Enter Your old password below')),
+                    child: const Text('Enter Your old password below')),
               ),
               Visibility(
                   visible: widget.status == changePass,
@@ -71,12 +70,13 @@ class _NewPassState extends State<NewPass> {
                           }
                         : null,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(borderSide: BorderSide()),
+                        border: const OutlineInputBorder(
+                            borderSide: const BorderSide()),
                         labelText: 'Enter your old password',
                         suffixIcon: IconButton(
                             icon: _showOldPass
-                                ? Icon(Icons.visibility_off)
-                                : Icon(Icons.visibility),
+                                ? const Icon(Icons.visibility_off)
+                                : const Icon(Icons.visibility),
                             onPressed: () {
                               setState(() {
                                 _showOldPass ^= true;
@@ -84,8 +84,8 @@ class _NewPassState extends State<NewPass> {
                             })),
                     obscureText: _showOldPass,
                   )),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.0),
                 child: Text(
                     'Enter and repeat your new password in the inputs below',
                     style: TextStyle(fontSize: 18, color: Colors.teal)),
@@ -100,12 +100,13 @@ class _NewPassState extends State<NewPass> {
                 },
                 obscureText: _showNewPass,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(borderSide: BorderSide()),
+                    border: const OutlineInputBorder(
+                        borderSide: const BorderSide()),
                     labelText: 'Enter new Password',
                     suffixIcon: IconButton(
                         icon: _showNewPass
-                            ? Icon(Icons.visibility_off)
-                            : Icon(Icons.visibility),
+                            ? const Icon(Icons.visibility_off)
+                            : const Icon(Icons.visibility),
                         onPressed: () {
                           setState(() {
                             _showNewPass ^= true;
@@ -113,7 +114,7 @@ class _NewPassState extends State<NewPass> {
                         })),
               ),
               Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: TextFormField(
                     controller: _rptPasswordController,
                     validator: (value) {
@@ -134,12 +135,13 @@ class _NewPassState extends State<NewPass> {
                     },
                     obscureText: _showRptPass,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(borderSide: BorderSide()),
+                        border: const OutlineInputBorder(
+                            borderSide: const BorderSide()),
                         labelText: 'Repeat new Password',
                         suffixIcon: IconButton(
                             icon: _showRptPass
-                                ? Icon(Icons.visibility_off)
-                                : Icon(Icons.visibility),
+                                ? const Icon(Icons.visibility_off)
+                                : const Icon(Icons.visibility),
                             onPressed: () {
                               setState(() {
                                 _showRptPass ^= true;
@@ -148,7 +150,7 @@ class _NewPassState extends State<NewPass> {
                   )),
               CupertinoButton(
                   color: Colors.blueGrey,
-                  child: Text('Change password'),
+                  child: const Text('Change password'),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       ProgressDialog dial = new ProgressDialog(context);

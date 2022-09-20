@@ -1,5 +1,3 @@
-// ignore_for_file: unused_field
-
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -235,7 +233,7 @@ class _HomeState extends State<Home> {
               backgroundColor: Colors.white,
               elevation: 0.0,
             ),
-            body: _isTechnician == false
+            body: _isTechnician == true
                 ? SingleChildScrollView(
                     child: Column(
                       children: [
@@ -536,11 +534,18 @@ class _HomeState extends State<Home> {
                                         const SizedBox(
                                           width: 10,
                                         ),
-                                        Text("Pending Approval :$noJobCards",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith()),
+                                        noInstJobCards != null
+                                            ? Text(
+                                                "Pending Approval :$noJobCards",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2!
+                                                    .copyWith())
+                                            : Text("Pending Approval :0",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2!
+                                                    .copyWith())
                                       ],
                                     ),
                                   ),
@@ -560,12 +565,18 @@ class _HomeState extends State<Home> {
                                         const SizedBox(
                                           width: 10,
                                         ),
-                                        Text(
-                                            "Pending Installation :$noInstJobCards",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith()),
+                                        noInstJobCards != null
+                                            ? Text(
+                                                "Pending Installation :$noInstJobCards",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2!
+                                                    .copyWith())
+                                            : Text("Pending Installation :0",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2!
+                                                    .copyWith())
                                       ],
                                     ),
                                   ),
@@ -585,12 +596,18 @@ class _HomeState extends State<Home> {
                                         const SizedBox(
                                           width: 10,
                                         ),
-                                        Text(
-                                            "Pending Maintenance : $noMaintJobCards",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith()),
+                                        noMaintJobCards != null
+                                            ? Text(
+                                                "Pending Maintenance : $noMaintJobCards",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2!
+                                                    .copyWith())
+                                            : Text("Pending Maintenance : 0",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2!
+                                                    .copyWith())
                                       ],
                                     ),
                                   ),

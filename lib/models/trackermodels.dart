@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'trackermodels.g.dart';
@@ -31,17 +32,18 @@ class Tracker {
   String? customer;
 
   factory Tracker.fromJson(Map<String, dynamic> json) => Tracker(
-      trackerid: json["trackerid"],
-      trackerdocno: json["trackerdocno"],
-      financier: json['financier'],
-      custmobile: json["custmobile"],
-      vehreg: json["vehreg"],
-      imei: json['imei'],
-      model: json["model"],
-      trackertype: json["trackertype"],
-      trackerlocation: json["trackerlocation"],
-      device: json["device"],
-      customer: json["customer"]);
+        trackerid: json["trackerid"],
+        trackerdocno: json["trackerdocno"],
+        financier: json['financier'],
+        custmobile: json["custmobile"],
+        vehreg: json["vehreg"],
+        imei: json['imei'],
+        model: json["model"],
+        trackertype: json["trackertype"],
+        trackerlocation: json["trackerlocation"],
+        device: json["device"],
+        customer: json["customer"],
+      );
 
   Map<String, dynamic> toJson() => {
         "trackerid": trackerid,
@@ -54,6 +56,28 @@ class Tracker {
         "trackertype": trackertype,
         "trackerlocation": trackerlocation,
         "device": device,
-        "customer": customer
+        "customer": customer,
+      };
+}
+
+class ImageList {
+  ImageList(this.images);
+
+  List<Images> images;
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'photolist': images,
+      };
+}
+
+class Images {
+  Images({required this.filename, required this.attachment});
+
+  String filename;
+  String attachment;
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'attachment': attachment,
+        'filename': filename,
       };
 }

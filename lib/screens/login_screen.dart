@@ -316,7 +316,7 @@ class _State extends State<LoginPage> {
                                                       msg: 'Welcome $username');
                                                 } else {
                                                   showDialog(
-                                                      context: _context,
+                                                      context: context,
                                                       builder:
                                                           (BuildContext bc) {
                                                         return CupertinoAlertDialog(
@@ -355,7 +355,7 @@ class _State extends State<LoginPage> {
                                             // Fluttertoast.showToast(
                                             //     msg: 'Error $statusCode Occured');
                                             showDialog(
-                                                context: _context,
+                                                context: context,
                                                 builder: (BuildContext bc) {
                                                   return CupertinoAlertDialog(
                                                     title: const Text(

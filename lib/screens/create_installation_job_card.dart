@@ -1891,7 +1891,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                           "location": location,
                           "installationdate": dateinput.toString(),
                           "userid": _userid,
-                          "technicianid": _techId,
+                          "technicianid": 30,
                           "remarks": remarks == null ? "" : remarks
                         }));
 

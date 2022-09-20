@@ -62,6 +62,9 @@ dev_dependencies:
   cached_network_image: ^3.2.0
   datetime_picker_formfield: ^2.0.0
   camera: ^0.9.4+11
+  image_picker: ^0.8.4+4
+  path: ^1.8.0
+  file_picker: ^4.6.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
