@@ -32,6 +32,7 @@ import 'package:async/async.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io' as Io;
+import 'package:transparent_image/transparent_image.dart';
 
 class CreateTracker extends StatefulWidget {
   _CreateTracker createState() => _CreateTracker();
@@ -57,12 +58,15 @@ class _CreateTracker extends State<CreateTracker> {
   late String imageFile;
   late String description;
   // List<Images>? images;
-  List<Map<String, dynamic>>? newList;
+
   String? filepath;
   List<JobCard>? _jobcards;
   final _installationdate = TextEditingController();
   final _remarks = TextEditingController();
-
+  Images? images;
+  List<Map<String, dynamic>>? newImagesList;
+  List<Images>? newList = [];
+  List<Images>? newimages = [];
   TextEditingController _dateinput = TextEditingController();
   TextEditingController _chasisno = TextEditingController();
   TextEditingController _vehtype = TextEditingController();
@@ -104,6 +108,7 @@ class _CreateTracker extends State<CreateTracker> {
   List pendinInstJobCardsJson = [];
 
   List devicesJson = [];
+  bool? iscameraopen;
   bool isLoading = false;
   bool isOther5 = false;
   bool isOther6 = false;
@@ -165,7 +170,10 @@ class _CreateTracker extends State<CreateTracker> {
   int? noJobCards;
   bool? isSelectedJobCard;
   bool? iscameraon;
-  List<Images>? images;
+  List<XFile>? imageslist = [];
+  List<String>? filenames = [];
+  //for captured image
+
   late String otherValue1;
   late String otherValue2;
   late String otherValue3;
@@ -177,6 +185,7 @@ class _CreateTracker extends State<CreateTracker> {
   HashSet<String> set2 = new HashSet<String>();
   @override
   void initState() {
+    loadCamera();
     isSelectedJobCard = false;
     iscameraon = false;
     _custName = null;
@@ -204,6 +213,7 @@ class _CreateTracker extends State<CreateTracker> {
       _fetchTechnicians();
     });
     image = null;
+    iscameraopen = false;
   }
 
   final ImagePicker imgpicker = ImagePicker();
@@ -217,94 +227,21 @@ class _CreateTracker extends State<CreateTracker> {
   String? filename2;
   String? filename3;
   String? filename4;
-  List filenames = [];
-  openImages() async {
-    try {
-      var pickedfiles = await imgpicker.pickMultiImage();
-      //you can use ImageCourse.camera for Camera capture
-      if (pickedfiles != null) {
-        if (pickedfiles.length < 2) {
-          imagefiles1 = pickedfiles;
-          Fluttertoast.showToast(msg: 'Image 1 Selected!');
-        } else {
-          Fluttertoast.showToast(
-              msg: 'You cannot select more than one image',
-              textColor: Colors.red);
-        }
-        setState(() {});
-      } else {
-        Fluttertoast.showToast(msg: 'No Image Selected', textColor: Colors.red);
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error picking file', textColor: Colors.red);
-    }
-  }
 
-  openImages2() async {
-    try {
-      var pickedfiles = await imgpicker.pickMultiImage();
-      //you can use ImageCourse.camera for Camera capture
-      if (pickedfiles != null) {
-        if (pickedfiles.length < 2) {
-          imagefiles2 = pickedfiles;
-          Fluttertoast.showToast(msg: 'Image 2 Selected!');
-        } else {
-          Fluttertoast.showToast(
-              msg: 'You cannot select more than one image',
-              textColor: Colors.red);
-        }
-        setState(() {});
-      } else {
-        Fluttertoast.showToast(msg: 'No Image Selected', textColor: Colors.red);
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error picking file', textColor: Colors.red);
-    }
-  }
+  loadCamera() async {
+    cameras = await availableCameras();
+    if (cameras != null) {
+      controller = CameraController(cameras![0], ResolutionPreset.max);
+      //cameras[0] = first camera, change to 1 to another camera
 
-  openImages3() async {
-    try {
-      var pickedfiles = await imgpicker.pickMultiImage();
-      //you can use ImageCourse.camera for Camera capture
-      if (pickedfiles != null) {
-        if (pickedfiles.length < 2) {
-          imagefiles3 = pickedfiles;
-          Fluttertoast.showToast(msg: 'Image 3 Selected!');
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Error,You cannot select more than one image',
-              textColor: Colors.red);
+      controller!.initialize().then((_) {
+        if (!mounted) {
+          return;
         }
         setState(() {});
-      } else {
-        Fluttertoast.showToast(
-            msg: 'Error, No Image Selected', textColor: Colors.red);
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error, picking file', textColor: Colors.red);
-    }
-  }
-
-  openImages4() async {
-    try {
-      var pickedfiles = await imgpicker.pickMultiImage();
-      //you can use ImageCourse.camera for Camera capture
-      if (pickedfiles != null) {
-        if (pickedfiles.length < 2) {
-          imagefiles4 = pickedfiles;
-          Fluttertoast.showToast(msg: 'Image 4 Selected!');
-        } else {
-          Fluttertoast.showToast(
-              msg: 'Error, You cannot select more than one image',
-              textColor: Colors.red);
-        }
-        setState(() {});
-      } else {
-        Fluttertoast.showToast(
-            msg: 'Error, No Image Selected', textColor: Colors.red);
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error, picking file', textColor: Colors.red);
+      });
+    } else {
+      print("NO any camera found");
     }
   }
 
@@ -318,7 +255,7 @@ class _CreateTracker extends State<CreateTracker> {
   bool _searchmode = false;
 
   Widget build(BuildContext context) {
-    return isSelectedJobCard == false && iscameraon == false
+    return isSelectedJobCard == false && iscameraopen == false
         ? Scaffold(
             floatingActionButton: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -803,13 +740,9 @@ class _CreateTracker extends State<CreateTracker> {
                                       GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            iscameraon = true;
-                                            imagefiles = null;
-
-                                            _image1Controller.clear();
-                                            _image2Controller.clear();
-                                            _image3Controller.clear();
-                                            _image4Controller.clear();
+                                            iscameraopen = true;
+                                            image = null;
+                                            _itemDescController.clear();
                                           });
                                         },
                                         child: Row(
@@ -833,21 +766,76 @@ class _CreateTracker extends State<CreateTracker> {
                                           ],
                                         ),
                                       ),
-                                      imagefiles != null
-                                          ? Wrap(
-                                              children:
-                                                  imagefiles!.map((imageone) {
-                                                return Card(
-                                                  child: Container(
-                                                    height: 100,
-                                                    width: 100,
-                                                    child: Image.file(
-                                                        File(imageone.path)),
-                                                  ),
-                                                );
-                                              }).toList(),
+                                      imageslist != null
+                                          ? Container(
+                                              child: GridView.builder(
+                                                scrollDirection: Axis.vertical,
+                                                shrinkWrap: true,
+                                                gridDelegate:
+                                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 2,
+                                                ),
+                                                itemCount: imageslist!.length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return Container(
+                                                    child: Stack(
+                                                      alignment: Alignment
+                                                          .bottomCenter,
+                                                      children: <Widget>[
+                                                        InteractiveViewer(
+                                                          panEnabled: true,
+                                                          boundaryMargin:
+                                                              const EdgeInsets
+                                                                  .all(80),
+                                                          minScale: 0.5,
+                                                          maxScale: 4,
+                                                          child: FadeInImage(
+                                                            image: FileImage(
+                                                              File(imageslist![
+                                                                      index]
+                                                                  .path),
+                                                            ),
+                                                            placeholder:
+                                                                MemoryImage(
+                                                                    kTransparentImage),
+                                                            fit: BoxFit.cover,
+                                                            width:
+                                                                double.infinity,
+                                                            height:
+                                                                double.infinity,
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          color: Colors.black
+                                                              .withOpacity(0.1),
+                                                          height: 30,
+                                                          width:
+                                                              double.infinity,
+                                                          child: Center(
+                                                            child: Text(
+                                                              filenames![index],
+                                                              maxLines: 8,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 16,
+                                                                  fontFamily:
+                                                                      'Regular'),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
                                             )
-                                          : Container()
+                                          : Container(),
                                     ],
                                   ),
                                 ))
@@ -2603,138 +2591,114 @@ class _CreateTracker extends State<CreateTracker> {
               )
             : Scaffold(
                 appBar: AppBar(
-                  title: Text("Vehicle Images"),
-                  automaticallyImplyLeading: false,
-                ),
-                body: SingleChildScrollView(
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 10,
+                  title: const Text("Capture Image from Camera"),
+                  backgroundColor: Colors.redAccent,
+                  leading: Builder(
+                    builder: (BuildContext context) {
+                      return RotatedBox(
+                        quarterTurns: 1,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              iscameraopen = false;
+                            });
+                          },
                         ),
-                        Row(
-                          children: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  openImages();
-                                },
-                                child: Text("Select Image 1")),
-                          ],
-                        ),
-                        TextFormField(
-                          controller: _image1Controller,
-                          validator: (value) =>
-                              value!.isEmpty ? "This field is required" : null,
-                          onSaved: (value) => {},
-                          keyboardType: TextInputType.text,
-                          decoration: const InputDecoration(
-                              hintText: "Enter Description"),
-                        ),
-                        Row(
-                          children: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  openImages2();
-                                },
-                                child: Text("Select Image 2")),
-                          ],
-                        ),
-                        TextFormField(
-                          controller: _image2Controller,
-                          validator: (value) =>
-                              value!.isEmpty ? "This field is required" : null,
-                          onSaved: (value) => {},
-                          keyboardType: TextInputType.text,
-                          decoration: const InputDecoration(
-                              hintText: "Enter Description"),
-                        ),
-                        Row(
-                          children: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  openImages3();
-                                },
-                                child: Text("Select Image 3")),
-                          ],
-                        ),
-                        TextFormField(
-                          controller: _image3Controller,
-                          validator: (value) =>
-                              value!.isEmpty ? "This field is required" : null,
-                          onSaved: (value) => {},
-                          keyboardType: TextInputType.text,
-                          decoration: const InputDecoration(
-                              hintText: "Enter Description"),
-                        ),
-                        Row(
-                          children: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  openImages4();
-                                },
-                                child: Text("Select Image 4")),
-                          ],
-                        ),
-                        TextFormField(
-                          controller: _image4Controller,
-                          validator: (value) =>
-                              value!.isEmpty ? "This field is required" : null,
-                          onSaved: (value) => {},
-                          keyboardType: TextInputType.text,
-                          decoration: const InputDecoration(
-                              hintText: "Enter Description"),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        ElevatedButton(
-                            onPressed: () {
-                              if (imagefiles1 != null &&
-                                  imagefiles2 != null &&
-                                  imagefiles3 != null &&
-                                  imagefiles4 != null) {
-                                if (_image1Controller.text.trim() != "" &&
-                                    _image2Controller.text.trim() != "" &&
-                                    _image3Controller.text.trim() != "" &&
-                                    _image4Controller.text.trim() != "") {
-                                  setState(() {
-                                    imagefiles = imagefiles1! +
-                                        imagefiles2! +
-                                        imagefiles3! +
-                                        imagefiles4!;
-                                    iscameraon = false;
-                                    filename = (_image1Controller.text.trim()) +
-                                        "," +
-                                        (_image2Controller.text.trim()) +
-                                        "," +
-                                        (_image3Controller.text.trim()) +
-                                        "," +
-                                        (_image4Controller.text.trim());
-                                    print(filename);
-                                    filenames = filename!.split(",");
-
-                                    uploadmultipleimage();
-                                  });
-                                } else {
-                                  Fluttertoast.showToast(
-                                      msg:
-                                          'Error, All descriptions must be filled',
-                                      textColor: Colors.red);
-                                }
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: 'Error, All images must be selected',
-                                    textColor: Colors.red);
-                              }
-                            },
-                            child: Text("Okay")),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
+                body: SingleChildScrollView(
+                    child: Container(
+                        child: Column(children: [
+                  Container(
+                    height: 500,
+                    width: 500,
+                    child: controller == null
+                        ? const Center(child: Text("Loading Camera..."))
+                        : !controller!.value.isInitialized
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : CameraPreview(controller!),
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Image Description",
+                        overflow: TextOverflow.ellipsis,
+                        style:
+                            Theme.of(context).textTheme.subtitle2!.copyWith(),
+                      ),
+                    ],
+                  ),
+                  TextFormField(
+                    validator: (value) =>
+                        value!.isEmpty ? "This field is required" : null,
+                    controller: _itemDescController,
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(
+                        hintText: "Enter Image Description"),
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  ElevatedButton.icon(
+                    //image capture button
+                    onPressed: () async {
+                      if (_itemDescController.text != '') {
+                        try {
+                          if (controller != null) {
+                            //check if contrller is not null
+                            if (controller!.value.isInitialized) {
+                              //check if controller is initialized
+                              image = await controller!
+                                  .takePicture(); //capture image
+                              setState(() {
+                                String? description =
+                                    _itemDescController.text.trim();
+                                print(description);
+                                final bytes =
+                                    Io.File(image!.path).readAsBytesSync();
+
+                                String imageFile = base64Encode(bytes);
+                                images = Images(
+                                    filename: description,
+                                    attachment: imageFile);
+                                _addImage(image!);
+                                _addImages(images!);
+                                _addDescription(description);
+                              });
+                            }
+                          }
+                        } catch (e) {
+                          print(e); //show error
+                        }
+                        setState(() {
+                          iscameraopen = false;
+                        });
+                      } else {
+                        setState(() {
+                          image = null;
+                          images = null;
+                        });
+
+                        Fluttertoast.showToast(
+                            msg:
+                                'Please fill the description to capture image');
+                      }
+                    },
+                    icon: const Icon(Icons.camera),
+                    label: const Text("Capture"),
+                  ),
+                ]))),
               );
   }
 
@@ -2945,7 +2909,7 @@ class _CreateTracker extends State<CreateTracker> {
                           "trackerlocation": _location,
                           "remarks": remarks == null ? "" : remarks,
                           "userid": _userid,
-                          "photolist": newList
+                          "photolist": newImagesList,
                         }));
 
                     log(jsonEncode(<String, dynamic>{
@@ -2998,7 +2962,7 @@ class _CreateTracker extends State<CreateTracker> {
                       // // "trackerlocation": _location,
                       // "remarks": remarks,
                       // "userid": _userid,
-                      "photolist": newList
+                      "photolist": newImagesList
                     }));
                     if (response != null) {
                       int statusCode = response.statusCode;
@@ -3020,51 +2984,35 @@ class _CreateTracker extends State<CreateTracker> {
         });
   }
 
+  void _addImage(XFile image) {
+    setState(() {
+      imageslist!.add(image);
+    });
+  }
+
+  void _addImages(Images images) {
+    setState(() {
+      newList!.add(images);
+      print(newList);
+      uploadmultipleimage();
+    });
+  }
+
+  void _addDescription(String description) {
+    setState(() {
+      filenames!.add(description);
+    });
+  }
+
   Future uploadmultipleimage() async {
-    for (int i = 0, j = 0;
-        i < imagefiles1!.length && j < imagefiles1!.length;
-        i++, j++) {
-      for (int i = 0, j = 0;
-          i < imagefiles2!.length && j < imagefiles2!.length;
-          i++, j++) {
-        for (int i = 0, j = 0;
-            i < imagefiles3!.length && j < imagefiles3!.length;
-            i++, j++) {
-          for (int i = 0, j = 0;
-              i < imagefiles4!.length && j < imagefiles4!.length;
-              i++, j++) {
-            final bytes = Io.File(imagefiles1![i].path).readAsBytesSync();
-            String imageFile = base64Encode(bytes);
-            final bytes1 = Io.File(imagefiles2![i].path).readAsBytesSync();
-            String imageFile1 = base64Encode(bytes1);
-            final bytes2 = Io.File(imagefiles3![i].path).readAsBytesSync();
-            String imageFile2 = base64Encode(bytes2);
-            final bytes3 = Io.File(imagefiles4![i].path).readAsBytesSync();
-            String imageFile3 = base64Encode(bytes3);
-            description = filenames[j].toString();
-            List<Images> images = [
-              Images(
-                  filename: _image1Controller.text.trim().toString(),
-                  attachment: imageFile),
-              Images(
-                  filename: _image2Controller.text.trim().toString(),
-                  attachment: imageFile1),
-              Images(
-                  filename: _image3Controller.text.trim().toString(),
-                  attachment: imageFile2),
-              Images(
-                  filename: _image4Controller.text.trim().toString(),
-                  attachment: imageFile3),
-            ];
-            newList = images.map((e) {
-              return {"filename": e.filename, "attachment": e.attachment};
-            }).toList();
-            print(imageFile);
-            print(imageFile1);
-          }
-        }
-      }
+    for (int i = 0; i < newList!.length; i++) {
+      print(newList![i].filename);
+      newImagesList = newList!.map((e) {
+        return {"filename": e.filename, "attachment": e.attachment};
+      }).toList();
+      print(newImagesList);
     }
+    // _submit();
   }
 
   getImageFileFromAsset(String path) async {
