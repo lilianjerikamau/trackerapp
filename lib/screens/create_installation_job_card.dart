@@ -1614,7 +1614,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                               ],
                             ),
                             actions: <Widget>[
-                              FlatButton(
+                              TextButton(
                                   onPressed: () {
                                     Navigator.pop(bc);
                                   },
@@ -1768,7 +1768,7 @@ class _CreateJobCard extends State<CreateJobCard> {
                               ],
                             ),
                             actions: <Widget>[
-                              FlatButton(
+                              TextButton(
                                   onPressed: () {
                                     Navigator.pop(bc);
                                   },
@@ -1829,12 +1829,12 @@ class _CreateJobCard extends State<CreateJobCard> {
             title: Text('Submit?'),
             content: Text('Are you sure you want to submit?'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   child: Text('No'),
                   onPressed: () {
                     Navigator.pop(ctx);
                   }),
-              FlatButton(
+              TextButton(
                   onPressed: () async {
                     String loanofficername = _loanofficername.text.trim();
                     String loanofficerphone = _loanofficerphone.text.trim();
@@ -1953,7 +1953,7 @@ void showAlertDialog(BuildContext context, String message) {
           title: Text('Error'),
           content: Text('$message'),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
                 onPressed: () {
                   Navigator.pop(bc);
                 },

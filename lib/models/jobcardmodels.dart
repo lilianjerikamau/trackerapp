@@ -13,6 +13,12 @@ class JobCard {
       this.location,
       this.docno,
       this.vehmodel,
+        this.backupimeino,
+        this.backupdeviceno2,
+        this.deviceno,
+        this.backupdeviceno,
+        this.backupimeino2,
+        this.imeino,
       this.notracker,
       this.remarks,
       this.date,
@@ -31,6 +37,13 @@ class JobCard {
   String? remarks;
   String? finname;
 
+  String? backupimeino;
+  String? backupdeviceno2;
+  String? deviceno;
+  String? backupdeviceno;
+  String? backupimeino2;
+  String? imeino;
+
   factory JobCard.fromJson(Map<String, dynamic> json) => JobCard(
         id: json["id"],
         customername: json["Customer"],
@@ -44,6 +57,12 @@ class JobCard {
         date: json["date"],
         remarks: json["remarks"],
         finname: json['finname'],
+      backupimeino: json['backupimeino'],
+      backupdeviceno2: json['backupdeviceno2'],
+      deviceno: json['deviceno'],
+      backupdeviceno :json['backupdeviceno'],
+      backupimeino2: json['backupimeino2'] ,
+      imeino:json['imeino'] ,
       );
 
   Map<String, dynamic> toJson() => {
@@ -58,6 +77,12 @@ class JobCard {
         "notracker": notracker,
         "date": date,
         "finname": finname,
-        "remarks": remarks
+        "remarks": remarks,
+  "backupimeino": backupimeino,
+  "backupdeviceno2": backupdeviceno2,
+  "deviceno" :deviceno,
+  "backupdeviceno": backupdeviceno,
+  "backupimeino2" :backupimeino2,
+  "imeino": imeino,
       };
 }

@@ -28,6 +28,8 @@ import 'package:api_cache_manager/api_cache_manager.dart';
 import 'package:api_cache_manager/models/cache_db_model.dart';
 import 'package:query_params/query_params.dart';
 
+import '../models/jobcardmodels.dart';
+
 class MaintainJobCard extends StatefulWidget {
   _MaintainJobCard createState() => _MaintainJobCard();
 }
@@ -55,13 +57,15 @@ class _MaintainJobCard extends State<MaintainJobCard> {
   String? _trackerlocation;
   String? _device;
   String? _customer;
-
+  List pendinInstJobCardsJson = [];
+  List<JobCard> _pendingMaintJobCards = [];
   Customer? _selectedCustomer;
   bool? isExistingTracker;
   List<Tracker>? _trackers;
   List<Technician>? _technicians;
   List trackersJson = [];
   List techniciansJson = [];
+
   @override
   void initState() {
     DateTime dateTime = DateTime.now();
@@ -217,7 +221,7 @@ class _MaintainJobCard extends State<MaintainJobCard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const <Widget>[
                           Text(
-                            'Create Meintenance Job Card',
+                            'Create Maintenance Job Card',
                             style: TextStyle(
                               fontSize: 20.0,
                               color: Colors.black,
@@ -709,12 +713,12 @@ class _MaintainJobCard extends State<MaintainJobCard> {
             title: const Text('Submit?'),
             content: const Text('Are you sure you want to submit?'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   child: const Text('No'),
                   onPressed: () {
                     Navigator.pop(ctx);
                   }),
-              FlatButton(
+              TextButton(
                   onPressed: () async {
                     Navigator.pop(ctx);
                     String location = _location.text.trim();
@@ -783,7 +787,7 @@ void showAlertDialog(BuildContext context, String message) {
           title: const Text('Error!'),
           content: Text('$message'),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
                 onPressed: () {
                   Navigator.pop(bc);
                 },

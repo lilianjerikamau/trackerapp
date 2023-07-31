@@ -151,7 +151,7 @@ class _CheckUserState extends State<CheckUser> with RouteAware {
                                                   content: Text(
                                                       'Your user account username is not Available'),
                                                   actions: <Widget>[
-                                                    FlatButton(
+                                                    TextButton(
                                                         onPressed: () {
                                                           Navigator.pop(bc);
                                                         },

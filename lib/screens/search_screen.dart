@@ -212,7 +212,7 @@ class _FinancierReceiptState extends State<FinancierReceipt> with RouteAware {
                               ],
                             ),
                             actions: <Widget>[
-                              FlatButton(
+                              TextButton(
                                   onPressed: () {
                                     Navigator.pop(bc);
                                   },

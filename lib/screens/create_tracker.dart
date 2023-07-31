@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:trackerapp/database/sessionpreferences.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'package:trackerapp/models/devicesmodels.dart';
@@ -334,10 +335,16 @@ class _CreateTracker extends State<CreateTracker> {
                           case 0:
                             form = _formKey.currentState;
                             if (form.validate()) {
-                              form.save();
-
-                              currentForm = 1;
-                              percentageComplete = 25;
+                              if((imageslist?.length!=0)==true) {
+                                print(imageslist?.length);
+                                form.save();
+                                currentForm = 1;
+                                percentageComplete = 25;
+                              }else{
+                                Fluttertoast.showToast(
+                                    msg:
+                                    'Please insert photos');
+                              }
                             } else {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
@@ -2701,7 +2708,9 @@ class _CreateTracker extends State<CreateTracker> {
                 ]))),
               );
   }
-
+  // https://erpqa.netrixbiz.com/AnchorERP/fused/api/trackerjobcard/pending/54?type=0
+  //jobcard
+  // https://erpqa.netrixbiz.com/AnchorERP/fused/api/trackerjobcard/pending/65?type=0
   _fetchPendingInstallationJobCard() async {
     String url = await Config.getBaseUrl();
 
@@ -2746,9 +2755,11 @@ class _CreateTracker extends State<CreateTracker> {
 
   _fetchDeviceDetails() async {
     String url = await Config.getBaseUrl();
+    print('calling devices');
     HttpClientResponse response = await Config.getRequestObject(
         url + 'tracker/device/?cc=$_costcenterid&tech=$_hrid&param=0',
         Config.get);
+    print(url+'tracker/device/?cc=$_costcenterid&tech=$_hrid&param=0');
     if (response != null) {
       print(response);
       response
@@ -2829,12 +2840,12 @@ class _CreateTracker extends State<CreateTracker> {
             title: const Text('Submit?'),
             content: const Text('Are you sure you want to submit'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   child: const Text('No'),
                   onPressed: () {
                     Navigator.pop(ctx);
                   }),
-              FlatButton(
+              TextButton(
                   onPressed: () async {
                     Navigator.pop(ctx);
                     log(images.toString());
@@ -5803,12 +5814,12 @@ class _CreateTracker extends State<CreateTracker> {
 //             title: const Text('Submit?'),
 //             content: const Text('Are you sure you want to submit'),
 //             actions: <Widget>[
-//               FlatButton(
+//               TextButton(
 //                   child: const Text('No'),
 //                   onPressed: () {
 //                     Navigator.pop(ctx);
 //                   }),
-//               FlatButton(
+//               TextButton(
 //                   onPressed: () async {
 //                     Navigator.pop(ctx);
 

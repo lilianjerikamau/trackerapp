@@ -194,7 +194,8 @@ class _State extends State<LoginPage> {
                                       : null,
                                 ),
                               ),
-                              FlatButton(
+                              TextButton(
+                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
                                 onPressed: () {
                                   Navigator.pushReplacement(
                                     context,
@@ -202,8 +203,8 @@ class _State extends State<LoginPage> {
                                         builder: (ctx) => CheckUser()),
                                   );
                                 },
-                                textColor: Colors.red,
-                                child: const Text('Forgot Password'),
+
+                                child: const Text('Forgot Password',style: TextStyle(color: Colors.white),),
                               ),
                               Padding(
                                   padding: const EdgeInsets.all(10.0),
@@ -325,7 +326,7 @@ class _State extends State<LoginPage> {
                                                           content: const Text(
                                                               'Your user account is not attached to any Hr_Employee account. Please contact the administrator with this information'),
                                                           actions: <Widget>[
-                                                            FlatButton(
+                                                            TextButton(
                                                                 onPressed: () {
                                                                   Navigator.pop(
                                                                       bc);
@@ -363,7 +364,7 @@ class _State extends State<LoginPage> {
                                                     content: const Text(
                                                         'There is a connection issue with the server! Please try again later'),
                                                     actions: <Widget>[
-                                                      FlatButton(
+                                                      TextButton(
                                                           onPressed: () {
                                                             Navigator.pop(bc);
                                                           },
@@ -386,12 +387,13 @@ class _State extends State<LoginPage> {
                                   )),
                               Row(
                                 children: <Widget>[
-                                  const Text('Change company URL?'),
-                                  FlatButton(
-                                    textColor: Colors.red,
+                                  Text('Change company URL?'),
+                                  TextButton(
+                                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+
                                     child: const Text(
                                       'Company URL',
-                                      style: TextStyle(fontSize: 20),
+                                      style: TextStyle(fontSize: 20,color: Colors.white),
                                     ),
                                     onPressed: () async {
                                       setState(() {

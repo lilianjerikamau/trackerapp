@@ -21,7 +21,8 @@ import 'package:trackerapp/widgets/validators.dart';
 // import 'package:seedfund/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:image_picker/image_picker.dart';
+import 'package:transparent_image/transparent_image.dart';
 class MaintainTracker extends StatefulWidget {
   const MaintainTracker({Key? key}) : super(key: key);
 
@@ -53,6 +54,9 @@ class _MaintainTrackerState extends State<MaintainTracker> {
   TextEditingController _trackerLocation = TextEditingController();
   List techniciansJson = [];
   List technicians = [];
+  bool? iscameraopen;
+  List<XFile>? imageslist = [];
+  List<String>? filenames = [];
   static late var _selectedInstaller = null;
   static late var _selectedJobCard = null;
   static late var _selectedValue = null;
@@ -66,18 +70,25 @@ class _MaintainTrackerState extends State<MaintainTracker> {
   static late var _location;
   static late var _vehreg;
   static late var _vehmodel;
-
+  bool _backupimeino1 = false;
+  bool _backupimeino2 = false;
   static late var _custPhone;
   static late var _techName;
   static late var _techId;
-
+  XFile? image; //for captured image
   late int? loansNumber = null;
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   final _formKey3 = GlobalKey<FormState>();
   final _formKey16 = GlobalKey<FormState>();
   List pendinInstJobCardsJson = [];
-
+  String? backupimeino = "";
+  String? backupdeviceno2 = "";
+  String? deviceno = "";
+  String? backupdeviceno = "";
+  String? backupimeino2 = "";
+  String? imeino = "";
+  List<JobCard> _pendingMaintJobCards = [];
   List devicesJson = [];
   bool isLoading = false;
   bool isOther5 = false;
@@ -172,6 +183,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
       _fetchPendingInstallationJobCard();
       _fetchDeviceDetails();
       _fetchTechnicians();
+      _fetchPendingMaintJobCard();
     });
   }
 
@@ -249,10 +261,16 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                           case 0:
                             form = _formKey.currentState;
                             if (form.validate()) {
-                              form.save();
-
-                              currentForm = 1;
-                              percentageComplete = 25;
+                              if((imageslist?.length!=0)==true) {
+                                print(imageslist?.length);
+                                form.save();
+                                currentForm = 1;
+                                percentageComplete = 25;
+                              }else{
+                                Fluttertoast.showToast(
+                                    msg:
+                                    'Please insert photos');
+                              }
                             } else {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
@@ -270,18 +288,18 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                               form.save();
 
                               // _checkDuplicates();
-                              if (_selectedImei != null) {
-                                if (_selectedDevice != null) {
-                                  currentForm = 2;
-                                  percentageComplete = 25;
-                                } else {
-                                  setState(() => _dropdownDeviceError =
-                                      "This field is required");
-                                }
-                              } else {
-                                setState(() => _dropdownIMEIError =
-                                    "This field is required");
-                              }
+                              // if (_selectedImei != null) {
+                              //   if (_selectedDevice != null) {
+                              currentForm = 2;
+                              percentageComplete = 25;
+                              // } else {
+                              //   setState(() => _dropdownDeviceError =
+                              //       "This field is required");
+                              // }
+                              // } else {
+                              //   setState(() => _dropdownIMEIError =
+                              //       "This field is required");
+                              // }
                             } else {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
@@ -614,6 +632,105 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                         decoration: const InputDecoration(
                                             hintText: "Enter Vehicle Location"),
                                       ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            iscameraopen = true;
+                                            image = null;
+                                            _itemDescController.clear();
+                                          });
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "Take a photo",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2!
+                                                  .copyWith(),
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            const Icon(
+                                              Icons.camera,
+                                              color: Colors.red,
+                                              size: 30.0,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      imageslist != null
+                                          ? Container(
+                                        child: GridView.builder(
+                                          scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                          ),
+                                          itemCount: imageslist!.length,
+                                          itemBuilder:
+                                              (BuildContext context,
+                                              int index) {
+                                            return Container(
+                                              child: Stack(
+                                                alignment: Alignment
+                                                    .bottomCenter,
+                                                children: <Widget>[
+                                                  InteractiveViewer(
+                                                    panEnabled: true,
+                                                    boundaryMargin:
+                                                    const EdgeInsets
+                                                        .all(80),
+                                                    minScale: 0.5,
+                                                    maxScale: 4,
+                                                    child: FadeInImage(
+                                                      image: FileImage(
+                                                        File(imageslist![
+                                                        index]
+                                                            .path),
+                                                      ),
+                                                      placeholder:
+                                                      MemoryImage(
+                                                          kTransparentImage),
+                                                      fit: BoxFit.cover,
+                                                      width:
+                                                      double.infinity,
+                                                      height:
+                                                      double.infinity,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    color: Colors.black
+                                                        .withOpacity(0.1),
+                                                    height: 30,
+                                                    width:
+                                                    double.infinity,
+                                                    child: Center(
+                                                      child: Text(
+                                                        filenames![index],
+                                                        maxLines: 8,
+                                                        overflow:
+                                                        TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                            color: Colors
+                                                                .white,
+                                                            fontSize: 16,
+                                                            fontFamily:
+                                                            'Regular'),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                          : Container(),
                                     ],
                                   ),
                                 ))
@@ -711,7 +828,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                                 .copyWith(),
                                           ),
                                           Text(
-                                            "*",
+                                            "",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2!
@@ -721,9 +838,9 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                       ),
                                       TextFormField(
                                         controller: _trackerLocation,
-                                        validator: (value) => value!.isEmpty
-                                            ? "This field is required"
-                                            : null,
+                                        // validator: (value) => value!.isEmpty
+                                        //     ? "This field is required"
+                                        //     : null,
                                         onSaved: (value) => {},
                                         keyboardType: TextInputType.text,
                                         decoration: const InputDecoration(
@@ -764,6 +881,14 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                         onChanged: (bool? value) {
                                           setState(() {
                                             isOther6 = value!;
+                                            if (isOther6 != false) {
+                                              _imeinoId = 0;
+                                              _imeinoId1 = 0;
+                                              _imeinoId2 = 0;
+                                              _devicenoId = 0;
+                                              _devicenoId1 = 0;
+                                              _devicenoId2 = 0;
+                                            }
                                           });
                                         },
                                       ),
@@ -781,7 +906,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                                 .copyWith(),
                                           ),
                                           Text(
-                                            "*",
+                                            ":$imeino",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2!
@@ -789,175 +914,62 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                           )
                                         ],
                                       ),
-                                      SearchableDropdown(
-                                        hint: const Text(
-                                          "IMEI Device",
-                                        ),
-                                        isExpanded: true,
-                                        onChanged: (value) {
-                                          _checkDuplicates();
-                                          setState(() {
-                                            _selectedImei = value != null
-                                                ? value
-                                                : 'Select IMEI Device';
-                                            _imeinoId = value != null
-                                                ? value['id']
-                                                : null;
-                                            _deviceSerialNo = value != null
-                                                ? value['serialno']
-                                                : null;
-                                            _deviceDescription = value != null
-                                                ? value['description']
-                                                : null;
-
-                                            print(_selectedImei);
-                                            print(_imeinoId);
-                                            print(_deviceSerialNo);
-                                            print(_deviceDescription);
-                                            _dropdownIMEIError = null;
-                                          });
-                                        },
-
-                                        // isCaseSensitiveSearch: true,
-                                        searchHint: const Text(
-                                          'Select IMEI Device ',
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        items: devicesJson.map((val) {
-                                          return DropdownMenuItem(
-                                            child: getListTile(val),
-                                            value: val,
-                                          );
-                                        }).toList(),
-                                      ),
-                                      _dropdownIMEIError == null
-                                          ? SizedBox.shrink()
-                                          : Text(
-                                              _dropdownIMEIError ?? "",
-                                              style:
-                                                  TextStyle(color: Colors.red),
-                                            ),
-                                      const SizedBox(
+                                      SizedBox(
                                         height: 10,
                                       ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Backup1 IMEI Number",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(),
-                                          ),
-                                          Text(
-                                            "",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(color: Colors.red),
-                                          )
-                                        ],
-                                      ),
-                                      SearchableDropdown(
-                                        hint: const Text(
-                                          "Backup1 IMEI Number",
-                                        ),
-                                        isExpanded: true,
-                                        onChanged: (value) {
-                                          // _checkDuplicates();
-                                          _selectedImei1 = value;
-                                          _imeinoId1 = value != null
-                                              ? value['id']
-                                              : null;
-                                          _deviceSerialNo = value != null
-                                              ? value['serialno']
-                                              : null;
-                                          _deviceDescription = value != null
-                                              ? value['description']
-                                              : null;
+                                      isOther6 != true
+                                          ? SearchableDropdown(
+                                              hint: const Text(
+                                                "IMEI Device",
+                                              ),
+                                              isExpanded: true,
+                                              onChanged: (value) {
+                                                // _checkDuplicates();
+                                                setState(() {
+                                                  _selectedImei = value != null
+                                                      ? value
+                                                      : 'Select IMEI Device';
+                                                  _imeinoId = value != null
+                                                      ? value['id']
+                                                      : null;
+                                                  _deviceSerialNo =
+                                                      value != null
+                                                          ? value['serialno']
+                                                          : null;
+                                                  _deviceDescription =
+                                                      value != null
+                                                          ? value['description']
+                                                          : null;
 
-                                          print(_selectedImei);
-                                          print(_imeinoId);
-                                          print(_deviceSerialNo);
-                                          print(_deviceDescription);
-                                          // set2.add(_selectedImei1);
-                                        },
+                                                  print(_selectedImei);
+                                                  print(_imeinoId);
+                                                  print(_deviceSerialNo);
+                                                  print(_deviceDescription);
+                                                  // _dropdownIMEIError = null;
+                                                });
+                                              },
 
-                                        // isCaseSensitiveSearch: true,
-                                        searchHint: const Text(
-                                          'Select Backup1 IMEI Number',
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        items: devicesJson.map((val) {
-                                          return DropdownMenuItem(
-                                            child: getListTile(val),
-                                            value: val,
-                                          );
-                                        }).toList(),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Backup2 IMEI Number",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(),
-                                          ),
-                                          Text(
-                                            "",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2!
-                                                .copyWith(color: Colors.red),
-                                          )
-                                        ],
-                                      ),
-                                      SearchableDropdown(
-                                        hint: const Text(
-                                          "Select Backup2 IMEI Number",
-                                        ),
-                                        isExpanded: true,
-                                        onChanged: (value) {
-                                          _checkDuplicates();
-                                          (value) => value == null
-                                              ? 'field required'
-                                              : null;
-                                          _selectedImei2 = value;
-                                          _imeinoId2 = value != null
-                                              ? value['id']
-                                              : null;
-                                          _deviceSerialNo = value != null
-                                              ? value['serialno']
-                                              : null;
-                                          _deviceDescription = value != null
-                                              ? value['description']
-                                              : null;
-                                          // set2.add(_selectedImei2);
-                                          print(_selectedImei);
-                                          print(_imeinoId);
-                                          print(_deviceSerialNo);
-                                          print(_deviceDescription);
-                                        },
-
-                                        // isCaseSensitiveSearch: true,
-                                        searchHint: const Text(
-                                          'Backup2 IMEI Number',
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        items: devicesJson.map((val) {
-                                          return DropdownMenuItem(
-                                            child: getListTile(val),
-                                            value: val,
-                                          );
-                                        }).toList(),
-                                      ),
-                                      const SizedBox(
+                                              // isCaseSensitiveSearch: true,
+                                              searchHint: const Text(
+                                                'Select IMEI Device ',
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                              items: devicesJson.map((val) {
+                                                return DropdownMenuItem(
+                                                  child: getListTile(val),
+                                                  value: val,
+                                                );
+                                              }).toList(),
+                                            )
+                                          : Container(),
+                                      // _dropdownIMEIError == null
+                                      //     ? SizedBox.shrink()
+                                      //     : Text(
+                                      //         _dropdownIMEIError ?? "",
+                                      //         style:
+                                      //             TextStyle(color: Colors.red),
+                                      //       ),
+                                      SizedBox(
                                         height: 10,
                                       ),
                                       Row(
@@ -971,7 +983,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                                 .copyWith(),
                                           ),
                                           Text(
-                                            "*",
+                                            ":$deviceno",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2!
@@ -979,56 +991,147 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                           )
                                         ],
                                       ),
-                                      SearchableDropdown(
-                                        hint: const Text(
-                                          "Device No",
-                                        ),
-                                        isExpanded: true,
-                                        onChanged: (value) {
-                                          _checkDuplicates();
-                                          setState(() {
-                                            (value) => value == null
-                                                ? 'field required'
-                                                : null;
-                                            _selectedDevice = value;
-                                            _devicenoId = value != null
-                                                ? value['id']
-                                                : null;
-                                            _deviceSerialNo = value != null
-                                                ? value['serialno']
-                                                : null;
-                                            _deviceDescription = value != null
-                                                ? value['description']
-                                                : null;
-                                            // set2.add(_selectedDevice);
-                                            // print(_selectedImei);
-                                            // print(_imeinoId);
-                                            // print(_deviceSerialNo);
-                                            // print(_deviceDescription);
-                                            _dropdownDeviceError = null;
-                                          });
-                                        },
+                                      isOther6 != true
+                                          ? SearchableDropdown(
+                                              hint: const Text(
+                                                "Device No",
+                                              ),
+                                              isExpanded: true,
+                                              onChanged: (value) {
+                                                // _checkDuplicates();
+                                                setState(() {
+                                                  (value) => value == null
+                                                      ? 'field required'
+                                                      : null;
+                                                  _selectedDevice = value;
+                                                  _devicenoId = value != null
+                                                      ? value['id']
+                                                      : null;
+                                                  _deviceSerialNo =
+                                                      value != null
+                                                          ? value['serialno']
+                                                          : null;
+                                                  _deviceDescription =
+                                                      value != null
+                                                          ? value['description']
+                                                          : null;
+                                                  // set2.add(_selectedDevice);
+                                                  // print(_selectedImei);
+                                                  // print(_imeinoId);
+                                                  // print(_deviceSerialNo);
+                                                  // print(_deviceDescription);
+                                                  // _dropdownDeviceError = null;
+                                                });
+                                              },
 
-                                        // isCaseSensitiveSearch: true,
-                                        searchHint: const Text(
-                                          'Device No',
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        items: devicesJson.map((val) {
-                                          return DropdownMenuItem(
-                                            child: getListTile(val),
-                                            value: val,
-                                          );
-                                        }).toList(),
-                                      ),
-                                      _dropdownDeviceError == null
-                                          ? SizedBox.shrink()
-                                          : Text(
-                                              _dropdownDeviceError ?? "",
-                                              style:
-                                                  TextStyle(color: Colors.red),
-                                            ),
+                                              // isCaseSensitiveSearch: true,
+                                              searchHint: const Text(
+                                                'Device No',
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                              items: devicesJson.map((val) {
+                                                return DropdownMenuItem(
+                                                  child: getListTile(val),
+                                                  value: val,
+                                                );
+                                              }).toList(),
+                                            )
+                                          : Container(),
+                                      // _dropdownDeviceError == null
+                                      //     ? SizedBox.shrink()
+                                      //     : Text(
+                                      //   _dropdownDeviceError ?? "",
+                                      //   style:
+                                      //   TextStyle(color: Colors.red),
+                                      // ),
                                       const SizedBox(
+                                        height: 10,
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Backup1 IMEI Number",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                          Text(
+                                            ":$backupimeino",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(color: Colors.red),
+                                          )
+                                        ],
+                                      ),
+                                      isOther6 != true
+                                          ? SearchableDropdown(
+                                              hint: const Text(
+                                                "Backup1 IMEI Number",
+                                              ),
+                                              isExpanded: true,
+                                              onChanged: (value) {
+                                                // _checkDuplicates();
+                                                _selectedImei1 = value;
+                                                _imeinoId1 = value != null
+                                                    ? value['id']
+                                                    : null;
+                                                _deviceSerialNo = value != null
+                                                    ? value['serialno']
+                                                    : null;
+                                                _deviceDescription =
+                                                    value != null
+                                                        ? value['description']
+                                                        : null;
+
+                                                print(_selectedImei);
+                                                print(_imeinoId);
+                                                print(_deviceSerialNo);
+                                                print(_deviceDescription);
+                                                // set2.add(_selectedImei1);
+                                              },
+
+                                              // isCaseSensitiveSearch: true,
+                                              searchHint: const Text(
+                                                'Select Backup1 IMEI Number',
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                              items: devicesJson.map((val) {
+                                                return DropdownMenuItem(
+                                                  child: getListTile(val),
+                                                  value: val,
+                                                );
+                                              }).toList(),
+                                            )
+                                          : Container(),
+                                      isOther6 != true
+                                          ? CheckboxListTile(
+                                              controlAffinity:
+                                                  ListTileControlAffinity
+                                                      .trailing,
+                                              title: Text(
+                                                'Remove Backup1 IMEI Number',
+                                                overflow: TextOverflow.ellipsis,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2!
+                                                    .copyWith(),
+                                              ),
+                                              value: _backupimeino1,
+                                              activeColor: Colors.red,
+                                              onChanged: (bool? value) {
+                                                setState(() {
+                                                  _backupimeino1 = value!;
+                                                });
+                                              },
+                                            )
+                                          : Container(),
+                                      SizedBox(
                                         height: 10,
                                       ),
                                       Row(
@@ -1042,7 +1145,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                                 .copyWith(),
                                           ),
                                           Text(
-                                            "",
+                                            ":$backupdeviceno",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2!
@@ -1050,42 +1153,137 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                           )
                                         ],
                                       ),
-                                      SearchableDropdown(
-                                        hint: const Text(
-                                          "Backup1 Device No",
-                                        ),
-                                        isExpanded: true,
-                                        onChanged: (value) {
-                                          _checkDuplicates();
-                                          (value) => value == null
-                                              ? 'field required'
-                                              : null;
-                                          _selectedDevice1 = value;
-                                          _devicenoId1 = value != null
-                                              ? value['id']
-                                              : null;
-                                          _deviceSerialNo = value != null
-                                              ? value['serialno']
-                                              : null;
-                                          _deviceDescription = value != null
-                                              ? value['description']
-                                              : null;
-                                          // set2.add(_selectedDevice1);
-                                        },
+                                      isOther6 != true
+                                          ? SearchableDropdown(
+                                              hint: const Text(
+                                                "Backup1 Device No",
+                                              ),
+                                              isExpanded: true,
+                                              onChanged: (value) {
+                                                _checkDuplicates();
+                                                (value) => value == null
+                                                    ? 'field required'
+                                                    : null;
+                                                _selectedDevice1 = value;
+                                                _devicenoId1 = value != null
+                                                    ? value['id']
+                                                    : null;
+                                                _deviceSerialNo = value != null
+                                                    ? value['serialno']
+                                                    : null;
+                                                _deviceDescription =
+                                                    value != null
+                                                        ? value['description']
+                                                        : null;
+                                                // set2.add(_selectedDevice1);
+                                              },
 
-                                        // isCaseSensitiveSearch: true,
-                                        searchHint: const Text(
-                                          'Select Backup1 Device No',
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        items: devicesJson.map((val) {
-                                          return DropdownMenuItem(
-                                            child: getListTile(val),
-                                            value: val,
-                                          );
-                                        }).toList(),
-                                      ),
+                                              // isCaseSensitiveSearch: true,
+                                              searchHint: const Text(
+                                                'Select Backup1 Device No',
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                              items: devicesJson.map((val) {
+                                                return DropdownMenuItem(
+                                                  child: getListTile(val),
+                                                  value: val,
+                                                );
+                                              }).toList(),
+                                            )
+                                          : Container(),
                                       const SizedBox(
+                                        height: 10,
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Backup2 IMEI Number",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(),
+                                          ),
+                                          Text(
+                                            ":$backupimeino2",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2!
+                                                .copyWith(color: Colors.red),
+                                          )
+                                        ],
+                                      ),
+                                      isOther6 != true
+                                          ? SearchableDropdown(
+                                              hint: const Text(
+                                                "Select Backup2 IMEI Number",
+                                              ),
+                                              isExpanded: true,
+                                              onChanged: (value) {
+                                                // _checkDuplicates();
+                                                (value) => value == null
+                                                    ? 'field required'
+                                                    : null;
+                                                _selectedImei2 = value;
+                                                _imeinoId2 = value != null
+                                                    ? value['id']
+                                                    : null;
+                                                _deviceSerialNo = value != null
+                                                    ? value['serialno']
+                                                    : null;
+                                                _deviceDescription =
+                                                    value != null
+                                                        ? value['description']
+                                                        : null;
+                                                // set2.add(_selectedImei2);
+                                                print(_selectedImei);
+                                                print(_imeinoId);
+                                                print(_deviceSerialNo);
+                                                print(_deviceDescription);
+                                              },
+
+                                              // isCaseSensitiveSearch: true,
+                                              searchHint: const Text(
+                                                'Backup2 IMEI Number',
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                              items: devicesJson.map((val) {
+                                                return DropdownMenuItem(
+                                                  child: getListTile(val),
+                                                  value: val,
+                                                );
+                                              }).toList(),
+                                            )
+                                          : Container(),
+                                      isOther6 != true
+                                          ? CheckboxListTile(
+                                              controlAffinity:
+                                                  ListTileControlAffinity
+                                                      .trailing,
+                                              title: Text(
+                                                'Remove Backup2 IMEI Number',
+                                                overflow: TextOverflow.ellipsis,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2!
+                                                    .copyWith(),
+                                              ),
+                                              value: _backupimeino2,
+                                              activeColor: Colors.red,
+                                              onChanged: (bool? value) {
+                                                setState(() {
+                                                  _backupimeino2 = value!;
+                                                });
+                                              },
+                                            )
+                                          : Container(),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      SizedBox(
                                         height: 10,
                                       ),
                                       Row(
@@ -1099,7 +1297,7 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                                 .copyWith(),
                                           ),
                                           Text(
-                                            "",
+                                            ":$backupdeviceno2",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2!
@@ -1107,46 +1305,49 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                                           )
                                         ],
                                       ),
-                                      SearchableDropdown(
-                                        hint: const Text(
-                                          "Backup2 Device No",
-                                        ),
-                                        isExpanded: true,
-                                        onChanged: (value) {
-                                          _checkDuplicates();
-                                          (value) => value == null
-                                              ? 'field required'
-                                              : null;
-                                          _selectedDevice2 = value;
-                                          _devicenoId2 = value != null
-                                              ? value['id']
-                                              : null;
-                                          _deviceSerialNo = value != null
-                                              ? value['serialno']
-                                              : null;
-                                          _deviceDescription = value != null
-                                              ? value['description']
-                                              : null;
+                                      isOther6 != true
+                                          ? SearchableDropdown(
+                                              hint: const Text(
+                                                "Backup2 Device No",
+                                              ),
+                                              isExpanded: true,
+                                              onChanged: (value) {
+                                                // _checkDuplicates();
+                                                (value) => value == null
+                                                    ? 'field required'
+                                                    : null;
+                                                _selectedDevice2 = value;
+                                                _devicenoId2 = value != null
+                                                    ? value['id']
+                                                    : null;
+                                                _deviceSerialNo = value != null
+                                                    ? value['serialno']
+                                                    : null;
+                                                _deviceDescription =
+                                                    value != null
+                                                        ? value['description']
+                                                        : null;
 
-                                          // print(_selectedImei);
-                                          // print(_imeinoId);
-                                          // print(_deviceSerialNo);
-                                          // print(_deviceDescription);
-                                          // set2.add(_selectedDevice2);
-                                        },
+                                                // print(_selectedImei);
+                                                // print(_imeinoId);
+                                                // print(_deviceSerialNo);
+                                                // print(_deviceDescription);
+                                                // set2.add(_selectedDevice2);
+                                              },
 
-                                        // isCaseSensitiveSearch: true,
-                                        searchHint: const Text(
-                                          'Select Backup2 Device No',
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        items: devicesJson.map((val) {
-                                          return DropdownMenuItem(
-                                            child: getListTile(val),
-                                            value: val,
-                                          );
-                                        }).toList(),
-                                      ),
+                                              // isCaseSensitiveSearch: true,
+                                              searchHint: const Text(
+                                                'Select Backup2 Device No',
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                              items: devicesJson.map((val) {
+                                                return DropdownMenuItem(
+                                                  child: getListTile(val),
+                                                  value: val,
+                                                );
+                                              }).toList(),
+                                            )
+                                          : Container(),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -2280,12 +2481,12 @@ class _MaintainTrackerState extends State<MaintainTracker> {
             title: Text('Submit?'),
             content: Text('Are you sure you want to Submit?'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   child: Text('No'),
                   onPressed: () {
                     Navigator.pop(ctx);
                   }),
-              FlatButton(
+              TextButton(
                   onPressed: () async {
                     Navigator.pop(ctx);
 
@@ -2306,6 +2507,8 @@ class _MaintainTrackerState extends State<MaintainTracker> {
                           'Content-Type': 'application/json',
                         },
                         body: jsonEncode(<String, dynamic>{
+                          "value1toremove1": _backupimeino1,
+                          "value1toremove2": _backupimeino2,
                           "trackertypeid": 1,
                           "trackerlocation": trackerlocation,
                           "jobcardid": _jobCardId,
@@ -2452,6 +2655,54 @@ class _MaintainTrackerState extends State<MaintainTracker> {
         return alert;
       },
     );
+  }
+
+  _fetchPendingMaintJobCard() async {
+    String url = await Config.getBaseUrl();
+    HttpClientResponse response = await Config.getRequestObject(
+        url + 'trackerjobcard/pending/${_loggedInUser.hrid}?type=1',
+        Config.get);
+    if (response != null) {
+      print(response);
+      response
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())
+          .listen((data) {
+        var jsonResponse = json.decode(data);
+        setState(() {
+          pendinInstJobCardsJson = jsonResponse;
+        });
+        print('maintenancejson');
+        print(jsonResponse);
+        var list = jsonResponse as List;
+        List<JobCard> result = list.map<JobCard>((json) {
+          return JobCard.fromJson(json);
+        }).toList();
+        if (result.isNotEmpty) {
+          setState(() {
+            result.sort((a, b) => a.customername!
+                .toLowerCase()
+                .compareTo(b.customername!.toLowerCase()));
+            _pendingMaintJobCards = result;
+            _pendingMaintJobCards.forEach((jobcard) {
+              imeino = jobcard.imeino!;
+              backupimeino = jobcard.backupimeino!;
+              backupimeino2 = jobcard.backupimeino2!;
+              deviceno = jobcard.deviceno!;
+              backupdeviceno = jobcard.backupdeviceno!;
+              backupdeviceno2 = jobcard.backupdeviceno2!;
+            });
+            // noMaintJobCards = _pendingMaintJobCards.length;
+          });
+        } else {
+          setState(() {
+            // _message = 'You have not been assigned any customers';
+          });
+        }
+      });
+    } else {
+      print('response is null ');
+    }
   }
 
   _body() {

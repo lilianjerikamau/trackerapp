@@ -233,7 +233,7 @@ class _HomeState extends State<Home> {
               backgroundColor: Colors.white,
               elevation: 0.0,
             ),
-            body: _isTechnician == true
+            body: _isTechnician == false
                 ? SingleChildScrollView(
                     child: Column(
                       children: [
@@ -888,7 +888,7 @@ class _HomeState extends State<Home> {
                                                                     'From date cannot come after to date'),
                                                                 actions: <
                                                                     Widget>[
-                                                                  FlatButton(
+                                                                  TextButton(
                                                                       onPressed:
                                                                           () {
                                                                         Navigator.pop(
@@ -955,7 +955,7 @@ class _HomeState extends State<Home> {
                                                                     'From date cannot come after to date'),
                                                                 actions: <
                                                                     Widget>[
-                                                                  FlatButton(
+                                                                  TextButton(
                                                                       onPressed:
                                                                           () {
                                                                         Navigator.pop(
@@ -1073,7 +1073,7 @@ class _HomeState extends State<Home> {
                                                               content: const Text(
                                                                   'From date cannot come after to date'),
                                                               actions: <Widget>[
-                                                                FlatButton(
+                                                                TextButton(
                                                                     onPressed:
                                                                         () {
                                                                       Navigator
@@ -1136,7 +1136,7 @@ class _HomeState extends State<Home> {
                                                             content: const Text(
                                                                 'From date cannot come after to date'),
                                                             actions: <Widget>[
-                                                              FlatButton(
+                                                              TextButton(
                                                                   onPressed:
                                                                       () {
                                                                     Navigator
@@ -1229,7 +1229,7 @@ class _HomeState extends State<Home> {
           String? remarks = jobCard.remarks;
           String? finname = jobCard.finname;
 
-          print("Jobcard id :::: ${jobCard.id}");
+          print("Jobcard idv :::: ${jobCard.id}");
 
           return Padding(
             padding: const EdgeInsets.all(10.0),
@@ -1242,6 +1242,7 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(name != null ? 'Name: $name' : 'Name: Undefined'),
+                    Text(vehreg!=null? 'Reg No:$vehreg':'Reg No:Undefined'),
                     // Text('Name balance: $bal'),
                     // Text('PDCheque balance: $pdBal'),
                     // Text('Available Credit: $creditLimit')
@@ -1347,7 +1348,7 @@ class _HomeState extends State<Home> {
           String? remarks = jobCard.remarks;
           String? finname = jobCard.finname;
 
-          print("Jobcard id :::: ${jobCard.id}");
+          print("Jobcard id2 :::: ${jobCard.id}");
 
           return Padding(
             padding: const EdgeInsets.all(10.0),
@@ -1360,7 +1361,7 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(name != null ? 'Name: $name' : 'Name: Undefined'),
-                    // Text('Name balance: $bal'),
+                    Text(vehreg!=null? 'Reg No:$vehreg':'Reg No:Undefined'),
                     // Text('PDCheque balance: $pdBal'),
                     // Text('Available Credit: $creditLimit')
                   ],
@@ -1409,7 +1410,6 @@ class _HomeState extends State<Home> {
 
   _fetchPendingMaintJobCard() async {
     String url = await Config.getBaseUrl();
-
     HttpClientResponse response = await Config.getRequestObject(
         url + 'trackerjobcard/pending/$_hrid?type=1', Config.get);
     if (response != null) {
@@ -1422,6 +1422,7 @@ class _HomeState extends State<Home> {
         setState(() {
           pendinInstJobCardsJson = jsonResponse;
         });
+        print('maintenancejson');
         print(jsonResponse);
         var list = jsonResponse as List;
         List<JobCard> result = list.map<JobCard>((json) {
@@ -1451,7 +1452,7 @@ class _HomeState extends State<Home> {
     String url = await getBaseUrl();
     HttpClientResponse response = await getRequestObject(
       url +
-          '/tracker/pendinginvoice/69?from=$formattedFromDate&to=$formattedToDate',
+          '/tracker/pendinginvoice/${_loggedInUser.hrid}?from=$formattedFromDate&to=$formattedToDate',
       get,
     );
     if (response != null) {
@@ -1521,7 +1522,7 @@ class _HomeState extends State<Home> {
           String? remarks = jobCard.remarks;
           String? finname = jobCard.finname;
 
-          print("Jobcard id :::: ${jobCard.id}");
+          print("Jobcard id3 :::: ${jobCard.id}");
 
           return Padding(
             padding: const EdgeInsets.all(10.0),
@@ -1534,6 +1535,7 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(name != null ? 'Name: $name' : 'Name: Undefined'),
+                Text(vehreg!=null? 'Reg No:$vehreg':'Reg No:Undefined'),
                     // Text('Name balance: $bal'),
                     // Text('PDCheque balance: $pdBal'),
                     // Text('Available Credit: $creditLimit')
@@ -1814,7 +1816,7 @@ class _HomeState extends State<Home> {
                             HttpClientResponse response =
                                 await getRequestObject(
                               url +
-                                  'https://erpqa.netrixbiz.com/AnchorERP/fused/api/tracker/pendinginvoice/69?from=$formattedFromDate&to=$formattedToDate',
+                                  'https://erpqa.netrixbiz.com/AnchorERP/fused/api/tracker/pendinginvoice/${_loggedInUser.hrid}?from=$formattedFromDate&to=$formattedToDate',
                               get,
                             );
                             if (response != null) {
